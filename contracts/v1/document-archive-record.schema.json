@@ -1,0 +1,602 @@
+{
+  "$defs": {
+    "CandidateFact": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "value_token": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Value Token",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "scale": {
+          "enum": [
+            1,
+            1000,
+            1000000
+          ],
+          "title": "Scale",
+          "type": "integer"
+        },
+        "currency": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "consolidated",
+            "separate",
+            "unknown"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/FactEvidence"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "value_token",
+        "value",
+        "scale",
+        "currency",
+        "period_start",
+        "period_end",
+        "scope",
+        "evidence"
+      ],
+      "title": "CandidateFact",
+      "type": "object"
+    },
+    "DocumentAgentResult": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "provider_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "blocked",
+            "rejected",
+            "needs_review"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/FactReview"
+          },
+          "maxItems": 64,
+          "title": "Facts",
+          "type": "array"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\S(?:.*\\S)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error Code"
+        }
+      },
+      "required": [
+        "document_id",
+        "provider_id",
+        "status",
+        "facts",
+        "error_code"
+      ],
+      "title": "DocumentAgentResult",
+      "type": "object"
+    },
+    "DocumentBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Block Id",
+          "type": "string"
+        },
+        "locator": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 32768,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "block_id",
+        "locator",
+        "text"
+      ],
+      "title": "DocumentBlock",
+      "type": "object"
+    },
+    "DocumentPacket": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "document_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "text",
+            "html",
+            "xlsx",
+            "pdf"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "classification": {
+          "enum": [
+            "public",
+            "private",
+            "secret"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/DocumentBlock"
+          },
+          "maxItems": 512,
+          "minItems": 1,
+          "title": "Blocks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "document_id",
+        "sha256",
+        "format",
+        "classification",
+        "blocks"
+      ],
+      "title": "DocumentPacket",
+      "type": "object"
+    },
+    "DocumentReviewCommand": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Command Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "fact_index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Fact Index",
+          "type": "integer"
+        },
+        "verdict": {
+          "enum": [
+            "accepted",
+            "rejected"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        },
+        "note": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command_id",
+        "expected_revision",
+        "fact_index",
+        "verdict",
+        "note"
+      ],
+      "title": "DocumentReviewCommand",
+      "type": "object"
+    },
+    "DocumentReviewEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "revision": {
+          "maximum": 10000,
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "command": {
+          "$ref": "#/$defs/DocumentReviewCommand"
+        },
+        "reviewed_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Reviewed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "revision",
+        "command",
+        "reviewed_at"
+      ],
+      "title": "DocumentReviewEvent",
+      "type": "object"
+    },
+    "FactEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Block Id",
+          "type": "string"
+        },
+        "quote": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "block_id",
+        "quote"
+      ],
+      "title": "FactEvidence",
+      "type": "object"
+    },
+    "FactReview": {
+      "additionalProperties": false,
+      "properties": {
+        "fact": {
+          "$ref": "#/$defs/CandidateFact"
+        },
+        "status": {
+          "enum": [
+            "needs_review",
+            "rejected"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason_code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Reason Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fact",
+        "status",
+        "reason_code"
+      ],
+      "title": "FactReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "archive_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Archive Id",
+      "type": "string"
+    },
+    "title": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "instrument_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Instrument Id"
+    },
+    "format": {
+      "enum": [
+        "text",
+        "html",
+        "xlsx"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "classification": {
+      "enum": [
+        "public",
+        "private",
+        "secret"
+      ],
+      "title": "Classification",
+      "type": "string"
+    },
+    "document_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Document Sha256",
+      "type": "string"
+    },
+    "draft_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Draft Sha256",
+      "type": "string"
+    },
+    "provenance": {
+      "const": "unverified_offline_import",
+      "default": "unverified_offline_import",
+      "title": "Provenance",
+      "type": "string"
+    },
+    "provider_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Model Id"
+    },
+    "prompt_version": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Prompt Version"
+    },
+    "source_available_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Source Available At",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Created At",
+      "type": "string"
+    },
+    "validation_status": {
+      "enum": [
+        "blocked",
+        "rejected",
+        "needs_review"
+      ],
+      "title": "Validation Status",
+      "type": "string"
+    },
+    "fact_count": {
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Fact Count",
+      "type": "integer"
+    },
+    "review_revision": {
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Review Revision",
+      "type": "integer"
+    },
+    "packet": {
+      "$ref": "#/$defs/DocumentPacket"
+    },
+    "draft_json": {
+      "maxLength": 262144,
+      "minLength": 1,
+      "title": "Draft Json",
+      "type": "string"
+    },
+    "result": {
+      "$ref": "#/$defs/DocumentAgentResult"
+    },
+    "reviews": {
+      "items": {
+        "$ref": "#/$defs/DocumentReviewEvent"
+      },
+      "maxItems": 10000,
+      "title": "Reviews",
+      "type": "array"
+    }
+  },
+  "required": [
+    "archive_id",
+    "title",
+    "instrument_id",
+    "format",
+    "classification",
+    "document_sha256",
+    "draft_sha256",
+    "provider_id",
+    "model_id",
+    "prompt_version",
+    "source_available_at",
+    "as_of",
+    "created_at",
+    "validation_status",
+    "fact_count",
+    "review_revision",
+    "packet",
+    "draft_json",
+    "result",
+    "reviews"
+  ],
+  "title": "DocumentArchiveRecord",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-archive-record:1.0"
+}

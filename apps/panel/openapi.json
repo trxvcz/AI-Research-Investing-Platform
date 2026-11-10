@@ -1,0 +1,6705 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AlphaSense Research API",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/instruments": {
+      "post": {
+        "tags": [
+          "instruments"
+        ],
+        "summary": "Register",
+        "operationId": "register_v1_instruments_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstrumentCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstrumentWrite"
+                }
+              }
+            }
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstrumentWrite"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "instruments"
+        ],
+        "summary": "Search",
+        "operationId": "search_v1_instruments_get",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+              "not": {
+                "pattern": "[\\x00-\\x1f\\x7f]"
+              },
+              "default": "",
+              "title": "Query"
+            }
+          },
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "data_origin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "synthetic",
+                    "live"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Data Origin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstrumentPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/instruments/{instrument_id}": {
+      "get": {
+        "tags": [
+          "instruments"
+        ],
+        "summary": "Get",
+        "operationId": "get_v1_instruments__instrument_id__get",
+        "parameters": [
+          {
+            "name": "instrument_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Instrument Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstrumentRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/snapshots": {
+      "post": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Archive",
+        "operationId": "archive_v1_snapshots_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SnapshotCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotWrite"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotWrite"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/snapshots/{snapshot_id}": {
+      "get": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Snapshot",
+        "operationId": "snapshot_v1_snapshots__snapshot_id__get",
+        "parameters": [
+          {
+            "name": "snapshot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Snapshot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/snapshots/{snapshot_id}/content": {
+      "get": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Download",
+        "operationId": "download_v1_snapshots__snapshot_id__content_get",
+        "parameters": [
+          {
+            "name": "snapshot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Snapshot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/instruments/{instrument_id}/snapshots": {
+      "get": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Snapshots",
+        "operationId": "snapshots_v1_instruments__instrument_id__snapshots_get",
+        "parameters": [
+          {
+            "name": "instrument_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Instrument Id"
+            }
+          },
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/research-runs": {
+      "post": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Create Run",
+        "operationId": "create_run_v1_research_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunWrite"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunWrite"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/research-runs/{run_id}": {
+      "get": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Run",
+        "operationId": "run_v1_research_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/research-runs/{run_id}/worker-job": {
+      "get": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Worker Job",
+        "operationId": "worker_job_v1_research_runs__run_id__worker_job_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerJobRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/research-runs/{run_id}/events": {
+      "post": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Apply",
+        "operationId": "apply_v1_research_runs__run_id__events_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/RunStart"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RunAdvance"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RunFail"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RunResume"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RunFinish"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "action",
+                  "mapping": {
+                    "start": "#/components/schemas/RunStart",
+                    "advance": "#/components/schemas/RunAdvance",
+                    "fail": "#/components/schemas/RunFail",
+                    "resume": "#/components/schemas/RunResume",
+                    "finish": "#/components/schemas/RunFinish"
+                  }
+                },
+                "title": "Payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunEventWrite"
+                }
+              }
+            }
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunEventWrite"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "research-archive"
+        ],
+        "summary": "Events",
+        "operationId": "events_v1_research_runs__run_id__events_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "after_sequence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "After Sequence"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunEventPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/runs": {
+      "get": {
+        "tags": [
+          "panel"
+        ],
+        "summary": "Panel Runs",
+        "operationId": "panel_runs_v1_panel_runs_get",
+        "parameters": [
+          {
+            "name": "instrument_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Instrument Id"
+            }
+          },
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PanelRunPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/reports/{report_id}/{revision}/html": {
+      "get": {
+        "tags": [
+          "panel"
+        ],
+        "summary": "Panel Report Html",
+        "operationId": "panel_report_html_v1_panel_reports__report_id___revision__html_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/analyses/{run_id}": {
+      "get": {
+        "tags": [
+          "panel"
+        ],
+        "summary": "Analysis State",
+        "operationId": "analysis_state_v1_panel_analyses__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PanelAnalysisResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/analyses": {
+      "post": {
+        "tags": [
+          "panel"
+        ],
+        "summary": "Launch Analysis",
+        "operationId": "launch_analysis_v1_panel_analyses_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PanelAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PanelAnalysisResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/catalog": {
+      "get": {
+        "tags": [
+          "panel"
+        ],
+        "summary": "Catalog Search",
+        "operationId": "catalog_search_v1_panel_catalog_get",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 128,
+              "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+              "not": {
+                "pattern": "[\\x00-\\x1f\\x7f]"
+              },
+              "default": "",
+              "title": "Query"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 30,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/catalog/refresh": {
+      "post": {
+        "tags": [
+          "panel"
+        ],
+        "summary": "Catalog Refresh",
+        "operationId": "catalog_refresh_v1_panel_catalog_refresh_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogPage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/tasks": {
+      "post": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Enqueue",
+        "operationId": "enqueue_v1_panel_tasks_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Task Page",
+        "operationId": "task_page_v1_panel_tasks_get",
+        "parameters": [
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/tasks/{run_id}": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Task",
+        "operationId": "task_v1_panel_tasks__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/documents": {
+      "post": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Create",
+        "operationId": "create_v1_panel_documents_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentArchiveCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentArchiveRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Page",
+        "operationId": "page_v1_panel_documents_get",
+        "parameters": [
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "instrument_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Instrument Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentArchivePage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/documents/{archive_id}": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Get",
+        "operationId": "get_v1_panel_documents__archive_id__get",
+        "parameters": [
+          {
+            "name": "archive_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Archive Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentArchiveRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/documents/{archive_id}/reviews": {
+      "post": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Review",
+        "operationId": "review_v1_panel_documents__archive_id__reviews_post",
+        "parameters": [
+          {
+            "name": "archive_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Archive Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentReviewCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentReviewEvent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/documents/{archive_id}/content": {
+      "get": {
+        "tags": [
+          "documents"
+        ],
+        "summary": "Content",
+        "operationId": "content_v1_panel_documents__archive_id__content_get",
+        "parameters": [
+          {
+            "name": "archive_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Archive Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "description": "Liveness never opens a database connection.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ready": {
+      "get": {
+        "summary": "Ready",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/validate": {
+      "post": {
+        "summary": "Validate",
+        "description": "Validate declared observations without fetching, persisting or analyzing.",
+        "operationId": "validate_v1_validate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResearchInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reports/inspect": {
+      "post": {
+        "summary": "Inspect",
+        "description": "Inspect supplied JSON only; never load a client path, fetch or migrate.",
+        "operationId": "inspect_v1_reports_inspect_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/LegacyInspection"
+                    },
+                    {
+                      "$ref": "#/components/schemas/V1Inspection"
+                    }
+                  ],
+                  "title": "Response Inspect V1 Reports Inspect Post",
+                  "discriminator": {
+                    "propertyName": "format",
+                    "mapping": {
+                      "legacy-m0": "#/components/schemas/LegacyInspection",
+                      "v1": "#/components/schemas/V1Inspection"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reports": {
+      "post": {
+        "summary": "Append Report",
+        "operationId": "append_report_v1_reports_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRevision"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoredRevisionInfo"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoredRevisionInfo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reports/{report_id}": {
+      "get": {
+        "summary": "Latest Report",
+        "operationId": "latest_report_v1_reports__report_id__get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Report Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportRevision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reports/{report_id}/revisions": {
+      "get": {
+        "summary": "Revisions",
+        "operationId": "revisions_v1_reports__report_id__revisions_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "after_revision",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "After Revision"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reports/{report_id}/revisions/{revision}": {
+      "get": {
+        "summary": "Specific Revision",
+        "operationId": "specific_revision_v1_reports__report_id__revisions__revision__get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportRevision"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AbsentObservation": {
+        "properties": {
+          "metric": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Metric"
+          },
+          "unit": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Unit"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "period_start": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Period End"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "not_applicable"
+            ],
+            "title": "Status"
+          },
+          "value": {
+            "type": "null",
+            "title": "Value"
+          },
+          "reason": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric",
+          "unit",
+          "currency",
+          "period_start",
+          "period_end",
+          "status",
+          "value",
+          "reason"
+        ],
+        "title": "AbsentObservation"
+      },
+      "AvailableObservation": {
+        "properties": {
+          "metric": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Metric"
+          },
+          "unit": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Unit"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "period_start": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Period End"
+          },
+          "status": {
+            "type": "string",
+            "const": "available",
+            "title": "Status"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Snapshot Id"
+          },
+          "event_time": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Event Time"
+          },
+          "available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Available At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric",
+          "unit",
+          "currency",
+          "period_start",
+          "period_end",
+          "status",
+          "value",
+          "source_id",
+          "snapshot_id",
+          "event_time",
+          "available_at"
+        ],
+        "title": "AvailableObservation"
+      },
+      "CandidateFact": {
+        "properties": {
+          "metric": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Metric"
+          },
+          "value_token": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Value Token"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Value"
+          },
+          "scale": {
+            "type": "integer",
+            "enum": [
+              1,
+              1000,
+              1000000
+            ],
+            "title": "Scale"
+          },
+          "currency": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Currency"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Period End"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "consolidated",
+              "separate",
+              "unknown"
+            ],
+            "title": "Scope"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/FactEvidence"
+            },
+            "type": "array",
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Evidence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric",
+          "value_token",
+          "value",
+          "scale",
+          "currency",
+          "period_start",
+          "period_end",
+          "scope",
+          "evidence"
+        ],
+        "title": "CandidateFact"
+      },
+      "CatalogEntry": {
+        "properties": {
+          "symbol": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+            "title": "Symbol"
+          },
+          "cik": {
+            "not": {
+              "enum": [
+                "0000000000"
+              ]
+            },
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[0-9]{10}$",
+            "title": "Cik"
+          },
+          "exchange_mic": {
+            "type": "string",
+            "enum": [
+              "XNAS",
+              "XNYS"
+            ],
+            "title": "Exchange Mic"
+          },
+          "display_name": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^\\S(?:[^\\x00-\\x1f\\x7f]*\\S)?$",
+            "title": "Display Name"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "symbol",
+          "cik",
+          "exchange_mic",
+          "display_name"
+        ],
+        "title": "CatalogEntry"
+      },
+      "CatalogPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CatalogEntry"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url",
+            "default": "https://www.sec.gov/files/company_tickers_exchange.json"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "retrieved_at"
+        ],
+        "title": "CatalogPage"
+      },
+      "DocumentAgentResult": {
+        "properties": {
+          "document_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Document Id"
+          },
+          "provider_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Provider Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "blocked",
+              "rejected",
+              "needs_review"
+            ],
+            "title": "Status"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/FactReview"
+            },
+            "type": "array",
+            "maxItems": 64,
+            "title": "Facts"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document_id",
+          "provider_id",
+          "status",
+          "facts",
+          "error_code"
+        ],
+        "title": "DocumentAgentResult"
+      },
+      "DocumentArchiveCreate": {
+        "properties": {
+          "archive_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Archive Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument Id"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "text",
+              "html",
+              "xlsx"
+            ],
+            "title": "Format"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private",
+              "secret"
+            ],
+            "title": "Classification",
+            "default": "private"
+          },
+          "content_base64": {
+            "type": "string",
+            "maxLength": 1398104,
+            "minLength": 4,
+            "title": "Content Base64"
+          },
+          "draft_json": {
+            "type": "string",
+            "maxLength": 262144,
+            "minLength": 1,
+            "title": "Draft Json"
+          },
+          "provider_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Provider Id",
+            "default": "offline-import"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "source_available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Source Available At"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "archive_id",
+          "title",
+          "format",
+          "content_base64",
+          "draft_json",
+          "source_available_at",
+          "as_of"
+        ],
+        "title": "DocumentArchiveCreate"
+      },
+      "DocumentArchivePage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentArchiveSummary"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "DocumentArchivePage"
+      },
+      "DocumentArchiveRecord": {
+        "properties": {
+          "archive_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Archive Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument Id"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "text",
+              "html",
+              "xlsx"
+            ],
+            "title": "Format"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private",
+              "secret"
+            ],
+            "title": "Classification"
+          },
+          "document_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Document Sha256"
+          },
+          "draft_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Draft Sha256"
+          },
+          "provenance": {
+            "type": "string",
+            "const": "unverified_offline_import",
+            "title": "Provenance",
+            "default": "unverified_offline_import"
+          },
+          "provider_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Provider Id"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "source_available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Source Available At"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "validation_status": {
+            "type": "string",
+            "enum": [
+              "blocked",
+              "rejected",
+              "needs_review"
+            ],
+            "title": "Validation Status"
+          },
+          "fact_count": {
+            "type": "integer",
+            "maximum": 64.0,
+            "minimum": 0.0,
+            "title": "Fact Count"
+          },
+          "review_revision": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Review Revision"
+          },
+          "packet": {
+            "$ref": "#/components/schemas/DocumentPacket"
+          },
+          "draft_json": {
+            "type": "string",
+            "maxLength": 262144,
+            "minLength": 1,
+            "title": "Draft Json"
+          },
+          "result": {
+            "$ref": "#/components/schemas/DocumentAgentResult"
+          },
+          "reviews": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentReviewEvent"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "title": "Reviews"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "archive_id",
+          "title",
+          "instrument_id",
+          "format",
+          "classification",
+          "document_sha256",
+          "draft_sha256",
+          "provider_id",
+          "model_id",
+          "prompt_version",
+          "source_available_at",
+          "as_of",
+          "created_at",
+          "validation_status",
+          "fact_count",
+          "review_revision",
+          "packet",
+          "draft_json",
+          "result",
+          "reviews"
+        ],
+        "title": "DocumentArchiveRecord"
+      },
+      "DocumentArchiveSummary": {
+        "properties": {
+          "archive_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Archive Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument Id"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "text",
+              "html",
+              "xlsx"
+            ],
+            "title": "Format"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private",
+              "secret"
+            ],
+            "title": "Classification"
+          },
+          "document_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Document Sha256"
+          },
+          "draft_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Draft Sha256"
+          },
+          "provenance": {
+            "type": "string",
+            "const": "unverified_offline_import",
+            "title": "Provenance",
+            "default": "unverified_offline_import"
+          },
+          "provider_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Provider Id"
+          },
+          "model_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Id"
+          },
+          "prompt_version": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt Version"
+          },
+          "source_available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Source Available At"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "validation_status": {
+            "type": "string",
+            "enum": [
+              "blocked",
+              "rejected",
+              "needs_review"
+            ],
+            "title": "Validation Status"
+          },
+          "fact_count": {
+            "type": "integer",
+            "maximum": 64.0,
+            "minimum": 0.0,
+            "title": "Fact Count"
+          },
+          "review_revision": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Review Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "archive_id",
+          "title",
+          "instrument_id",
+          "format",
+          "classification",
+          "document_sha256",
+          "draft_sha256",
+          "provider_id",
+          "model_id",
+          "prompt_version",
+          "source_available_at",
+          "as_of",
+          "created_at",
+          "validation_status",
+          "fact_count",
+          "review_revision"
+        ],
+        "title": "DocumentArchiveSummary"
+      },
+      "DocumentBlock": {
+        "properties": {
+          "block_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Block Id"
+          },
+          "locator": {
+            "type": "string",
+            "maxLength": 256,
+            "minLength": 1,
+            "title": "Locator"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 32768,
+            "minLength": 1,
+            "title": "Text"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "block_id",
+          "locator",
+          "text"
+        ],
+        "title": "DocumentBlock"
+      },
+      "DocumentPacket": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version",
+            "default": "1.0"
+          },
+          "document_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Document Id"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "text",
+              "html",
+              "xlsx",
+              "pdf"
+            ],
+            "title": "Format"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private",
+              "secret"
+            ],
+            "title": "Classification"
+          },
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentBlock"
+            },
+            "type": "array",
+            "maxItems": 512,
+            "minItems": 1,
+            "title": "Blocks"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document_id",
+          "sha256",
+          "format",
+          "classification",
+          "blocks"
+        ],
+        "title": "DocumentPacket"
+      },
+      "DocumentReviewCommand": {
+        "properties": {
+          "command_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Command Id"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          },
+          "fact_index": {
+            "type": "integer",
+            "maximum": 63.0,
+            "minimum": 0.0,
+            "title": "Fact Index"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "rejected"
+            ],
+            "title": "Verdict"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "command_id",
+          "expected_revision",
+          "fact_index",
+          "verdict",
+          "note"
+        ],
+        "title": "DocumentReviewCommand"
+      },
+      "DocumentReviewEvent": {
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "command": {
+            "$ref": "#/components/schemas/DocumentReviewCommand"
+          },
+          "reviewed_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Reviewed At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revision",
+          "command",
+          "reviewed_at"
+        ],
+        "title": "DocumentReviewEvent"
+      },
+      "FactEvidence": {
+        "properties": {
+          "block_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Block Id"
+          },
+          "quote": {
+            "type": "string",
+            "maxLength": 4096,
+            "minLength": 1,
+            "title": "Quote"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "block_id",
+          "quote"
+        ],
+        "title": "FactEvidence"
+      },
+      "FactReview": {
+        "properties": {
+          "fact": {
+            "$ref": "#/components/schemas/CandidateFact"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "needs_review",
+              "rejected"
+            ],
+            "title": "Status"
+          },
+          "reason_code": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Reason Code"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fact",
+          "status",
+          "reason_code"
+        ],
+        "title": "FactReview"
+      },
+      "Finding": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "fact",
+              "calculation",
+              "assumption",
+              "interpretation"
+            ],
+            "title": "Kind"
+          },
+          "text": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Text"
+          },
+          "observation_indexes": {
+            "items": {
+              "type": "integer",
+              "maximum": 999.0,
+              "minimum": 0.0
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "title": "Observation Indexes"
+          },
+          "method": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Method"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "text",
+          "observation_indexes",
+          "method"
+        ],
+        "title": "Finding"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResult": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status",
+            "default": "ok"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "validation-only",
+              "postgresql"
+            ],
+            "title": "Mode",
+            "default": "validation-only"
+          },
+          "research_only": {
+            "type": "boolean",
+            "const": true,
+            "title": "Research Only",
+            "default": true
+          },
+          "external_providers_enabled": {
+            "type": "boolean",
+            "const": false,
+            "title": "External Providers Enabled",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "HealthResult"
+      },
+      "InstrumentCreate": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "symbol": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+            "title": "Symbol"
+          },
+          "exchange_mic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4,
+                "minLength": 4,
+                "pattern": "^[A-Z0-9]{4}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exchange Mic"
+          },
+          "currency": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Currency"
+          },
+          "display_name": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^\\S(?:[^\\x00-\\x1f\\x7f]*\\S)?$",
+            "title": "Display Name"
+          },
+          "asset_type": {
+            "type": "string",
+            "enum": [
+              "equity",
+              "etf",
+              "commodity"
+            ],
+            "title": "Asset Type"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Available At"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]"
+                },
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "license": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "instrument_id",
+          "symbol",
+          "exchange_mic",
+          "currency",
+          "display_name",
+          "asset_type",
+          "data_origin",
+          "as_of",
+          "available_at",
+          "source_id",
+          "source_url",
+          "license"
+        ],
+        "title": "InstrumentCreate"
+      },
+      "InstrumentPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/InstrumentRecord"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "InstrumentPage"
+      },
+      "InstrumentRecord": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "symbol": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+            "title": "Symbol"
+          },
+          "exchange_mic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4,
+                "minLength": 4,
+                "pattern": "^[A-Z0-9]{4}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exchange Mic"
+          },
+          "currency": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Currency"
+          },
+          "display_name": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^\\S(?:[^\\x00-\\x1f\\x7f]*\\S)?$",
+            "title": "Display Name"
+          },
+          "asset_type": {
+            "type": "string",
+            "enum": [
+              "equity",
+              "etf",
+              "commodity"
+            ],
+            "title": "Asset Type"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Available At"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]"
+                },
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "license": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "instrument_id",
+          "symbol",
+          "exchange_mic",
+          "currency",
+          "display_name",
+          "asset_type",
+          "data_origin",
+          "as_of",
+          "available_at",
+          "source_id",
+          "source_url",
+          "license",
+          "created_at"
+        ],
+        "title": "InstrumentRecord"
+      },
+      "InstrumentWrite": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "symbol": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+            "title": "Symbol"
+          },
+          "exchange_mic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4,
+                "minLength": 4,
+                "pattern": "^[A-Z0-9]{4}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exchange Mic"
+          },
+          "currency": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "title": "Currency"
+          },
+          "display_name": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "pattern": "^\\S(?:[^\\x00-\\x1f\\x7f]*\\S)?$",
+            "title": "Display Name"
+          },
+          "asset_type": {
+            "type": "string",
+            "enum": [
+              "equity",
+              "etf",
+              "commodity"
+            ],
+            "title": "Asset Type"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Available At"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]"
+                },
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "license": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "instrument_id",
+          "symbol",
+          "exchange_mic",
+          "currency",
+          "display_name",
+          "asset_type",
+          "data_origin",
+          "as_of",
+          "available_at",
+          "source_id",
+          "source_url",
+          "license",
+          "created_at",
+          "created"
+        ],
+        "title": "InstrumentWrite"
+      },
+      "LegacyInspection": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "const": "legacy-m0",
+            "title": "Format",
+            "default": "legacy-m0"
+          },
+          "report_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Report Id"
+          },
+          "legacy_status": {
+            "type": "string",
+            "enum": [
+              "demo",
+              "partial",
+              "blocked",
+              "complete",
+              "failed"
+            ],
+            "title": "Legacy Status"
+          },
+          "migration_status": {
+            "type": "string",
+            "const": "blocked_missing_provenance",
+            "title": "Migration Status",
+            "default": "blocked_missing_provenance"
+          },
+          "missing_fields": {
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "observation_available_at"
+              },
+              {
+                "type": "string",
+                "const": "observation_periods"
+              },
+              {
+                "type": "string",
+                "const": "snapshot_provenance"
+              }
+            ],
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Missing Fields",
+            "default": [
+              "observation_available_at",
+              "observation_periods",
+              "snapshot_provenance"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "legacy_status"
+        ],
+        "title": "LegacyInspection"
+      },
+      "PanelAnalysisRequest": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 1,
+            "title": "Symbol"
+          },
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "symbol",
+          "run_id"
+        ],
+        "title": "PanelAnalysisRequest"
+      },
+      "PanelAnalysisResult": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "failed",
+              "completed"
+            ],
+            "title": "Status"
+          },
+          "error_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Reason"
+          },
+          "report_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Id"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "instrument_id",
+          "status",
+          "error_reason",
+          "report_id",
+          "revision"
+        ],
+        "title": "PanelAnalysisResult"
+      },
+      "PanelRun": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "failed",
+              "completed"
+            ],
+            "title": "Status"
+          },
+          "current_step": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "data",
+                  "validate",
+                  "fundamental",
+                  "technical",
+                  "report",
+                  "review"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step"
+          },
+          "error_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Reason"
+          },
+          "report_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Id"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "current_step",
+          "error_reason",
+          "report_id",
+          "revision",
+          "created_at"
+        ],
+        "title": "PanelRun"
+      },
+      "PanelRunPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PanelRun"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "PanelRunPage"
+      },
+      "ReportRevision": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "parent_revision_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent Revision Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "generated_at_utc": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Generated At Utc"
+          },
+          "input": {
+            "$ref": "#/components/schemas/ResearchInput"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "methodology_version": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Methodology Version"
+          },
+          "pipeline_git_sha": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$",
+            "title": "Pipeline Git Sha"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceProvenance"
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "title": "Sources"
+          },
+          "fundamental_section": {
+            "$ref": "#/components/schemas/ReportSection"
+          },
+          "technical_section": {
+            "$ref": "#/components/schemas/ReportSection"
+          },
+          "synthesis_section": {
+            "$ref": "#/components/schemas/ReportSection"
+          },
+          "scenario_section": {
+            "$ref": "#/components/schemas/ReportSection"
+          },
+          "uncertainties": {
+            "items": {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "type": "string",
+              "maxLength": 512,
+              "minLength": 1,
+              "pattern": "^\\S(?:.*\\S)?$"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "title": "Uncertainties"
+          },
+          "limitations": {
+            "items": {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "type": "string",
+              "maxLength": 512,
+              "minLength": 1,
+              "pattern": "^\\S(?:.*\\S)?$"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "minItems": 1,
+            "title": "Limitations"
+          },
+          "disclaimer": {
+            "type": "string",
+            "const": "Research only. No order execution or personalized investment advice.",
+            "title": "Disclaimer"
+          },
+          "model_provenance": {
+            "type": "null",
+            "title": "Model Provenance"
+          },
+          "prompt_template_version": {
+            "type": "null",
+            "title": "Prompt Template Version"
+          },
+          "chart_artifact_ids": {
+            "items": {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "type": "string",
+              "maxLength": 128,
+              "minLength": 1,
+              "pattern": "^\\S(?:.*\\S)?$"
+            },
+            "type": "array",
+            "maxItems": 0,
+            "title": "Chart Artifact Ids"
+          },
+          "input_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Sha256"
+          },
+          "checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "report_id",
+          "revision_id",
+          "parent_revision_id",
+          "revision",
+          "generated_at_utc",
+          "input",
+          "status",
+          "methodology_version",
+          "pipeline_git_sha",
+          "sources",
+          "fundamental_section",
+          "technical_section",
+          "synthesis_section",
+          "scenario_section",
+          "uncertainties",
+          "limitations",
+          "disclaimer",
+          "model_provenance",
+          "prompt_template_version",
+          "chart_artifact_ids",
+          "input_sha256",
+          "checksum"
+        ],
+        "title": "ReportRevision"
+      },
+      "ReportSection": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "failed",
+              "not_applicable"
+            ],
+            "title": "Status"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/Finding"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Findings"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "findings",
+          "reason"
+        ],
+        "title": "ReportSection"
+      },
+      "ResearchInput": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Instrument Id"
+          },
+          "asset_type": {
+            "type": "string",
+            "enum": [
+              "equity",
+              "etf",
+              "commodity"
+            ],
+            "title": "Asset Type"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "observations": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AvailableObservation"
+                },
+                {
+                  "$ref": "#/components/schemas/AbsentObservation"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "status",
+                "mapping": {
+                  "available": "#/components/schemas/AvailableObservation",
+                  "missing": "#/components/schemas/AbsentObservation",
+                  "not_applicable": "#/components/schemas/AbsentObservation"
+                }
+              }
+            },
+            "type": "array",
+            "maxItems": 1000,
+            "minItems": 1,
+            "title": "Observations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "instrument_id",
+          "asset_type",
+          "as_of",
+          "data_origin",
+          "observations"
+        ],
+        "title": "ResearchInput"
+      },
+      "RevisionInfo": {
+        "properties": {
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "generated_at_utc": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Generated At Utc"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "revision_id",
+          "revision",
+          "checksum",
+          "status",
+          "generated_at_utc"
+        ],
+        "title": "RevisionInfo"
+      },
+      "RevisionPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RevisionInfo"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Items"
+          },
+          "next_after_revision": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_revision"
+        ],
+        "title": "RevisionPage"
+      },
+      "RunAdvance": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "expected_sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Expected Sequence"
+          },
+          "actor": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Actor"
+          },
+          "action": {
+            "type": "string",
+            "const": "advance",
+            "title": "Action"
+          },
+          "step": {
+            "type": "string",
+            "enum": [
+              "data",
+              "validate",
+              "fundamental",
+              "technical",
+              "report",
+              "review"
+            ],
+            "title": "Step"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "expected_sequence",
+          "actor",
+          "action",
+          "step"
+        ],
+        "title": "RunAdvance"
+      },
+      "RunCreate": {
+        "properties": {
+          "action": {
+            "type": "string",
+            "const": "create",
+            "title": "Action",
+            "default": "create"
+          },
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "snapshot_ids": {
+            "items": {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "minItems": 1,
+            "title": "Snapshot Ids"
+          },
+          "pipeline_version": {
+            "type": "string",
+            "enum": [
+              "manual-research-v1",
+              "deterministic-research-v1",
+              "sec-fundamentals-v1",
+              "sec-fundamentals-v2"
+            ],
+            "title": "Pipeline Version",
+            "default": "manual-research-v1"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "run_id",
+          "instrument_id",
+          "as_of",
+          "snapshot_ids"
+        ],
+        "title": "RunCreate"
+      },
+      "RunEvent": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "event_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "created",
+              "start",
+              "advance",
+              "fail",
+              "resume",
+              "finish"
+            ],
+            "title": "Kind"
+          },
+          "request": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RunCreate"
+              },
+              {
+                "$ref": "#/components/schemas/RunStart"
+              },
+              {
+                "$ref": "#/components/schemas/RunAdvance"
+              },
+              {
+                "$ref": "#/components/schemas/RunFail"
+              },
+              {
+                "$ref": "#/components/schemas/RunResume"
+              },
+              {
+                "$ref": "#/components/schemas/RunFinish"
+              }
+            ],
+            "title": "Request",
+            "discriminator": {
+              "propertyName": "action",
+              "mapping": {
+                "advance": "#/components/schemas/RunAdvance",
+                "create": "#/components/schemas/RunCreate",
+                "fail": "#/components/schemas/RunFail",
+                "finish": "#/components/schemas/RunFinish",
+                "resume": "#/components/schemas/RunResume",
+                "start": "#/components/schemas/RunStart"
+              }
+            }
+          },
+          "state": {
+            "$ref": "#/components/schemas/RunState"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "event_id",
+          "sequence",
+          "kind",
+          "request",
+          "state",
+          "created_at"
+        ],
+        "title": "RunEvent"
+      },
+      "RunEventPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RunEvent"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Items"
+          },
+          "next_after_sequence": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 2147483647.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Sequence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_sequence"
+        ],
+        "title": "RunEventPage"
+      },
+      "RunEventWrite": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "event_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Event Id"
+          },
+          "sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "created",
+              "start",
+              "advance",
+              "fail",
+              "resume",
+              "finish"
+            ],
+            "title": "Kind"
+          },
+          "request": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RunCreate"
+              },
+              {
+                "$ref": "#/components/schemas/RunStart"
+              },
+              {
+                "$ref": "#/components/schemas/RunAdvance"
+              },
+              {
+                "$ref": "#/components/schemas/RunFail"
+              },
+              {
+                "$ref": "#/components/schemas/RunResume"
+              },
+              {
+                "$ref": "#/components/schemas/RunFinish"
+              }
+            ],
+            "title": "Request",
+            "discriminator": {
+              "propertyName": "action",
+              "mapping": {
+                "advance": "#/components/schemas/RunAdvance",
+                "create": "#/components/schemas/RunCreate",
+                "fail": "#/components/schemas/RunFail",
+                "finish": "#/components/schemas/RunFinish",
+                "resume": "#/components/schemas/RunResume",
+                "start": "#/components/schemas/RunStart"
+              }
+            }
+          },
+          "state": {
+            "$ref": "#/components/schemas/RunState"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "event_id",
+          "sequence",
+          "kind",
+          "request",
+          "state",
+          "created_at",
+          "created"
+        ],
+        "title": "RunEventWrite"
+      },
+      "RunFail": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "expected_sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Expected Sequence"
+          },
+          "actor": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Actor"
+          },
+          "action": {
+            "type": "string",
+            "const": "fail",
+            "title": "Action"
+          },
+          "step": {
+            "type": "string",
+            "enum": [
+              "data",
+              "validate",
+              "fundamental",
+              "technical",
+              "report",
+              "review"
+            ],
+            "title": "Step"
+          },
+          "error_code": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Error Code"
+          },
+          "reason": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "expected_sequence",
+          "actor",
+          "action",
+          "step",
+          "error_code",
+          "reason"
+        ],
+        "title": "RunFail"
+      },
+      "RunFinish": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "expected_sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Expected Sequence"
+          },
+          "actor": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Actor"
+          },
+          "action": {
+            "type": "string",
+            "const": "finish",
+            "title": "Action"
+          },
+          "report_revision_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Revision Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "expected_sequence",
+          "actor",
+          "action",
+          "report_revision_id"
+        ],
+        "title": "RunFinish"
+      },
+      "RunResume": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "expected_sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Expected Sequence"
+          },
+          "actor": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Actor"
+          },
+          "action": {
+            "type": "string",
+            "const": "resume",
+            "title": "Action"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "expected_sequence",
+          "actor",
+          "action"
+        ],
+        "title": "RunResume"
+      },
+      "RunStart": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "expected_sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Expected Sequence"
+          },
+          "actor": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Actor"
+          },
+          "action": {
+            "type": "string",
+            "const": "start",
+            "title": "Action"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "expected_sequence",
+          "actor",
+          "action"
+        ],
+        "title": "RunStart"
+      },
+      "RunState": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "snapshot_ids": {
+            "items": {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "minItems": 1,
+            "title": "Snapshot Ids"
+          },
+          "pipeline_version": {
+            "type": "string",
+            "enum": [
+              "manual-research-v1",
+              "deterministic-research-v1",
+              "sec-fundamentals-v1",
+              "sec-fundamentals-v2"
+            ],
+            "title": "Pipeline Version"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "failed",
+              "completed"
+            ],
+            "title": "Status"
+          },
+          "current_step": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "data",
+                  "validate",
+                  "fundamental",
+                  "technical",
+                  "report",
+                  "review"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step"
+          },
+          "completed_steps": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "data",
+                "validate",
+                "fundamental",
+                "technical",
+                "report",
+                "review"
+              ]
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Completed Steps"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "error_reason": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+                },
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Reason"
+          },
+          "report_revision_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Revision Id"
+          },
+          "report_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "complete",
+                  "partial",
+                  "blocked",
+                  "failed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Status"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "instrument_id",
+          "as_of",
+          "snapshot_ids",
+          "pipeline_version",
+          "data_origin",
+          "sequence",
+          "status",
+          "current_step",
+          "completed_steps",
+          "error_code",
+          "error_reason",
+          "report_revision_id",
+          "report_status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "RunState"
+      },
+      "RunWrite": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "snapshot_ids": {
+            "items": {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "minItems": 1,
+            "title": "Snapshot Ids"
+          },
+          "pipeline_version": {
+            "type": "string",
+            "enum": [
+              "manual-research-v1",
+              "deterministic-research-v1",
+              "sec-fundamentals-v1",
+              "sec-fundamentals-v2"
+            ],
+            "title": "Pipeline Version"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "sequence": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "failed",
+              "completed"
+            ],
+            "title": "Status"
+          },
+          "current_step": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "data",
+                  "validate",
+                  "fundamental",
+                  "technical",
+                  "report",
+                  "review"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step"
+          },
+          "completed_steps": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "data",
+                "validate",
+                "fundamental",
+                "technical",
+                "report",
+                "review"
+              ]
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Completed Steps"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "error_reason": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+                },
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Reason"
+          },
+          "report_revision_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Revision Id"
+          },
+          "report_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "complete",
+                  "partial",
+                  "blocked",
+                  "failed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Status"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "instrument_id",
+          "as_of",
+          "snapshot_ids",
+          "pipeline_version",
+          "data_origin",
+          "sequence",
+          "status",
+          "current_step",
+          "completed_steps",
+          "error_code",
+          "error_reason",
+          "report_revision_id",
+          "report_status",
+          "created_at",
+          "updated_at",
+          "created"
+        ],
+        "title": "RunWrite"
+      },
+      "SnapshotCreate": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Snapshot Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]"
+                },
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "license": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available At"
+          },
+          "retrieved_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Retrieved At"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "application/json",
+              "text/plain",
+              "text/csv",
+              "application/pdf",
+              "application/octet-stream"
+            ],
+            "title": "Media Type"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256"
+          },
+          "byte_length": {
+            "type": "integer",
+            "maximum": 1048576.0,
+            "minimum": 1.0,
+            "title": "Byte Length"
+          },
+          "content_base64": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 1398104,
+            "minLength": 4,
+            "pattern": "^[A-Za-z0-9+/]*={0,2}$",
+            "title": "Content Base64"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "snapshot_id",
+          "instrument_id",
+          "data_origin",
+          "source_id",
+          "source_url",
+          "license",
+          "as_of",
+          "available_at",
+          "retrieved_at",
+          "media_type",
+          "sha256",
+          "byte_length",
+          "content_base64"
+        ],
+        "title": "SnapshotCreate"
+      },
+      "SnapshotPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SnapshotRecord"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "SnapshotPage"
+      },
+      "SnapshotRecord": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Snapshot Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]"
+                },
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "license": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available At"
+          },
+          "retrieved_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Retrieved At"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "application/json",
+              "text/plain",
+              "text/csv",
+              "application/pdf",
+              "application/octet-stream"
+            ],
+            "title": "Media Type"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256"
+          },
+          "byte_length": {
+            "type": "integer",
+            "maximum": 1048576.0,
+            "minimum": 1.0,
+            "title": "Byte Length"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "snapshot_id",
+          "instrument_id",
+          "data_origin",
+          "source_id",
+          "source_url",
+          "license",
+          "as_of",
+          "available_at",
+          "retrieved_at",
+          "media_type",
+          "sha256",
+          "byte_length",
+          "created_at"
+        ],
+        "title": "SnapshotRecord"
+      },
+      "SnapshotWrite": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Snapshot Id"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "source_id": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]"
+                },
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "license": {
+            "not": {
+              "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available At"
+          },
+          "retrieved_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Retrieved At"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "application/json",
+              "text/plain",
+              "text/csv",
+              "application/pdf",
+              "application/octet-stream"
+            ],
+            "title": "Media Type"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256"
+          },
+          "byte_length": {
+            "type": "integer",
+            "maximum": 1048576.0,
+            "minimum": 1.0,
+            "title": "Byte Length"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "snapshot_id",
+          "instrument_id",
+          "data_origin",
+          "source_id",
+          "source_url",
+          "license",
+          "as_of",
+          "available_at",
+          "retrieved_at",
+          "media_type",
+          "sha256",
+          "byte_length",
+          "created_at",
+          "created"
+        ],
+        "title": "SnapshotWrite"
+      },
+      "SourceProvenance": {
+        "properties": {
+          "source_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Source Id"
+          },
+          "snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Snapshot Id"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Sha256"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[hH][tT][tT][pP][sS]?://",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "retrieved_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Retrieved At"
+          },
+          "license": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "License"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source_id",
+          "snapshot_id",
+          "sha256",
+          "url",
+          "retrieved_at",
+          "license"
+        ],
+        "title": "SourceProvenance"
+      },
+      "StoredRevisionInfo": {
+        "properties": {
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "generated_at_utc": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Generated At Utc"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "revision_id",
+          "revision",
+          "checksum",
+          "status",
+          "generated_at_utc",
+          "created"
+        ],
+        "title": "StoredRevisionInfo"
+      },
+      "TaskCreate": {
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 1,
+            "title": "Symbol"
+          },
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "exchange_mic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "XNAS",
+                  "XNYS",
+                  "XWAR"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exchange Mic"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "symbol",
+          "run_id"
+        ],
+        "title": "TaskCreate"
+      },
+      "TaskPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TaskRecord"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "TaskPage"
+      },
+      "TaskRecord": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "symbol": {
+            "type": "string",
+            "title": "Symbol"
+          },
+          "exchange_mic": {
+            "type": "string",
+            "enum": [
+              "XNAS",
+              "XNYS"
+            ],
+            "title": "Exchange Mic"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "import",
+              "analysis",
+              "completed",
+              "failed"
+            ],
+            "title": "Stage"
+          },
+          "attempt": {
+            "type": "integer",
+            "title": "Attempt"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "error_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Reason"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "heartbeat_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heartbeat At"
+          },
+          "lease_expires_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lease Expires At"
+          },
+          "worker_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worker Id"
+          },
+          "instrument_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrument Id"
+          },
+          "report_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Id"
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "symbol",
+          "exchange_mic",
+          "status",
+          "stage",
+          "attempt",
+          "error_code",
+          "error_reason",
+          "created_at",
+          "updated_at",
+          "heartbeat_at",
+          "lease_expires_at",
+          "worker_id",
+          "instrument_id",
+          "report_id",
+          "revision"
+        ],
+        "title": "TaskRecord"
+      },
+      "V1Inspection": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "const": "v1",
+            "title": "Format",
+            "default": "v1"
+          },
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Revision Id"
+          },
+          "revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Revision"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "report_id",
+          "revision_id",
+          "revision",
+          "status",
+          "data_origin",
+          "checksum"
+        ],
+        "title": "V1Inspection"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ValidationResult": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "1.0",
+            "title": "Schema Version"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Instrument Id"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "data_origin": {
+            "type": "string",
+            "enum": [
+              "synthetic",
+              "live"
+            ],
+            "title": "Data Origin"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial",
+              "blocked"
+            ],
+            "title": "Status"
+          },
+          "available_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Available Count"
+          },
+          "missing_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Missing Count"
+          },
+          "not_applicable_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Not Applicable Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "instrument_id",
+          "as_of",
+          "data_origin",
+          "status",
+          "available_count",
+          "missing_count",
+          "not_applicable_count"
+        ],
+        "title": "ValidationResult"
+      },
+      "WorkerJobRecord": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "dead"
+            ],
+            "title": "Status"
+          },
+          "attempts": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Attempts"
+          },
+          "worker_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worker Id"
+          },
+          "lease_expires_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lease Expires At"
+          },
+          "implementation_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Implementation Hash"
+          },
+          "pipeline_git_sha": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$",
+            "title": "Pipeline Git Sha"
+          },
+          "last_error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error Code"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "status",
+          "attempts",
+          "worker_id",
+          "lease_expires_at",
+          "implementation_hash",
+          "pipeline_git_sha",
+          "last_error_code",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "WorkerJobRecord"
+      }
+    }
+  }
+}

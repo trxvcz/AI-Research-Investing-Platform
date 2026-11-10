@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "facts": [
+    {
+      "metric": "revenue",
+      "value_token": "12,5",
+      "value": "12500000",
+      "scale": 1000000,
+      "currency": "PLN",
+      "period_start": "2025-01-01",
+      "period_end": "2025-12-31",
+      "scope": "consolidated",
+      "evidence": [
+        {"block_id": "block-1", "quote": "12,5 mln PLN"}
+      ]
+    }
+  ]
+}
