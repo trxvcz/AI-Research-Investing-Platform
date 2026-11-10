@@ -1,0 +1,307 @@
+{
+  "$defs": {
+    "RunAdvance": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "advance",
+          "title": "Action",
+          "type": "string"
+        },
+        "step": {
+          "enum": [
+            "data",
+            "validate",
+            "fundamental",
+            "technical",
+            "report",
+            "review"
+          ],
+          "title": "Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action",
+        "step"
+      ],
+      "title": "RunAdvance",
+      "type": "object"
+    },
+    "RunFail": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "fail",
+          "title": "Action",
+          "type": "string"
+        },
+        "step": {
+          "enum": [
+            "data",
+            "validate",
+            "fundamental",
+            "technical",
+            "report",
+            "review"
+          ],
+          "title": "Step",
+          "type": "string"
+        },
+        "error_code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Error Code",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action",
+        "step",
+        "error_code",
+        "reason"
+      ],
+      "title": "RunFail",
+      "type": "object"
+    },
+    "RunFinish": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "finish",
+          "title": "Action",
+          "type": "string"
+        },
+        "report_revision_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Revision Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action",
+        "report_revision_id"
+      ],
+      "title": "RunFinish",
+      "type": "object"
+    },
+    "RunResume": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "resume",
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action"
+      ],
+      "title": "RunResume",
+      "type": "object"
+    },
+    "RunStart": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "start",
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action"
+      ],
+      "title": "RunStart",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "advance": "#/$defs/RunAdvance",
+      "fail": "#/$defs/RunFail",
+      "finish": "#/$defs/RunFinish",
+      "resume": "#/$defs/RunResume",
+      "start": "#/$defs/RunStart"
+    },
+    "propertyName": "action"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/RunStart"
+    },
+    {
+      "$ref": "#/$defs/RunAdvance"
+    },
+    {
+      "$ref": "#/$defs/RunFail"
+    },
+    {
+      "$ref": "#/$defs/RunResume"
+    },
+    {
+      "$ref": "#/$defs/RunFinish"
+    }
+  ],
+  "title": "RootModel[Annotated[Union[RunStart, RunAdvance, RunFail, RunResume, RunFinish], FieldInfo(annotation=NoneType, required=True, discriminator='action')]]",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:run-command:1.0"
+}

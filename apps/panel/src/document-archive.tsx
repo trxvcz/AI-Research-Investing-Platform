@@ -1,4 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
+import {QueueDocumentTask} from './document-tasks';
 import {assertArchiveIdentity, assertReviewIdentity, bytesToBase64, checkChronology, explicitTimestamp, latestReviews, MAX_DOCUMENT_BYTES, MAX_DRAFT_BYTES, requireFileSize, selectImportAttempt} from './document-archive-state';
 import type {ArchiveCreate, ArchivePage, ArchiveRecord, ReviewCommand, ReviewEvent} from './document-archive-state';
 
@@ -19,7 +20,7 @@ async function readResponse<T>(response:Response):Promise<T>{
 }
 const errorText=(error:unknown)=>error instanceof ArchiveFailure?error.message:'Nie potwierdzono wyniku operacji. Sprawdź połączenie i ponów tę samą próbę.';
 
-export function DocumentArchive(){
+export function DocumentArchive({onTaskQueued}:{onTaskQueued?:()=>void}={}){
   const [cursorStack,setCursorStack]=useState<string[]>(['']);
   const [reload,setReload]=useState(0);
   const [selected,setSelected]=useState('');
@@ -59,7 +60,7 @@ export function DocumentArchive(){
       <button disabled={loading||cursorStack.length===1} onClick={()=>setCursorStack(values=>values.slice(0,-1))}>← Wstecz</button>
       <button disabled={loading||!current?.next_after_id} onClick={()=>{if(current?.next_after_id)setCursorStack(values=>[...values,current.next_after_id!]);}}>Dalej →</button>
     </nav>}
-    {selected&&<DocumentDetails key={selected} archiveId={selected} reload={reload} onChanged={()=>setReload(n=>n+1)}/>}
+    {selected&&<DocumentDetails key={selected} archiveId={selected} reload={reload} onChanged={()=>setReload(n=>n+1)} onTaskQueued={onTaskQueued}/>}
   </section>;
 }
 
@@ -141,7 +142,7 @@ function ImportDocument({onImported}:{onImported:(id:string)=>void}){
   </details>;
 }
 
-function DocumentDetails({archiveId,reload,onChanged}:{archiveId:string;reload:number;onChanged:()=>void}){
+function DocumentDetails({archiveId,reload,onChanged,onTaskQueued}:{archiveId:string;reload:number;onChanged:()=>void;onTaskQueued?:()=>void}){
   const [record,setRecord]=useState<ArchiveRecord>();
   const [error,setError]=useState('');
   const [loading,setLoading]=useState(false);
@@ -166,6 +167,7 @@ function DocumentDetails({archiveId,reload,onChanged}:{archiveId:string;reload:n
     <p>Dostępny od {time(record.source_available_at)}. Stan analizy na {time(record.as_of)}. Zapisano {time(record.created_at)}.</p>
     <details><summary>Tożsamość i sumy kontrolne</summary><p>Archiwum: <code>{record.archive_id}</code></p><p>SHA-256 dokumentu: <code>{record.document_sha256}</code></p><p>SHA-256 szkicu: <code>{record.draft_sha256}</code></p></details>
     <a download href={base+'/'+encodeURIComponent(archiveId)+'/content'}>Pobierz oryginalny dokument</a>
+    <QueueDocumentTask archiveId={archiveId} onQueued={onTaskQueued}/>
     <p className="disclaimer">Akceptacja w przeglądzie zapisuje decyzję człowieka. Nie publikuje danych w raporcie i nie tworzy rekomendacji inwestycyjnej.</p>
     {record.result.error_code&&<p>Walidator: {record.result.error_code}</p>}
     {record.result.facts.length===0&&<p>Szkic nie zawiera faktów dostępnych do przeglądu.</p>}

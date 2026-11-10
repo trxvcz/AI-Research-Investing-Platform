@@ -1,0 +1,672 @@
+{
+  "$defs": {
+    "RunAdvance": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "advance",
+          "title": "Action",
+          "type": "string"
+        },
+        "step": {
+          "enum": [
+            "data",
+            "validate",
+            "fundamental",
+            "technical",
+            "report",
+            "review"
+          ],
+          "title": "Step",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action",
+        "step"
+      ],
+      "title": "RunAdvance",
+      "type": "object"
+    },
+    "RunCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "const": "create",
+          "default": "create",
+          "title": "Action",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "instrument_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "snapshot_ids": {
+          "items": {
+            "format": "uuid",
+            "not": {
+              "pattern": "\\s$"
+            },
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Snapshot Ids",
+          "type": "array"
+        },
+        "pipeline_version": {
+          "default": "manual-research-v1",
+          "enum": [
+            "manual-research-v1",
+            "deterministic-research-v1",
+            "sec-fundamentals-v1",
+            "sec-fundamentals-v2"
+          ],
+          "title": "Pipeline Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "run_id",
+        "instrument_id",
+        "as_of",
+        "snapshot_ids"
+      ],
+      "title": "RunCreate",
+      "type": "object"
+    },
+    "RunFail": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "fail",
+          "title": "Action",
+          "type": "string"
+        },
+        "step": {
+          "enum": [
+            "data",
+            "validate",
+            "fundamental",
+            "technical",
+            "report",
+            "review"
+          ],
+          "title": "Step",
+          "type": "string"
+        },
+        "error_code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Error Code",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action",
+        "step",
+        "error_code",
+        "reason"
+      ],
+      "title": "RunFail",
+      "type": "object"
+    },
+    "RunFinish": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "finish",
+          "title": "Action",
+          "type": "string"
+        },
+        "report_revision_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Revision Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action",
+        "report_revision_id"
+      ],
+      "title": "RunFinish",
+      "type": "object"
+    },
+    "RunResume": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "resume",
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action"
+      ],
+      "title": "RunResume",
+      "type": "object"
+    },
+    "RunStart": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "expected_sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Expected Sequence",
+          "type": "integer"
+        },
+        "actor": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Actor",
+          "type": "string"
+        },
+        "action": {
+          "const": "start",
+          "title": "Action",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "expected_sequence",
+        "actor",
+        "action"
+      ],
+      "title": "RunStart",
+      "type": "object"
+    },
+    "RunState": {
+      "additionalProperties": false,
+      "properties": {
+        "run_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "instrument_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "snapshot_ids": {
+          "items": {
+            "format": "uuid",
+            "not": {
+              "pattern": "\\s$"
+            },
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Snapshot Ids",
+          "type": "array"
+        },
+        "pipeline_version": {
+          "enum": [
+            "manual-research-v1",
+            "deterministic-research-v1",
+            "sec-fundamentals-v1",
+            "sec-fundamentals-v2"
+          ],
+          "title": "Pipeline Version",
+          "type": "string"
+        },
+        "data_origin": {
+          "enum": [
+            "synthetic",
+            "live"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "sequence": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "failed",
+            "completed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "current_step": {
+          "anyOf": [
+            {
+              "enum": [
+                "data",
+                "validate",
+                "fundamental",
+                "technical",
+                "report",
+                "review"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Current Step"
+        },
+        "completed_steps": {
+          "items": {
+            "enum": [
+              "data",
+              "validate",
+              "fundamental",
+              "technical",
+              "report",
+              "review"
+            ],
+            "type": "string"
+          },
+          "maxItems": 6,
+          "title": "Completed Steps",
+          "type": "array"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "not": {
+                "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+              },
+              "pattern": "^\\S(?:.*\\S)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error Code"
+        },
+        "error_reason": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "not": {
+                "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+              },
+              "pattern": "^\\S(?:.*\\S)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error Reason"
+        },
+        "report_revision_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Report Revision Id"
+        },
+        "report_status": {
+          "anyOf": [
+            {
+              "enum": [
+                "complete",
+                "partial",
+                "blocked",
+                "failed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Report Status"
+        },
+        "created_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "instrument_id",
+        "as_of",
+        "snapshot_ids",
+        "pipeline_version",
+        "data_origin",
+        "sequence",
+        "status",
+        "current_step",
+        "completed_steps",
+        "error_code",
+        "error_reason",
+        "report_revision_id",
+        "report_status",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "RunState",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "event_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Event Id",
+      "type": "string"
+    },
+    "sequence": {
+      "maximum": 2147483647,
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "kind": {
+      "enum": [
+        "created",
+        "start",
+        "advance",
+        "fail",
+        "resume",
+        "finish"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "request": {
+      "discriminator": {
+        "mapping": {
+          "advance": "#/$defs/RunAdvance",
+          "create": "#/$defs/RunCreate",
+          "fail": "#/$defs/RunFail",
+          "finish": "#/$defs/RunFinish",
+          "resume": "#/$defs/RunResume",
+          "start": "#/$defs/RunStart"
+        },
+        "propertyName": "action"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/RunCreate"
+        },
+        {
+          "$ref": "#/$defs/RunStart"
+        },
+        {
+          "$ref": "#/$defs/RunAdvance"
+        },
+        {
+          "$ref": "#/$defs/RunFail"
+        },
+        {
+          "$ref": "#/$defs/RunResume"
+        },
+        {
+          "$ref": "#/$defs/RunFinish"
+        }
+      ],
+      "title": "Request"
+    },
+    "state": {
+      "$ref": "#/$defs/RunState"
+    },
+    "created_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "event_id",
+    "sequence",
+    "kind",
+    "request",
+    "state",
+    "created_at"
+  ],
+  "title": "RunEvent",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:run-event:1.0"
+}

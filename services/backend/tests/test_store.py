@@ -253,6 +253,15 @@ def test_pg_dump_restore_preserves_checksums(database: tuple[Engine, str], tmp_p
     from test_document_archive import review as review_command
 
     from alphasense.document_archive import DocumentArchiveStore
+    from alphasense.document_task_contracts import DocumentTaskCreate
+    from alphasense.document_task_worker import implementation_fingerprint, process_document_once
+    from alphasense.document_tasks import DocumentTaskStore
+    from alphasense.schedule_contracts import ScheduleCommand, ScheduleCreate
+    from alphasense.sec_contracts import SecImportRequest
+    from alphasense.sec_schedules import ScheduleStore
+    from alphasense.tasks import TaskStore
+    from alphasense.worker_session_contracts import WorkerSessionStart
+    from alphasense.worker_sessions import WorkerSessionStore
 
     engine, schema = database
     tools = os.environ.get("ALPHASENSE_PG_BIN", "")
@@ -285,6 +294,52 @@ def test_pg_dump_restore_preserves_checksums(database: tuple[Engine, str], tmp_p
     decision = document_store.review(imported.archive_id, document_decision)
     document_checkpoint = document_store.get(imported.archive_id)
     original_document = document_store.content(imported.archive_id)
+    document_jobs = DocumentTaskStore(engine)
+    document_job = document_jobs.create(
+        DocumentTaskCreate(job_id=uuid4(), archive_id=imported.archive_id)
+    )
+    assert document_jobs.claim("before-backup", implementation_fingerprint()) is not None
+    document_job_checkpoint = document_jobs.detail(document_job.job_id)
+    sessions = WorkerSessionStore(engine)
+    session = sessions.start(
+        WorkerSessionStart(
+            session_id=uuid4(),
+            worker_id="backup-session",
+            kind="document_validation",
+            mode="once",
+            process_id=1,
+            implementation_sha256="a" * 64,
+        )
+    )
+    sessions.heartbeat(session.session_id)
+    session_checkpoint = sessions.stop(session.session_id, "completed")
+    with engine.connect() as connection:
+        schedule_start = connection.scalar(text("SELECT clock_timestamp()-INTERVAL '2 hours'"))
+    schedule_id = uuid4()
+    schedule_template = SecImportRequest(
+        cik="0000320193",
+        symbol="AAPL",
+        exchange_mic="XNAS",
+        instrument_id=uuid4(),
+        run_id=schedule_id,
+        pipeline_version="sec-fundamentals-v2",
+    )
+    schedules = ScheduleStore(engine)
+    schedules.create(
+        ScheduleCreate(
+            schedule_id=schedule_id,
+            symbol="AAPL",
+            exchange_mic="XNAS",
+            interval_seconds=3600,
+            first_run_at=schedule_start,
+            enabled=True,
+        ),
+        schedule_template,
+    )
+    schedule_receipt = schedules.dispatch_due()[0]
+    schedule_checkpoint = schedules.get(schedule_id)
+    schedule_history = schedules.occurrences(schedule_id)
+    task_history = TaskStore(engine).history(schedule_receipt.run_id)
     snapshot_data = json.loads((SAMPLE.parent / "snapshot.synthetic.json").read_text("utf-8"))
     snapshot_data.update(snapshot_id=str(uuid4()), instrument_id=str(registered.instrument_id))
     uploaded = SnapshotCreate.model_validate(snapshot_data)
@@ -370,6 +425,18 @@ def test_pg_dump_restore_preserves_checksums(database: tuple[Engine, str], tmp_p
         assert InstrumentStore(restored).get(registered.instrument_id).symbol == registered.symbol
         assert SnapshotStore(restored).content(archived.snapshot_id)[1] == uploaded.raw_bytes()
         restored_documents = DocumentArchiveStore(restored)
+        restored_schedules = ScheduleStore(restored)
+        assert restored_schedules.get(schedule_id) == schedule_checkpoint
+        assert restored_schedules.occurrences(schedule_id) == schedule_history
+        assert TaskStore(restored).history(schedule_receipt.run_id) == task_history
+        assert restored_schedules.dispatch_due() == []
+        pause_schedule = ScheduleCommand(command_id=uuid4(), expected_revision=0, enabled=False)
+        assert restored_schedules.command(schedule_id, pause_schedule).revision == 1
+        assert restored_schedules.command(schedule_id, pause_schedule).enabled is False
+        restored_session = WorkerSessionStore(restored).get(session.session_id)
+        assert restored_session.model_dump(
+            exclude={"observed_at"}
+        ) == session_checkpoint.model_dump(exclude={"observed_at"})
         assert restored_documents.get(imported.archive_id) == document_checkpoint
         assert restored_documents.content(imported.archive_id) == original_document
         assert restored_documents.review(imported.archive_id, document_decision) == decision
@@ -378,6 +445,26 @@ def test_pg_dump_restore_preserves_checksums(database: tuple[Engine, str], tmp_p
         )
         assert revised_decision.revision == 2
         assert restored_documents.get(imported.archive_id).reviews[0] == decision
+        restored_document_jobs = DocumentTaskStore(restored)
+        assert restored_document_jobs.detail(document_job.job_id) == document_job_checkpoint
+        with restored.begin() as connection:
+            connection.execute(
+                text(
+                    "UPDATE document_tasks "
+                    "SET lease_expires_at=clock_timestamp()-INTERVAL '1 second' "
+                    "WHERE job_id=:job_id"
+                ),
+                {"job_id": document_job.job_id},
+            )
+        assert process_document_once(restored, "after-restore")
+        recovered_document_job = restored_document_jobs.detail(document_job.job_id)
+        assert recovered_document_job.task.status == "completed"
+        assert recovered_document_job.task.attempt == 2
+        assert [audit.outcome for audit in recovered_document_job.audits] == [
+            "interrupted",
+            "completed",
+        ]
+        assert recovered_document_job.task.result == document_checkpoint.result
         with restored.begin() as connection, pytest.raises(DBAPIError):
             connection.execute(text("TRUNCATE document_reviews"))
         restored_ledger = ResearchStore(restored)

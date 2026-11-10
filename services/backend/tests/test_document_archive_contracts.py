@@ -68,6 +68,9 @@ def test_review_revision_is_bounded_strict_integer(revision: object) -> None:
     "path,limit",
     [
         ("/v1/panel/documents", MAX_DOCUMENT_IMPORT_BODY),
+        ("/v1/panel/document-tasks", MAX_DOCUMENT_REVIEW_BODY),
+        ("/v1/panel/schedules", MAX_DOCUMENT_REVIEW_BODY),
+        (f"/v1/panel/schedules/{uuid4()}/commands", MAX_DOCUMENT_REVIEW_BODY),
         (f"/v1/panel/documents/{uuid4()}/reviews/", MAX_DOCUMENT_REVIEW_BODY),
     ],
 )

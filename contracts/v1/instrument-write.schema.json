@@ -1,0 +1,167 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "instrument_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Instrument Id",
+      "type": "string"
+    },
+    "symbol": {
+      "maxLength": 32,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+      "title": "Symbol",
+      "type": "string"
+    },
+    "exchange_mic": {
+      "anyOf": [
+        {
+          "maxLength": 4,
+          "minLength": 4,
+          "pattern": "^[A-Z0-9]{4}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Exchange Mic"
+    },
+    "currency": {
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[A-Z]{3}$",
+      "title": "Currency",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 200,
+      "minLength": 1,
+      "not": {
+        "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+      },
+      "pattern": "^\\S(?:[^\\x00-\\x1f\\x7f]*\\S)?$",
+      "title": "Display Name",
+      "type": "string"
+    },
+    "asset_type": {
+      "enum": [
+        "equity",
+        "etf",
+        "commodity"
+      ],
+      "title": "Asset Type",
+      "type": "string"
+    },
+    "data_origin": {
+      "enum": [
+        "synthetic",
+        "live"
+      ],
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "available_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Available At",
+      "type": "string"
+    },
+    "source_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Source Id",
+      "type": "string"
+    },
+    "source_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]"
+          },
+          "pattern": "^[hH][tT][tT][pP][sS]?://",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Source Url"
+    },
+    "license": {
+      "maxLength": 512,
+      "minLength": 1,
+      "not": {
+        "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "License",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Created At",
+      "type": "string"
+    },
+    "created": {
+      "title": "Created",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "instrument_id",
+    "symbol",
+    "exchange_mic",
+    "currency",
+    "display_name",
+    "asset_type",
+    "data_origin",
+    "as_of",
+    "available_at",
+    "source_id",
+    "source_url",
+    "license",
+    "created_at",
+    "created"
+  ],
+  "title": "InstrumentWrite",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:instrument-write:1.0"
+}

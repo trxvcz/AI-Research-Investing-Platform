@@ -1,0 +1,3 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+fetch('/reports').then(r=>{if(!r.ok)throw Error();return r.json();}).then(ids=>{document.querySelector('#status').textContent=ids.length?'Raporty demonstracyjne':'Uruchom npm run demo, aby utworzyć raport.';for(const id of ids){const li=document.createElement('li'),a=document.createElement('a');a.href='/reports/'+encodeURIComponent(id)+'/report.html';a.textContent=id;li.append(a);document.querySelector('#reports').append(li);}}).catch(()=>document.querySelector('#status').textContent='Offline — raporty wymagają połączenia.');
+

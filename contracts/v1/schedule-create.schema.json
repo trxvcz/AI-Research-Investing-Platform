@@ -1,0 +1,72 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schedule_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Schedule Id",
+      "type": "string"
+    },
+    "symbol": {
+      "maxLength": 16,
+      "minLength": 1,
+      "title": "Symbol",
+      "type": "string"
+    },
+    "exchange_mic": {
+      "anyOf": [
+        {
+          "enum": [
+            "XNAS",
+            "XNYS",
+            "XWAR"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exchange Mic"
+    },
+    "interval_seconds": {
+      "maximum": 2592000,
+      "minimum": 3600,
+      "title": "Interval Seconds",
+      "type": "integer"
+    },
+    "first_run_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "First Run At",
+      "type": "string"
+    },
+    "enabled": {
+      "default": false,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "refresh": {
+      "default": false,
+      "title": "Refresh",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schedule_id",
+    "symbol",
+    "interval_seconds",
+    "first_run_at"
+  ],
+  "title": "ScheduleCreate",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:schedule-create:1.0"
+}

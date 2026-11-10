@@ -64,6 +64,9 @@ def test_static_panel_has_security_headers(tmp_path: Path, monkeypatch: pytest.M
         "/v1/panel/catalog/refresh",
         "/v1/panel/tasks",
         "/v1/panel/documents",
+        "/v1/panel/document-tasks",
+        "/v1/panel/schedules",
+        "/v1/panel/schedules/91f9692a-c3cc-4835-96ec-d6902dac00ec/commands",
         "/v1/panel/documents/91f9692a-c3cc-4835-96ec-d6902dac00ec/reviews",
     ],
 )

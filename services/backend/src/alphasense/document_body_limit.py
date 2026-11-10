@@ -17,7 +17,13 @@ class DocumentBodyLimit:
         if (
             scope["type"] != "http"
             or scope.get("method") != "POST"
-            or not (path == "/v1/panel/documents" or path.startswith("/v1/panel/documents/"))
+            or not (
+                path == "/v1/panel/documents"
+                or path.startswith("/v1/panel/documents/")
+                or path == "/v1/panel/document-tasks"
+                or path == "/v1/panel/schedules"
+                or path.startswith("/v1/panel/schedules/")
+            )
         ):
             await self.app(scope, receive, send)
             return

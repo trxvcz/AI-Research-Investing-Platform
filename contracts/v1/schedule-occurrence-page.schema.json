@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "ScheduleOccurrence": {
+      "additionalProperties": false,
+      "properties": {
+        "schedule_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Schedule Id",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "scheduled_for": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Scheduled For",
+          "type": "string"
+        },
+        "dispatched_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Dispatched At",
+          "type": "string"
+        },
+        "skipped_slots": {
+          "minimum": 0,
+          "title": "Skipped Slots",
+          "type": "integer"
+        },
+        "outcome": {
+          "enum": [
+            "enqueued",
+            "skipped_busy"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "run_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Run Id"
+        }
+      },
+      "required": [
+        "schedule_id",
+        "sequence",
+        "scheduled_for",
+        "dispatched_at",
+        "skipped_slots",
+        "outcome",
+        "run_id"
+      ],
+      "title": "ScheduleOccurrence",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schedule_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Schedule Id",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ScheduleOccurrence"
+      },
+      "maxItems": 50,
+      "title": "Items",
+      "type": "array"
+    },
+    "next_after_sequence": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Next After Sequence"
+    }
+  },
+  "required": [
+    "schedule_id",
+    "items",
+    "next_after_sequence"
+  ],
+  "title": "ScheduleOccurrencePage",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:schedule-occurrence-page:1.0"
+}

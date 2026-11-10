@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "instrument_id": "DEMO-EQUITY",
+  "asset_type": "equity",
+  "as_of": "2024-02-01T00:00:00Z",
+  "data_origin": "synthetic",
+  "observations": [
+    {
+      "metric": "revenue",
+      "unit": "USD",
+      "currency": "USD",
+      "period_start": "2023-01-01T00:00:00Z",
+      "period_end": "2023-12-31T23:59:59Z",
+      "status": "available",
+      "value": 0,
+      "source_id": "synthetic-demo",
+      "snapshot_id": "synthetic-snapshot-1",
+      "event_time": "2024-01-15T00:00:00Z",
+      "available_at": "2024-01-16T00:00:00Z"
+    },
+    {
+      "metric": "net_margin",
+      "unit": "ratio",
+      "currency": null,
+      "period_start": "2023-01-01T00:00:00Z",
+      "period_end": "2023-12-31T23:59:59Z",
+      "status": "missing",
+      "value": null,
+      "reason": "Synthetic fixture has no net income input"
+    }
+  ]
+}

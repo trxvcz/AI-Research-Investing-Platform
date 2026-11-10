@@ -1,0 +1,10 @@
+{
+  "currency": "USD",
+  "job_limit": 0,
+  "day_limit": 0,
+  "month_limit": 0,
+  "max_attempts": 2,
+  "concurrency": 2,
+  "exhaustion": "block",
+  "note": "Free-only policy forbids paid calls and paid fallbacks regardless of budget caps. Unknown cost, expired verification or exhausted free quota blocks selection. These caps are not price estimates or permission to enable billing."
+}

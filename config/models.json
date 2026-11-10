@@ -1,0 +1,39 @@
+{
+  "providers": [
+    {
+      "id": "openai",
+      "enabled": false,
+      "model_id": null,
+      "price_sheet": null,
+      "quality_evaluation": null
+    },
+    {
+      "id": "anthropic",
+      "enabled": false,
+      "model_id": null,
+      "price_sheet": null,
+      "quality_evaluation": null
+    },
+    {
+      "id": "gemini",
+      "enabled": false,
+      "model_id": null,
+      "price_sheet": null,
+      "quality_evaluation": null
+    },
+    {
+      "id": "ollama",
+      "enabled": false,
+      "model_id": null,
+      "price_sheet": null,
+      "quality_evaluation": null
+    }
+  ],
+  "unknown_price": "deny",
+  "routing": [
+    "cache",
+    "deterministic",
+    "qualified_lowest_total_cost",
+    "escalate_on_quality_failure"
+  ]
+}

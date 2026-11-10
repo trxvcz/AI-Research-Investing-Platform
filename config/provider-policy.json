@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "policy": "free-only-v1",
+  "providers": [
+    {
+      "provider_id": "sec-edgar-public-v1",
+      "enabled": true,
+      "capability": "data",
+      "execution": "remote",
+      "billing": "free_no_billing",
+      "max_charge_usd": "0",
+      "paid_fallback": false,
+      "hard_cap_verified": false,
+      "quality_pass": true,
+      "terms_url": "https://www.sec.gov/about/privacy-information",
+      "terms_sha256": "f106021632fe3895fed1921be478578ccad6843999cef29c315ffa0c79828672",
+      "reviewed_at": "2026-11-02T16:09:26.230905Z",
+      "review_expires_at": "2026-11-09T16:09:26.230905Z",
+      "data_policy": "public_only",
+      "quota_scope": "sec-edgar-public-local",
+      "quota_limit": 20,
+      "quota_window_start": "2026-11-09T00:00:00Z",
+      "quota_window_end": "2026-11-10T00:00:00Z"
+    }
+  ]
+}

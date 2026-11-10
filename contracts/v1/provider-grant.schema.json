@@ -1,0 +1,206 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "provider_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "capability": {
+      "enum": [
+        "data",
+        "model"
+      ],
+      "title": "Capability",
+      "type": "string"
+    },
+    "execution": {
+      "enum": [
+        "local",
+        "remote"
+      ],
+      "title": "Execution",
+      "type": "string"
+    },
+    "billing": {
+      "enum": [
+        "free_no_billing",
+        "free_tier",
+        "paid",
+        "unknown"
+      ],
+      "title": "Billing",
+      "type": "string"
+    },
+    "max_charge_usd": {
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "ge": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Max Charge Usd"
+    },
+    "paid_fallback": {
+      "title": "Paid Fallback",
+      "type": "boolean"
+    },
+    "hard_cap_verified": {
+      "title": "Hard Cap Verified",
+      "type": "boolean"
+    },
+    "quality_pass": {
+      "title": "Quality Pass",
+      "type": "boolean"
+    },
+    "terms_url": {
+      "anyOf": [
+        {
+          "format": "uri",
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]"
+          },
+          "pattern": "^[hH][tT][tT][pP][sS]?://",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Terms Url"
+    },
+    "terms_sha256": {
+      "anyOf": [
+        {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Terms Sha256"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reviewed At"
+    },
+    "review_expires_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Review Expires At"
+    },
+    "data_policy": {
+      "enum": [
+        "no_transfer",
+        "public_only",
+        "local_only"
+      ],
+      "title": "Data Policy",
+      "type": "string"
+    },
+    "quota_scope": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Quota Scope",
+      "type": "string"
+    },
+    "quota_limit": {
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Quota Limit",
+      "type": "integer"
+    },
+    "quota_window_start": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Quota Window Start",
+      "type": "string"
+    },
+    "quota_window_end": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Quota Window End",
+      "type": "string"
+    }
+  },
+  "required": [
+    "provider_id",
+    "enabled",
+    "capability",
+    "execution",
+    "billing",
+    "max_charge_usd",
+    "paid_fallback",
+    "hard_cap_verified",
+    "quality_pass",
+    "terms_url",
+    "terms_sha256",
+    "reviewed_at",
+    "review_expires_at",
+    "data_policy",
+    "quota_scope",
+    "quota_limit",
+    "quota_window_start",
+    "quota_window_end"
+  ],
+  "title": "ProviderGrant",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:provider-grant:1.0"
+}

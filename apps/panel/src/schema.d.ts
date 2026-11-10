@@ -313,6 +313,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/panel/tasks/{run_id}/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Events */
+        get: operations["events_v1_panel_tasks__run_id__events_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/schedules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Page */
+        get: operations["page_v1_panel_schedules_get"];
+        put?: never;
+        /** Create */
+        post: operations["create_v1_panel_schedules_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/schedules/{schedule_id}/commands": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Command */
+        post: operations["command_v1_panel_schedules__schedule_id__commands_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/schedules/{schedule_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get */
+        get: operations["get_v1_panel_schedules__schedule_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/schedules/{schedule_id}/occurrences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Occurrences */
+        get: operations["occurrences_v1_panel_schedules__schedule_id__occurrences_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/panel/documents": {
         parameters: {
             query?: never;
@@ -374,6 +460,75 @@ export interface paths {
         };
         /** Content */
         get: operations["content_v1_panel_documents__archive_id__content_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/document-tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Page */
+        get: operations["page_v1_panel_document_tasks_get"];
+        put?: never;
+        /** Create */
+        post: operations["create_v1_panel_document_tasks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/document-tasks/{job_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detail */
+        get: operations["detail_v1_panel_document_tasks__job_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/workers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Page */
+        get: operations["page_v1_panel_workers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/workers/{session_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Session */
+        get: operations["session_v1_panel_workers__session_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -927,6 +1082,180 @@ export interface components {
              */
             reviewed_at: string;
         };
+        /** DocumentTaskAudit */
+        DocumentTaskAudit: {
+            /** Attempt */
+            attempt: number;
+            /** Worker Id */
+            worker_id: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Finished At
+             * Format: date-time
+             */
+            finished_at: string;
+            /**
+             * Outcome
+             * @enum {string}
+             */
+            outcome: "completed" | "blocked" | "failed" | "interrupted";
+            /** Error Code */
+            error_code: string | null;
+            /**
+             * Execution
+             * @enum {string}
+             */
+            execution: "offline-validation-v1" | "model-disabled-v1";
+            /** Implementation Sha256 */
+            implementation_sha256: string;
+            /** Request Sha256 */
+            request_sha256: string;
+            /** Output Sha256 */
+            output_sha256: string | null;
+            result: components["schemas"]["DocumentAgentResult"] | null;
+            /**
+             * Provider Called
+             * @default false
+             * @constant
+             */
+            provider_called: false;
+            /** Model Id */
+            model_id?: null;
+            /** Prompt Version */
+            prompt_version?: null;
+            /** Response Sha256 */
+            response_sha256?: null;
+            /** Input Tokens */
+            input_tokens?: null;
+            /** Output Tokens */
+            output_tokens?: null;
+            /**
+             * Usage Status
+             * @default not_applicable
+             * @constant
+             */
+            usage_status: "not_applicable";
+            /**
+             * Cost Usd
+             * @default 0
+             * @constant
+             */
+            cost_usd: "0";
+        };
+        /** DocumentTaskCreate */
+        DocumentTaskCreate: {
+            /**
+             * Job Id
+             * Format: uuid
+             */
+            job_id: string;
+            /**
+             * Archive Id
+             * Format: uuid
+             */
+            archive_id: string;
+            /**
+             * Mode
+             * @default validate_saved_draft
+             * @enum {string}
+             */
+            mode: "validate_saved_draft" | "model_extract";
+        };
+        /** DocumentTaskDetail */
+        DocumentTaskDetail: {
+            task: components["schemas"]["DocumentTaskRecord"];
+            /** Events */
+            events: components["schemas"]["DocumentTaskEvent"][];
+            /** Audits */
+            audits: components["schemas"]["DocumentTaskAudit"][];
+        };
+        /** DocumentTaskEvent */
+        DocumentTaskEvent: {
+            /** Sequence */
+            sequence: number;
+            /** Attempt */
+            attempt: number;
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "queued" | "reading" | "validating" | "archiving" | "completed" | "blocked" | "failed";
+            /**
+             * Recorded At
+             * Format: date-time
+             */
+            recorded_at: string;
+            /** Error Code */
+            error_code: string | null;
+        };
+        /** DocumentTaskPage */
+        DocumentTaskPage: {
+            /** Items */
+            items: components["schemas"]["DocumentTaskRecord"][];
+            /** Next After Id */
+            next_after_id: string | null;
+        };
+        /** DocumentTaskRecord */
+        DocumentTaskRecord: {
+            /**
+             * Job Id
+             * Format: uuid
+             */
+            job_id: string;
+            /**
+             * Archive Id
+             * Format: uuid
+             */
+            archive_id: string;
+            /** Title */
+            title: string;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "validate_saved_draft" | "model_extract";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "completed" | "blocked" | "failed";
+            /**
+             * Stage
+             * @enum {string}
+             */
+            stage: "queued" | "reading" | "validating" | "archiving" | "completed" | "blocked" | "failed";
+            /** Attempt */
+            attempt: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Heartbeat At */
+            heartbeat_at: string | null;
+            /** Lease Expires At */
+            lease_expires_at: string | null;
+            /** Worker Id */
+            worker_id: string | null;
+            /** Error Code */
+            error_code: string | null;
+            /** Document Sha256 */
+            document_sha256: string;
+            /** Draft Sha256 */
+            draft_sha256: string;
+            /** Input Sha256 */
+            input_sha256: string;
+            result: components["schemas"]["DocumentAgentResult"] | null;
+        };
         /** FactEvidence */
         FactEvidence: {
             /** Block Id */
@@ -990,6 +1319,44 @@ export interface components {
              * @constant
              */
             external_providers_enabled: false;
+        };
+        /** ImportTaskEvent */
+        ImportTaskEvent: {
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /** Sequence */
+            sequence: number;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "created" | "transition" | "legacy_snapshot";
+            /**
+             * Recorded At
+             * Format: date-time
+             */
+            recorded_at: string;
+            task: components["schemas"]["TaskRecord"];
+        };
+        /** ImportTaskEventPage */
+        ImportTaskEventPage: {
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /**
+             * Coverage
+             * @enum {string}
+             */
+            coverage: "complete" | "legacy_snapshot";
+            /** Items */
+            items: components["schemas"]["ImportTaskEvent"][];
+            /** Next After Sequence */
+            next_after_sequence: number | null;
         };
         /** InstrumentCreate */
         InstrumentCreate: {
@@ -1712,6 +2079,175 @@ export interface components {
             /** Created */
             created: boolean;
         };
+        /** ScheduleCommand */
+        ScheduleCommand: {
+            /**
+             * Command Id
+             * Format: uuid
+             */
+            command_id: string;
+            /** Expected Revision */
+            expected_revision: number;
+            /** Enabled */
+            enabled: boolean;
+        };
+        /** ScheduleCreate */
+        ScheduleCreate: {
+            /**
+             * Schedule Id
+             * Format: uuid
+             */
+            schedule_id: string;
+            /** Symbol */
+            symbol: string;
+            /** Exchange Mic */
+            exchange_mic?: ("XNAS" | "XNYS" | "XWAR") | null;
+            /** Interval Seconds */
+            interval_seconds: number;
+            /**
+             * First Run At
+             * Format: date-time
+             */
+            first_run_at: string;
+            /**
+             * Enabled
+             * @default false
+             */
+            enabled: boolean;
+            /**
+             * Refresh
+             * @default false
+             */
+            refresh: boolean;
+        };
+        /** ScheduleOccurrence */
+        ScheduleOccurrence: {
+            /**
+             * Schedule Id
+             * Format: uuid
+             */
+            schedule_id: string;
+            /** Sequence */
+            sequence: number;
+            /**
+             * Scheduled For
+             * Format: date-time
+             */
+            scheduled_for: string;
+            /**
+             * Dispatched At
+             * Format: date-time
+             */
+            dispatched_at: string;
+            /** Skipped Slots */
+            skipped_slots: number;
+            /**
+             * Outcome
+             * @enum {string}
+             */
+            outcome: "enqueued" | "skipped_busy";
+            /** Run Id */
+            run_id: string | null;
+        };
+        /** ScheduleOccurrencePage */
+        ScheduleOccurrencePage: {
+            /**
+             * Schedule Id
+             * Format: uuid
+             */
+            schedule_id: string;
+            /** Items */
+            items: components["schemas"]["ScheduleOccurrence"][];
+            /** Next After Sequence */
+            next_after_sequence: number | null;
+        };
+        /** SchedulePage */
+        SchedulePage: {
+            /** Items */
+            items: components["schemas"]["ScheduleRecord"][];
+            /** Next After Id */
+            next_after_id: string | null;
+        };
+        /** ScheduleRecord */
+        ScheduleRecord: {
+            /**
+             * Schedule Id
+             * Format: uuid
+             */
+            schedule_id: string;
+            template: components["schemas"]["SecImportRequest"];
+            /** Interval Seconds */
+            interval_seconds: number;
+            /**
+             * First Run At
+             * Format: date-time
+             */
+            first_run_at: string;
+            /**
+             * Next Run At
+             * Format: date-time
+             */
+            next_run_at: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Revision */
+            revision: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Last Scheduled For */
+            last_scheduled_for: string | null;
+            /** Last Outcome */
+            last_outcome: ("enqueued" | "skipped_busy") | null;
+            /** Last Run Id */
+            last_run_id: string | null;
+        };
+        /** SecImportRequest */
+        SecImportRequest: {
+            /** Cik */
+            cik: string;
+            /** Symbol */
+            symbol: string;
+            /**
+             * Exchange Mic
+             * @enum {string}
+             */
+            exchange_mic: "XNAS" | "XNYS";
+            /**
+             * Instrument Id
+             * Format: uuid
+             */
+            instrument_id: string;
+            /**
+             * Run Id
+             * Format: uuid
+             */
+            run_id: string;
+            /**
+             * Revenue Concept
+             * @default RevenueFromContractWithCustomerExcludingAssessedTax
+             * @enum {string}
+             */
+            revenue_concept: "RevenueFromContractWithCustomerExcludingAssessedTax" | "Revenues" | "SalesRevenueNet";
+            /**
+             * Pipeline Version
+             * @default sec-fundamentals-v1
+             * @enum {string}
+             */
+            pipeline_version: "sec-fundamentals-v1" | "sec-fundamentals-v2";
+            /**
+             * Refresh
+             * @default false
+             */
+            refresh: boolean;
+        };
         /** SnapshotCreate */
         SnapshotCreate: {
             /**
@@ -2117,6 +2653,79 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** WorkerSessionPage */
+        WorkerSessionPage: {
+            /** Items */
+            items: components["schemas"]["WorkerSessionRecord"][];
+            /** Next After Id */
+            next_after_id: string | null;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Stale After Seconds
+             * @default 45
+             * @constant
+             */
+            stale_after_seconds: 45;
+        };
+        /** WorkerSessionRecord */
+        WorkerSessionRecord: {
+            /**
+             * Session Id
+             * Format: uuid
+             */
+            session_id: string;
+            /** Worker Id */
+            worker_id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "sec_import" | "document_validation" | "sec_scheduler";
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "once" | "forever";
+            /** Process Id */
+            process_id: number;
+            /** Implementation Sha256 */
+            implementation_sha256: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Heartbeat At
+             * Format: date-time
+             */
+            heartbeat_at: string;
+            /** Stopped At */
+            stopped_at: string | null;
+            /** Stop Reason */
+            stop_reason: ("completed" | "interrupted" | "error") | null;
+            /** Error Code */
+            error_code: ("WORKER_RUNTIME_FAILED" | "WORKER_MONITOR_FAILED") | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "online" | "stale" | "stopped";
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /**
+             * Contact Expires At
+             * Format: date-time
+             */
+            contact_expires_at: string;
         };
     };
     responses: never;
@@ -2831,6 +3440,205 @@ export interface operations {
             };
         };
     };
+    events_v1_panel_tasks__run_id__events_get: {
+        parameters: {
+            query?: {
+                after_sequence?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportTaskEventPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    page_v1_panel_schedules_get: {
+        parameters: {
+            query?: {
+                after_id?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SchedulePage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_v1_panel_schedules_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    command_v1_panel_schedules__schedule_id__commands_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                schedule_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleCommand"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_v1_panel_schedules__schedule_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                schedule_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    occurrences_v1_panel_schedules__schedule_id__occurrences_get: {
+        parameters: {
+            query?: {
+                after_sequence?: number;
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                schedule_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleOccurrencePage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     page_v1_panel_documents_get: {
         parameters: {
             query?: {
@@ -2981,6 +3789,166 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    page_v1_panel_document_tasks_get: {
+        parameters: {
+            query?: {
+                after_id?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentTaskPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_v1_panel_document_tasks_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentTaskCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentTaskRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    detail_v1_panel_document_tasks__job_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentTaskDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    page_v1_panel_workers_get: {
+        parameters: {
+            query?: {
+                after_id?: string | null;
+                limit?: number;
+                kind?: ("sec_import" | "document_validation" | "sec_scheduler") | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkerSessionPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    session_v1_panel_workers__session_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkerSessionRecord"];
                 };
             };
             /** @description Validation Error */

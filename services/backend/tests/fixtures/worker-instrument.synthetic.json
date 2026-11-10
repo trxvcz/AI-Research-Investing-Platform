@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "instrument_id": "50bb7e95-023a-4ceb-a583-5e74e96a66ca",
+  "symbol": "SYNTH-WORKER",
+  "exchange_mic": "XNAS",
+  "currency": "USD",
+  "display_name": "Synthetic worker fixture",
+  "asset_type": "equity",
+  "data_origin": "synthetic",
+  "as_of": "2024-02-01T00:00:00Z",
+  "available_at": "2024-01-01T00:00:00Z",
+  "source_id": "synthetic-registry",
+  "source_url": null,
+  "license": "generated fixture"
+}

@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "run_id": "9e34cbef-9217-4607-b806-dc6ed27decda",
+  "instrument_id": "50bb7e95-023a-4ceb-a583-5e74e96a66ca",
+  "as_of": "2024-02-01T00:00:00+00:00",
+  "snapshot_ids": [
+    "00000000-0000-0000-0000-000000000001"
+  ],
+  "pipeline_version": "deterministic-research-v1"
+}

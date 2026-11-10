@@ -15,6 +15,13 @@ from alphasense.document_archive_contracts import (
     DocumentReviewEvent,
 )
 from alphasense.document_contracts import DocumentAgentResult, DocumentPacket, ExtractionDraft
+from alphasense.document_task_contracts import (
+    DocumentTaskAudit,
+    DocumentTaskCreate,
+    DocumentTaskDetail,
+    DocumentTaskPage,
+    DocumentTaskRecord,
+)
 from alphasense.instrument_contracts import (
     InstrumentCreate,
     InstrumentPage,
@@ -33,6 +40,13 @@ from alphasense.run_contracts import (
     RunState,
     RunWrite,
 )
+from alphasense.schedule_contracts import (
+    ScheduleCommand,
+    ScheduleCreate,
+    ScheduleOccurrencePage,
+    SchedulePage,
+    ScheduleRecord,
+)
 from alphasense.sec_contracts import SecFetchRequest, SecImportRequest
 from alphasense.snapshot_contracts import (
     SnapshotCreate,
@@ -42,10 +56,25 @@ from alphasense.snapshot_contracts import (
     SnapshotWrite,
 )
 from alphasense.storage_contracts import RevisionInfo, RevisionPage, StoredRevisionInfo
+from alphasense.task_contracts import ImportTaskEventPage
 from alphasense.worker_contracts import WorkerJobRecord
+from alphasense.worker_session_contracts import WorkerSessionPage, WorkerSessionRecord
 
 ROOT = Path(__file__).resolve().parents[4]
 MODELS: dict[str, type[BaseModel]] = {
+    "import-task-event-page": ImportTaskEventPage,
+    "schedule-create": ScheduleCreate,
+    "schedule-command": ScheduleCommand,
+    "schedule-record": ScheduleRecord,
+    "schedule-page": SchedulePage,
+    "schedule-occurrence-page": ScheduleOccurrencePage,
+    "worker-session-record": WorkerSessionRecord,
+    "worker-session-page": WorkerSessionPage,
+    "document-task-create": DocumentTaskCreate,
+    "document-task-record": DocumentTaskRecord,
+    "document-task-page": DocumentTaskPage,
+    "document-task-detail": DocumentTaskDetail,
+    "document-task-audit": DocumentTaskAudit,
     "document-archive-create": DocumentArchiveCreate,
     "document-archive-page": DocumentArchivePage,
     "document-archive-record": DocumentArchiveRecord,

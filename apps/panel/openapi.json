@@ -1190,6 +1190,355 @@
         }
       }
     },
+    "/v1/panel/tasks/{run_id}/events": {
+      "get": {
+        "tags": [
+          "tasks"
+        ],
+        "summary": "Events",
+        "operationId": "events_v1_panel_tasks__run_id__events_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "after_sequence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "After Sequence"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportTaskEventPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/schedules": {
+      "post": {
+        "tags": [
+          "sec-schedules"
+        ],
+        "summary": "Create",
+        "operationId": "create_v1_panel_schedules_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "sec-schedules"
+        ],
+        "summary": "Page",
+        "operationId": "page_v1_panel_schedules_get",
+        "parameters": [
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchedulePage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/schedules/{schedule_id}/commands": {
+      "post": {
+        "tags": [
+          "sec-schedules"
+        ],
+        "summary": "Command",
+        "operationId": "command_v1_panel_schedules__schedule_id__commands_post",
+        "parameters": [
+          {
+            "name": "schedule_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Schedule Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/schedules/{schedule_id}": {
+      "get": {
+        "tags": [
+          "sec-schedules"
+        ],
+        "summary": "Get",
+        "operationId": "get_v1_panel_schedules__schedule_id__get",
+        "parameters": [
+          {
+            "name": "schedule_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Schedule Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/schedules/{schedule_id}/occurrences": {
+      "get": {
+        "tags": [
+          "sec-schedules"
+        ],
+        "summary": "Occurrences",
+        "operationId": "occurrences_v1_panel_schedules__schedule_id__occurrences_get",
+        "parameters": [
+          {
+            "name": "schedule_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Schedule Id"
+            }
+          },
+          {
+            "name": "after_sequence",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "After Sequence"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleOccurrencePage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/panel/documents": {
       "post": {
         "tags": [
@@ -1449,6 +1798,292 @@
             "content": {
               "application/json": {
                 "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/document-tasks": {
+      "post": {
+        "tags": [
+          "document-tasks"
+        ],
+        "summary": "Create",
+        "operationId": "create_v1_panel_document_tasks_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentTaskCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentTaskRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "document-tasks"
+        ],
+        "summary": "Page",
+        "operationId": "page_v1_panel_document_tasks_get",
+        "parameters": [
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentTaskPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/document-tasks/{job_id}": {
+      "get": {
+        "tags": [
+          "document-tasks"
+        ],
+        "summary": "Detail",
+        "operationId": "detail_v1_panel_document_tasks__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentTaskDetail"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/workers": {
+      "get": {
+        "tags": [
+          "worker-sessions"
+        ],
+        "summary": "Page",
+        "operationId": "page_v1_panel_workers_get",
+        "parameters": [
+          {
+            "name": "after_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                  "not": {
+                    "pattern": "\\s$"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "sec_import",
+                    "document_validation",
+                    "sec_scheduler"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerSessionPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/workers/{session_id}": {
+      "get": {
+        "tags": [
+          "worker-sessions"
+        ],
+        "summary": "Session",
+        "operationId": "session_v1_panel_workers__session_id__get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkerSessionRecord"
+                }
               }
             }
           },
@@ -3013,6 +3648,540 @@
         ],
         "title": "DocumentReviewEvent"
       },
+      "DocumentTaskAudit": {
+        "properties": {
+          "attempt": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Attempt"
+          },
+          "worker_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Worker Id"
+          },
+          "started_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Finished At"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "blocked",
+              "failed",
+              "interrupted"
+            ],
+            "title": "Outcome"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "execution": {
+            "type": "string",
+            "enum": [
+              "offline-validation-v1",
+              "model-disabled-v1"
+            ],
+            "title": "Execution"
+          },
+          "implementation_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Implementation Sha256"
+          },
+          "request_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Request Sha256"
+          },
+          "output_sha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 64,
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Sha256"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DocumentAgentResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "provider_called": {
+            "type": "boolean",
+            "const": false,
+            "title": "Provider Called",
+            "default": false
+          },
+          "model_id": {
+            "type": "null",
+            "title": "Model Id"
+          },
+          "prompt_version": {
+            "type": "null",
+            "title": "Prompt Version"
+          },
+          "response_sha256": {
+            "type": "null",
+            "title": "Response Sha256"
+          },
+          "input_tokens": {
+            "type": "null",
+            "title": "Input Tokens"
+          },
+          "output_tokens": {
+            "type": "null",
+            "title": "Output Tokens"
+          },
+          "usage_status": {
+            "type": "string",
+            "const": "not_applicable",
+            "title": "Usage Status",
+            "default": "not_applicable"
+          },
+          "cost_usd": {
+            "type": "string",
+            "const": "0",
+            "title": "Cost Usd",
+            "default": "0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "attempt",
+          "worker_id",
+          "started_at",
+          "finished_at",
+          "outcome",
+          "error_code",
+          "execution",
+          "implementation_sha256",
+          "request_sha256",
+          "output_sha256",
+          "result"
+        ],
+        "title": "DocumentTaskAudit"
+      },
+      "DocumentTaskCreate": {
+        "properties": {
+          "job_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Job Id"
+          },
+          "archive_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Archive Id"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "validate_saved_draft",
+              "model_extract"
+            ],
+            "title": "Mode",
+            "default": "validate_saved_draft"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "job_id",
+          "archive_id"
+        ],
+        "title": "DocumentTaskCreate"
+      },
+      "DocumentTaskDetail": {
+        "properties": {
+          "task": {
+            "$ref": "#/components/schemas/DocumentTaskRecord"
+          },
+          "events": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentTaskEvent"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "title": "Events"
+          },
+          "audits": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentTaskAudit"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Audits"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "task",
+          "events",
+          "audits"
+        ],
+        "title": "DocumentTaskDetail"
+      },
+      "DocumentTaskEvent": {
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "attempt": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Attempt"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "reading",
+              "validating",
+              "archiving",
+              "completed",
+              "blocked",
+              "failed"
+            ],
+            "title": "Stage"
+          },
+          "recorded_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Recorded At"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "sequence",
+          "attempt",
+          "stage",
+          "recorded_at",
+          "error_code"
+        ],
+        "title": "DocumentTaskEvent"
+      },
+      "DocumentTaskPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DocumentTaskRecord"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "DocumentTaskPage"
+      },
+      "DocumentTaskRecord": {
+        "properties": {
+          "job_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Job Id"
+          },
+          "archive_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Archive Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "validate_saved_draft",
+              "model_extract"
+            ],
+            "title": "Mode"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "blocked",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "reading",
+              "validating",
+              "archiving",
+              "completed",
+              "blocked",
+              "failed"
+            ],
+            "title": "Stage"
+          },
+          "attempt": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Attempt"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "heartbeat_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Heartbeat At"
+          },
+          "lease_expires_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lease Expires At"
+          },
+          "worker_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Worker Id"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^\\S(?:.*\\S)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "document_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Document Sha256"
+          },
+          "draft_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Draft Sha256"
+          },
+          "input_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Input Sha256"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DocumentAgentResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "job_id",
+          "archive_id",
+          "title",
+          "mode",
+          "status",
+          "stage",
+          "attempt",
+          "created_at",
+          "updated_at",
+          "heartbeat_at",
+          "lease_expires_at",
+          "worker_id",
+          "error_code",
+          "document_sha256",
+          "draft_sha256",
+          "input_sha256",
+          "result"
+        ],
+        "title": "DocumentTaskRecord"
+      },
       "FactEvidence": {
         "properties": {
           "block_id": {
@@ -3179,6 +4348,104 @@
         "additionalProperties": false,
         "type": "object",
         "title": "HealthResult"
+      },
+      "ImportTaskEvent": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "created",
+              "transition",
+              "legacy_snapshot"
+            ],
+            "title": "Kind"
+          },
+          "recorded_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Recorded At"
+          },
+          "task": {
+            "$ref": "#/components/schemas/TaskRecord"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "sequence",
+          "kind",
+          "recorded_at",
+          "task"
+        ],
+        "title": "ImportTaskEvent"
+      },
+      "ImportTaskEventPage": {
+        "properties": {
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "coverage": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "legacy_snapshot"
+            ],
+            "title": "Coverage"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ImportTaskEvent"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Items"
+          },
+          "next_after_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Sequence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "run_id",
+          "coverage",
+          "items",
+          "next_after_sequence"
+        ],
+        "title": "ImportTaskEventPage"
       },
       "InstrumentCreate": {
         "properties": {
@@ -5453,6 +6720,476 @@
         ],
         "title": "RunWrite"
       },
+      "ScheduleCommand": {
+        "properties": {
+          "command_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Command Id"
+          },
+          "expected_revision": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Expected Revision"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "command_id",
+          "expected_revision",
+          "enabled"
+        ],
+        "title": "ScheduleCommand"
+      },
+      "ScheduleCreate": {
+        "properties": {
+          "schedule_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Schedule Id"
+          },
+          "symbol": {
+            "type": "string",
+            "maxLength": 16,
+            "minLength": 1,
+            "title": "Symbol"
+          },
+          "exchange_mic": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "XNAS",
+                  "XNYS",
+                  "XWAR"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Exchange Mic"
+          },
+          "interval_seconds": {
+            "type": "integer",
+            "maximum": 2592000.0,
+            "minimum": 3600.0,
+            "title": "Interval Seconds"
+          },
+          "first_run_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "First Run At"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "default": false
+          },
+          "refresh": {
+            "type": "boolean",
+            "title": "Refresh",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schedule_id",
+          "symbol",
+          "interval_seconds",
+          "first_run_at"
+        ],
+        "title": "ScheduleCreate"
+      },
+      "ScheduleOccurrence": {
+        "properties": {
+          "schedule_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Schedule Id"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Sequence"
+          },
+          "scheduled_for": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Scheduled For"
+          },
+          "dispatched_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Dispatched At"
+          },
+          "skipped_slots": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Skipped Slots"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "enqueued",
+              "skipped_busy"
+            ],
+            "title": "Outcome"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schedule_id",
+          "sequence",
+          "scheduled_for",
+          "dispatched_at",
+          "skipped_slots",
+          "outcome",
+          "run_id"
+        ],
+        "title": "ScheduleOccurrence"
+      },
+      "ScheduleOccurrencePage": {
+        "properties": {
+          "schedule_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Schedule Id"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ScheduleOccurrence"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Items"
+          },
+          "next_after_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Sequence"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schedule_id",
+          "items",
+          "next_after_sequence"
+        ],
+        "title": "ScheduleOccurrencePage"
+      },
+      "SchedulePage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ScheduleRecord"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id"
+        ],
+        "title": "SchedulePage"
+      },
+      "ScheduleRecord": {
+        "properties": {
+          "schedule_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Schedule Id"
+          },
+          "template": {
+            "$ref": "#/components/schemas/SecImportRequest"
+          },
+          "interval_seconds": {
+            "type": "integer",
+            "maximum": 2592000.0,
+            "minimum": 3600.0,
+            "title": "Interval Seconds"
+          },
+          "first_run_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "First Run At"
+          },
+          "next_run_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Next Run At"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "revision": {
+            "type": "integer",
+            "maximum": 10000.0,
+            "minimum": 0.0,
+            "title": "Revision"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Updated At"
+          },
+          "last_scheduled_for": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Scheduled For"
+          },
+          "last_outcome": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "enqueued",
+                  "skipped_busy"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Outcome"
+          },
+          "last_run_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Run Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schedule_id",
+          "template",
+          "interval_seconds",
+          "first_run_at",
+          "next_run_at",
+          "enabled",
+          "revision",
+          "created_at",
+          "updated_at",
+          "last_scheduled_for",
+          "last_outcome",
+          "last_run_id"
+        ],
+        "title": "ScheduleRecord"
+      },
+      "SecImportRequest": {
+        "properties": {
+          "cik": {
+            "not": {
+              "enum": [
+                "0000000000"
+              ]
+            },
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 10,
+            "pattern": "^[0-9]{10}$",
+            "title": "Cik"
+          },
+          "symbol": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 1,
+            "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+            "title": "Symbol"
+          },
+          "exchange_mic": {
+            "type": "string",
+            "enum": [
+              "XNAS",
+              "XNYS"
+            ],
+            "title": "Exchange Mic"
+          },
+          "instrument_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Instrument Id"
+          },
+          "run_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Run Id"
+          },
+          "revenue_concept": {
+            "type": "string",
+            "enum": [
+              "RevenueFromContractWithCustomerExcludingAssessedTax",
+              "Revenues",
+              "SalesRevenueNet"
+            ],
+            "title": "Revenue Concept",
+            "default": "RevenueFromContractWithCustomerExcludingAssessedTax"
+          },
+          "pipeline_version": {
+            "type": "string",
+            "enum": [
+              "sec-fundamentals-v1",
+              "sec-fundamentals-v2"
+            ],
+            "title": "Pipeline Version",
+            "default": "sec-fundamentals-v1"
+          },
+          "refresh": {
+            "type": "boolean",
+            "title": "Refresh",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "cik",
+          "symbol",
+          "exchange_mic",
+          "instrument_id",
+          "run_id"
+        ],
+        "title": "SecImportRequest"
+      },
       "SnapshotCreate": {
         "properties": {
           "schema_version": {
@@ -6699,6 +8436,221 @@
           "updated_at"
         ],
         "title": "WorkerJobRecord"
+      },
+      "WorkerSessionPage": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/WorkerSessionRecord"
+            },
+            "type": "array",
+            "maxItems": 50,
+            "title": "Items"
+          },
+          "next_after_id": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next After Id"
+          },
+          "observed_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Observed At"
+          },
+          "stale_after_seconds": {
+            "type": "integer",
+            "const": 45,
+            "title": "Stale After Seconds",
+            "default": 45
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "next_after_id",
+          "observed_at"
+        ],
+        "title": "WorkerSessionPage"
+      },
+      "WorkerSessionRecord": {
+        "properties": {
+          "session_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Session Id"
+          },
+          "worker_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Worker Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "sec_import",
+              "document_validation",
+              "sec_scheduler"
+            ],
+            "title": "Kind"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "once",
+              "forever"
+            ],
+            "title": "Mode"
+          },
+          "process_id": {
+            "type": "integer",
+            "maximum": 2147483647.0,
+            "minimum": 1.0,
+            "title": "Process Id"
+          },
+          "implementation_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Implementation Sha256"
+          },
+          "started_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "heartbeat_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Heartbeat At"
+          },
+          "stopped_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stopped At"
+          },
+          "stop_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "completed",
+                  "interrupted",
+                  "error"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop Reason"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "WORKER_RUNTIME_FAILED",
+                  "WORKER_MONITOR_FAILED"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "online",
+              "stale",
+              "stopped"
+            ],
+            "title": "Status"
+          },
+          "observed_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Observed At"
+          },
+          "contact_expires_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Contact Expires At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "session_id",
+          "worker_id",
+          "kind",
+          "mode",
+          "process_id",
+          "implementation_sha256",
+          "started_at",
+          "heartbeat_at",
+          "stopped_at",
+          "stop_reason",
+          "error_code",
+          "status",
+          "observed_at",
+          "contact_expires_at"
+        ],
+        "title": "WorkerSessionRecord"
       }
     }
   }

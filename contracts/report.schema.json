@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/alphasense/report.schema.json",
+  "title": "report",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parent_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "demo",
+        "partial",
+        "blocked",
+        "complete",
+        "failed"
+      ]
+    },
+    "input_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "code_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "analysis": {
+      "$ref": "#/$defs/analysis"
+    },
+    "trace": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "charts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "id",
+    "parent_id",
+    "created_at",
+    "status",
+    "input_hash",
+    "code_version",
+    "analysis",
+    "trace",
+    "charts",
+    "warnings"
+  ],
+  "$defs": {
+    "analysis": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "analysis",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "asset_type": {
+          "enum": [
+            "equity",
+            "commodity"
+          ]
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fundamental": {
+          "type": "object"
+        },
+        "technical": {
+          "type": "object"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "demo",
+            "partial",
+            "blocked",
+            "complete",
+            "failed"
+          ]
+        }
+      },
+      "required": [
+        "asset_id",
+        "asset_type",
+        "as_of",
+        "fundamental",
+        "technical",
+        "sources",
+        "status"
+      ]
+    }
+  }
+}

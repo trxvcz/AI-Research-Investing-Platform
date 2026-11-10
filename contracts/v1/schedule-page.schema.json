@@ -1,0 +1,257 @@
+{
+  "$defs": {
+    "ScheduleRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "schedule_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Schedule Id",
+          "type": "string"
+        },
+        "template": {
+          "$ref": "#/$defs/SecImportRequest"
+        },
+        "interval_seconds": {
+          "maximum": 2592000,
+          "minimum": 3600,
+          "title": "Interval Seconds",
+          "type": "integer"
+        },
+        "first_run_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "First Run At",
+          "type": "string"
+        },
+        "next_run_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Next Run At",
+          "type": "string"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "revision": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Updated At",
+          "type": "string"
+        },
+        "last_scheduled_for": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Scheduled For"
+        },
+        "last_outcome": {
+          "anyOf": [
+            {
+              "enum": [
+                "enqueued",
+                "skipped_busy"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Outcome"
+        },
+        "last_run_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Last Run Id"
+        }
+      },
+      "required": [
+        "schedule_id",
+        "template",
+        "interval_seconds",
+        "first_run_at",
+        "next_run_at",
+        "enabled",
+        "revision",
+        "created_at",
+        "updated_at",
+        "last_scheduled_for",
+        "last_outcome",
+        "last_run_id"
+      ],
+      "title": "ScheduleRecord",
+      "type": "object"
+    },
+    "SecImportRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "cik": {
+          "maxLength": 10,
+          "minLength": 10,
+          "not": {
+            "enum": [
+              "0000000000"
+            ]
+          },
+          "pattern": "^[0-9]{10}$",
+          "title": "Cik",
+          "type": "string"
+        },
+        "symbol": {
+          "maxLength": 32,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+          "title": "Symbol",
+          "type": "string"
+        },
+        "exchange_mic": {
+          "enum": [
+            "XNAS",
+            "XNYS"
+          ],
+          "title": "Exchange Mic",
+          "type": "string"
+        },
+        "instrument_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "run_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "revenue_concept": {
+          "default": "RevenueFromContractWithCustomerExcludingAssessedTax",
+          "enum": [
+            "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "Revenues",
+            "SalesRevenueNet"
+          ],
+          "title": "Revenue Concept",
+          "type": "string"
+        },
+        "pipeline_version": {
+          "default": "sec-fundamentals-v1",
+          "enum": [
+            "sec-fundamentals-v1",
+            "sec-fundamentals-v2"
+          ],
+          "title": "Pipeline Version",
+          "type": "string"
+        },
+        "refresh": {
+          "default": false,
+          "title": "Refresh",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "cik",
+        "symbol",
+        "exchange_mic",
+        "instrument_id",
+        "run_id"
+      ],
+      "title": "SecImportRequest",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ScheduleRecord"
+      },
+      "maxItems": 50,
+      "title": "Items",
+      "type": "array"
+    },
+    "next_after_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Next After Id"
+    }
+  },
+  "required": [
+    "items",
+    "next_after_id"
+  ],
+  "title": "SchedulePage",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:schedule-page:1.0"
+}

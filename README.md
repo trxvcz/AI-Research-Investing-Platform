@@ -1,5 +1,21 @@
 # AlphaSense starter
 
+## Prywatny wariant wdrożenia
+
+Dodano osobny pakiet FastAPI/React/PostgreSQL z logowaniem właściciela, HTTPS przez Caddy, izolowaną bazą i polityką restartu kontenerów. Sprawdzony lokalnie w osobnym projekcie; VPS pozostaje do uruchomienia i odbioru. [Instrukcja i ograniczenia](docs/PRIVATE_DEPLOYMENT.md).
+
+## Historia SEC i harmonogramy analiz
+
+Panel pokazuje trwałą historię zmian etapów importu SEC i pozwala tworzyć wstrzymane harmonogramy dla wybranych spółek. Osobny scheduler zapisuje zlecenia, pomija zaległe terminy bez masowego nadrabiania i respektuje aktualny mechanizm źródeł oraz limitów w workerze. Starsza historia jest jawnie oznaczona jako niepełna. [Zakres, API i start](docs/SEC_SCHEDULES.md).
+
+## Rejestr wykonawców
+
+Panel pokazuje żywe sygnały procesów SEC i dokumentów, także podczas bezczynności, oraz historię uruchomień i zakończeń. Brak sygnału przez 45 sekund oznacza utratę kontaktu; stare obserwacje nie pozostają oznaczone jako aktualne. To monitoring procesów, odrębny od wyniku zadania i użycia LLM. [Zakres i działanie](docs/WORKER_SESSIONS.md).
+
+## Kolejka dokumentów i audyt wykonania
+
+Zapisany szkic można zlecić do weryfikacji w osobnym procesie. PostgreSQL zachowuje zadanie, etapy, próby, hashe i audyt, a panel pokazuje postęp. Worker działa także po zamknięciu panelu; `Start-DocumentWorker.ps1` uruchamia go osobno. Obecny tryb odtwarza weryfikację offline. Nowa ekstrakcja LLM pozostaje jawnie zablokowana i nie zużywa budżetu Gemini. [Zakres i start](docs/DOCUMENT_TASKS.md).
+
 ## Archiwum szkiców i przegląd faktów
 
 Panel ma sekcję „Szkice z dokumentów”: lokalny import dokumentu i zapisanego szkicu JSON, cytaty z kontekstem, oryginały do pobrania oraz trwała historia decyzji dla każdego faktu. Akceptacja pozostaje oceną szkicu i nie publikuje metryk w raporcie. Import nie wywołuje modelu. [Zakres, API i instrukcja](docs/DOCUMENT_ARCHIVE.md).

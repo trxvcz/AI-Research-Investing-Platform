@@ -1,0 +1,102 @@
+{
+  "$defs": {
+    "DocumentBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Block Id",
+          "type": "string"
+        },
+        "locator": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 32768,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "block_id",
+        "locator",
+        "text"
+      ],
+      "title": "DocumentBlock",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "document_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Document Id",
+      "type": "string"
+    },
+    "sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Sha256",
+      "type": "string"
+    },
+    "format": {
+      "enum": [
+        "text",
+        "html",
+        "xlsx",
+        "pdf"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "classification": {
+      "enum": [
+        "public",
+        "private",
+        "secret"
+      ],
+      "title": "Classification",
+      "type": "string"
+    },
+    "blocks": {
+      "items": {
+        "$ref": "#/$defs/DocumentBlock"
+      },
+      "maxItems": 512,
+      "minItems": 1,
+      "title": "Blocks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "document_id",
+    "sha256",
+    "format",
+    "classification",
+    "blocks"
+  ],
+  "title": "DocumentPacket",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-packet:1.0"
+}

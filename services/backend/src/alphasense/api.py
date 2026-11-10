@@ -20,6 +20,7 @@ from alphasense.db import (
 )
 from alphasense.document_archive_api import router as document_router
 from alphasense.document_body_limit import DocumentBodyLimit
+from alphasense.document_task_api import router as document_task_router
 from alphasense.instrument_api import router as instrument_router
 from alphasense.instruments import InstrumentConflict, InstrumentNotFound
 from alphasense.legacy import InvalidReportError, ReportInspection, inspect_report
@@ -27,10 +28,12 @@ from alphasense.panel_api import router as panel_router
 from alphasense.panel_launch import router as panel_launch_router
 from alphasense.report_contracts import ReportRevision, ReportUUID
 from alphasense.runs import RunConflict, RunNotFound
+from alphasense.schedule_api import router as schedule_router
 from alphasense.sec_catalog import router as sec_catalog_router
 from alphasense.snapshots import SnapshotConflict, SnapshotNotFound
 from alphasense.storage_contracts import RevisionPage, StoredRevisionInfo
 from alphasense.task_api import router as task_router
+from alphasense.worker_session_api import router as worker_session_router
 
 app = FastAPI(
     title="AlphaSense Research API",
@@ -44,7 +47,10 @@ app.include_router(panel_router)
 app.include_router(panel_launch_router)
 app.include_router(sec_catalog_router)
 app.include_router(task_router)
+app.include_router(schedule_router)
 app.include_router(document_router)
+app.include_router(document_task_router)
+app.include_router(worker_session_router)
 app.add_middleware(SnapshotBodyLimit)
 app.add_middleware(DocumentBodyLimit)
 

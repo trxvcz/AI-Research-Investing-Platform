@@ -1,0 +1,222 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "instrument_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Instrument Id",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "snapshot_ids": {
+      "items": {
+        "format": "uuid",
+        "not": {
+          "pattern": "\\s$"
+        },
+        "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+        "type": "string"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Snapshot Ids",
+      "type": "array"
+    },
+    "pipeline_version": {
+      "enum": [
+        "manual-research-v1",
+        "deterministic-research-v1",
+        "sec-fundamentals-v1",
+        "sec-fundamentals-v2"
+      ],
+      "title": "Pipeline Version",
+      "type": "string"
+    },
+    "data_origin": {
+      "enum": [
+        "synthetic",
+        "live"
+      ],
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "sequence": {
+      "maximum": 2147483647,
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "failed",
+        "completed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "current_step": {
+      "anyOf": [
+        {
+          "enum": [
+            "data",
+            "validate",
+            "fundamental",
+            "technical",
+            "report",
+            "review"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Current Step"
+    },
+    "completed_steps": {
+      "items": {
+        "enum": [
+          "data",
+          "validate",
+          "fundamental",
+          "technical",
+          "report",
+          "review"
+        ],
+        "type": "string"
+      },
+      "maxItems": 6,
+      "title": "Completed Steps",
+      "type": "array"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Error Code"
+    },
+    "error_reason": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "[\\x00-\\x1f\\x7f]|\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Error Reason"
+    },
+    "report_revision_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Report Revision Id"
+    },
+    "report_status": {
+      "anyOf": [
+        {
+          "enum": [
+            "complete",
+            "partial",
+            "blocked",
+            "failed"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Report Status"
+    },
+    "created_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "instrument_id",
+    "as_of",
+    "snapshot_ids",
+    "pipeline_version",
+    "data_origin",
+    "sequence",
+    "status",
+    "current_step",
+    "completed_steps",
+    "error_code",
+    "error_reason",
+    "report_revision_id",
+    "report_status",
+    "created_at",
+    "updated_at"
+  ],
+  "title": "RunState",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:run-state:1.0"
+}

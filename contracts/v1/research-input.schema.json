@@ -1,0 +1,292 @@
+{
+  "$defs": {
+    "AbsentObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Unit",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "period_start": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "missing",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "null"
+        },
+        "reason": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "currency",
+        "period_start",
+        "period_end",
+        "status",
+        "value",
+        "reason"
+      ],
+      "title": "AbsentObservation",
+      "type": "object"
+    },
+    "AvailableObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Unit",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "period_start": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "status": {
+          "const": "available",
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "source_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Available At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "currency",
+        "period_start",
+        "period_end",
+        "status",
+        "value",
+        "source_id",
+        "snapshot_id",
+        "event_time",
+        "available_at"
+      ],
+      "title": "AvailableObservation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "instrument_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Instrument Id",
+      "type": "string"
+    },
+    "asset_type": {
+      "enum": [
+        "equity",
+        "etf",
+        "commodity"
+      ],
+      "title": "Asset Type",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "data_origin": {
+      "enum": [
+        "synthetic",
+        "live"
+      ],
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "observations": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "available": "#/$defs/AvailableObservation",
+            "missing": "#/$defs/AbsentObservation",
+            "not_applicable": "#/$defs/AbsentObservation"
+          },
+          "propertyName": "status"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/AvailableObservation"
+          },
+          {
+            "$ref": "#/$defs/AbsentObservation"
+          }
+        ]
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Observations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "instrument_id",
+    "asset_type",
+    "as_of",
+    "data_origin",
+    "observations"
+  ],
+  "title": "ResearchInput",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:research-input:1.0"
+}

@@ -1,0 +1,49 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "cik": {
+      "maxLength": 10,
+      "minLength": 10,
+      "not": {
+        "enum": [
+          "0000000000"
+        ]
+      },
+      "pattern": "^[0-9]{10}$",
+      "title": "Cik",
+      "type": "string"
+    },
+    "resource": {
+      "enum": [
+        "submissions",
+        "revenue",
+        "net_income",
+        "cash",
+        "debt_current",
+        "debt_noncurrent",
+        "operating_cf",
+        "capex"
+      ],
+      "title": "Resource",
+      "type": "string"
+    },
+    "revenue_concept": {
+      "default": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "enum": [
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "Revenues",
+        "SalesRevenueNet"
+      ],
+      "title": "Revenue Concept",
+      "type": "string"
+    }
+  },
+  "required": [
+    "cik",
+    "resource"
+  ],
+  "title": "SecFetchRequest",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:sec-fetch-request:1.0"
+}

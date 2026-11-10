@@ -1,6 +1,7 @@
 """PostgreSQL Core tables. Runtime never creates or migrates these implicitly."""
 
 from sqlalchemy import (
+    Boolean,
     CheckConstraint,
     Column,
     DateTime,
@@ -17,8 +18,47 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 
-MIGRATION_HEAD = "0010_document_archive"
+MIGRATION_HEAD = "0014_sec_schedules"
 metadata = MetaData()
+
+worker_sessions = Table(
+    "worker_sessions",
+    metadata,
+    Column("session_id", UUID(as_uuid=True), primary_key=True),
+    Column("worker_id", String(128), nullable=False),
+    Column("kind", String(32), nullable=False),
+    Column("mode", String(16), nullable=False),
+    Column("process_id", Integer, nullable=False),
+    Column("implementation_sha256", String(64), nullable=False),
+    Column("started_at", DateTime(timezone=True), nullable=False),
+    Column("heartbeat_at", DateTime(timezone=True), nullable=False),
+    Column("stopped_at", DateTime(timezone=True)),
+    Column("stop_reason", String(16)),
+    Column("error_code", String(32)),
+    CheckConstraint(
+        "kind IN ('sec_import','document_validation','sec_scheduler')",
+        name="ck_worker_session_kind",
+    ),
+    CheckConstraint("mode IN ('once','forever')", name="ck_worker_session_mode"),
+    CheckConstraint("process_id > 0", name="ck_worker_session_pid"),
+    CheckConstraint("implementation_sha256 ~ '^[a-f0-9]{64}$'", name="ck_worker_session_hash"),
+    CheckConstraint(
+        "length(btrim(worker_id)) BETWEEN 1 AND 128 AND worker_id=btrim(worker_id) "
+        "AND worker_id !~ '[[:cntrl:]]'",
+        name="ck_worker_session_name",
+    ),
+    CheckConstraint("heartbeat_at >= started_at", name="ck_worker_session_heartbeat"),
+    CheckConstraint(
+        "(stopped_at IS NULL AND stop_reason IS NULL AND error_code IS NULL) OR "
+        "(stopped_at IS NOT NULL AND stop_reason IS NOT NULL AND stopped_at >= heartbeat_at "
+        "AND stop_reason IN ('completed','interrupted') "
+        "AND error_code IS NULL) OR (stopped_at IS NOT NULL AND stop_reason IS NOT NULL "
+        "AND error_code IS NOT NULL AND stopped_at >= heartbeat_at AND stop_reason='error' "
+        "AND error_code IN ('WORKER_RUNTIME_FAILED','WORKER_MONITOR_FAILED'))",
+        name="ck_worker_session_stop",
+    ),
+    Index("ix_worker_session_kind", "kind", "session_id"),
+)
 
 instruments = Table(
     "instruments",
@@ -395,4 +435,176 @@ document_reviews = Table(
     UniqueConstraint("archive_id", "command_id", name="uq_document_review_command"),
     CheckConstraint("revision BETWEEN 1 AND 10000", name="ck_document_review_revision"),
     CheckConstraint("command_sha256 ~ '^[a-f0-9]{64}$'", name="ck_document_review_hash"),
+)
+
+
+document_tasks = Table(
+    "document_tasks",
+    metadata,
+    Column("job_id", UUID(as_uuid=True), primary_key=True),
+    Column(
+        "archive_id", UUID(as_uuid=True), ForeignKey("document_archives.archive_id"), nullable=False
+    ),
+    Column("request", JSONB, nullable=False),
+    Column("input_sha256", String(64), nullable=False),
+    Column("document_sha256", String(64), nullable=False),
+    Column("draft_sha256", String(64), nullable=False),
+    Column("status", String(16), nullable=False),
+    Column("stage", String(16), nullable=False),
+    Column("attempt", Integer, nullable=False),
+    Column("worker_id", String(128)),
+    Column("implementation_sha256", String(64)),
+    Column("lease_token", UUID(as_uuid=True)),
+    Column("started_at", DateTime(timezone=True)),
+    Column("heartbeat_at", DateTime(timezone=True)),
+    Column("lease_expires_at", DateTime(timezone=True)),
+    Column("error_code", String(128)),
+    Column("result", JSONB),
+    Column(
+        "created_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    Column(
+        "updated_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    CheckConstraint("attempt BETWEEN 0 AND 3", name="ck_document_task_attempt"),
+    CheckConstraint(
+        "status IN ('queued','running','completed','blocked','failed')",
+        name="ck_document_task_status",
+    ),
+    CheckConstraint(
+        "stage IN ('queued','reading','validating','archiving','completed','blocked','failed')",
+        name="ck_document_task_stage",
+    ),
+    CheckConstraint(
+        "(status='running') = (lease_token IS NOT NULL AND lease_expires_at IS NOT NULL)",
+        name="ck_document_task_lease",
+    ),
+    CheckConstraint(
+        "input_sha256 ~ '^[a-f0-9]{64}$' AND document_sha256 ~ '^[a-f0-9]{64}$' "
+        "AND draft_sha256 ~ '^[a-f0-9]{64}$'",
+        name="ck_document_task_hash",
+    ),
+    Index("ix_document_task_claim", "status", "created_at"),
+)
+
+document_task_events = Table(
+    "document_task_events",
+    metadata,
+    Column("job_id", UUID(as_uuid=True), ForeignKey("document_tasks.job_id"), primary_key=True),
+    Column("sequence", Integer, primary_key=True),
+    Column("payload", JSONB, nullable=False),
+    Column("sha256", String(64), nullable=False),
+    CheckConstraint("sequence BETWEEN 1 AND 32", name="ck_document_task_event_sequence"),
+    CheckConstraint("sha256 ~ '^[a-f0-9]{64}$'", name="ck_document_task_event_hash"),
+)
+
+document_task_audits = Table(
+    "document_task_audits",
+    metadata,
+    Column("job_id", UUID(as_uuid=True), ForeignKey("document_tasks.job_id"), primary_key=True),
+    Column("attempt", Integer, primary_key=True),
+    Column("payload", JSONB, nullable=False),
+    Column("sha256", String(64), nullable=False),
+    CheckConstraint("attempt BETWEEN 1 AND 3", name="ck_document_task_audit_attempt"),
+    CheckConstraint("sha256 ~ '^[a-f0-9]{64}$'", name="ck_document_task_audit_hash"),
+)
+
+import_task_events = Table(
+    "import_task_events",
+    metadata,
+    Column("run_id", UUID(as_uuid=True), ForeignKey("import_tasks.run_id"), primary_key=True),
+    Column("sequence", Integer, primary_key=True),
+    Column("kind", String(24), nullable=False),
+    Column("recorded_at", DateTime(timezone=True), nullable=False),
+    Column("payload", JSONB, nullable=False),
+    CheckConstraint("sequence > 0", name="ck_import_task_event_sequence"),
+    CheckConstraint(
+        "kind IN ('created','transition','legacy_snapshot')", name="ck_import_task_event_kind"
+    ),
+)
+
+sec_schedules = Table(
+    "sec_schedules",
+    metadata,
+    Column("schedule_id", UUID(as_uuid=True), primary_key=True),
+    Column("template", JSONB, nullable=False),
+    Column("create_request", JSONB, nullable=False),
+    Column("interval_seconds", Integer, nullable=False),
+    Column("first_run_at", DateTime(timezone=True), nullable=False),
+    Column("next_run_at", DateTime(timezone=True), nullable=False),
+    Column("enabled", Boolean, nullable=False),
+    Column("revision", Integer, nullable=False, server_default="0"),
+    Column(
+        "created_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    Column(
+        "updated_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    Column("last_scheduled_for", DateTime(timezone=True)),
+    Column("last_outcome", String(16)),
+    Column("last_run_id", UUID(as_uuid=True), ForeignKey("import_tasks.run_id")),
+    CheckConstraint("interval_seconds BETWEEN 3600 AND 2592000", name="ck_sec_schedule_interval"),
+    CheckConstraint("revision BETWEEN 0 AND 10000", name="ck_sec_schedule_revision"),
+    CheckConstraint("next_run_at >= first_run_at", name="ck_sec_schedule_next"),
+    CheckConstraint(
+        "last_outcome IS NULL OR last_outcome IN ('enqueued','skipped_busy')",
+        name="ck_sec_schedule_outcome",
+    ),
+    Index("ix_sec_schedule_due", "enabled", "next_run_at"),
+)
+
+sec_schedule_commands = Table(
+    "sec_schedule_commands",
+    metadata,
+    Column(
+        "schedule_id", UUID(as_uuid=True), ForeignKey("sec_schedules.schedule_id"), primary_key=True
+    ),
+    Column("revision", Integer, primary_key=True),
+    Column("command_id", UUID(as_uuid=True), nullable=False),
+    Column("payload", JSONB, nullable=False),
+    Column(
+        "recorded_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    UniqueConstraint("schedule_id", "command_id", name="uq_sec_schedule_command"),
+    CheckConstraint("revision BETWEEN 1 AND 10000", name="ck_sec_schedule_command_revision"),
+)
+
+sec_schedule_occurrences = Table(
+    "sec_schedule_occurrences",
+    metadata,
+    Column(
+        "schedule_id", UUID(as_uuid=True), ForeignKey("sec_schedules.schedule_id"), primary_key=True
+    ),
+    Column("sequence", Integer, primary_key=True),
+    Column("scheduled_for", DateTime(timezone=True), nullable=False),
+    Column("dispatched_at", DateTime(timezone=True), nullable=False),
+    Column("skipped_slots", Integer, nullable=False),
+    Column("outcome", String(16), nullable=False),
+    Column("run_id", UUID(as_uuid=True), ForeignKey("import_tasks.run_id")),
+    UniqueConstraint("schedule_id", "scheduled_for", name="uq_sec_schedule_slot"),
+    CheckConstraint(
+        "sequence > 0 AND skipped_slots >= 0", name="ck_sec_schedule_occurrence_counts"
+    ),
+    CheckConstraint(
+        "outcome IN ('enqueued','skipped_busy')", name="ck_sec_schedule_occurrence_outcome"
+    ),
+    CheckConstraint(
+        "(outcome='enqueued') = (run_id IS NOT NULL)", name="ck_sec_schedule_occurrence_task"
+    ),
+    CheckConstraint("dispatched_at >= scheduled_for", name="ck_sec_schedule_occurrence_time"),
 )

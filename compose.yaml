@@ -1,0 +1,18 @@
+services:
+  api:
+    build: .
+    ports: ["127.0.0.1:8080:8080"]
+    volumes: ["reports:/app/artifacts"]
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    read_only: true
+    tmpfs: ["/tmp"]
+  demo:
+    build: .
+    profiles: ["demo"]
+    command: ["node", "services/runtime/demo.mjs"]
+    volumes: ["reports:/app/artifacts"]
+volumes:
+  reports:
+

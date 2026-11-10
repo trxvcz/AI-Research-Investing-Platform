@@ -1,0 +1,14 @@
+{
+  "name": "alphasense-starter",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node services/api/server.mjs",
+    "demo": "node services/runtime/demo.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

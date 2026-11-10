@@ -1,0 +1,6 @@
+# Specyfikacja badań
+Wejście: asset_id, typ equity/commodity, as_of UTC, horyzont, waluta, dataset snapshot, konfiguracja i pytanie. Każdy rekord ma event_time i available_at. Wybieraj tylko available_at <= as_of.
+Spółki: model biznesowy, segmenty, przychody/marże/FCF, ROIC i zadłużenie, rozwodnienie, zarząd, ryzyka, wycena względna i scenariusze DCF z jawnymi założeniami. Obliczenia Python, interpretacja opcjonalnie LLM. Nie stosuj wskaźników bez sensu dla sektora.
+Surowce: podaż/popyt, zapasy, produkcja, koszty krańcowe, sezonowość, logistyka/geopolityka, FX, krzywa futures, contango/backwardation i rolki. Nie stosuj P/E do surowca; rozróżniaj spot, futures i ETF.
+Technical dopiero po fundamental: OHLCV skorygowane zgodnie z metodą, kalendarz/strefy, trend/zmienność/wolumen, RSI/ATR/MA z warmup, poziomy i warunki unieważnienia. Wynik to hipoteza, nie pewność.
+Raport: summary, dane i jakość, fundamental, technical, scenariusze, ograniczenia, strategy evidence jeśli dostępne, wykresy z osiami/jednostkami, cytowania dokument/URL/strona/czas pobrania, lineage, koszt, wersje i werdykt review. Przechowuj każdą próbę analizy; blocked i failed także jako wersjonowany manifest. Brak danych = jawny brak, nigdy wymyślona wartość.

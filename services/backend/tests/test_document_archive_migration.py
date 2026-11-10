@@ -7,7 +7,7 @@ from sqlalchemy import Engine, select, text
 from sqlalchemy.exc import DBAPIError
 from test_document_archive import ROOT, database, request, review  # noqa: F401
 
-from alphasense.db_schema import document_reviews
+from alphasense.db_schema import MIGRATION_HEAD, document_reviews
 from alphasense.document_archive import DocumentArchiveStore
 
 
@@ -18,9 +18,7 @@ def test_empty_downgrade_and_upgrade(database: Engine) -> None:  # noqa: F811
         command.downgrade(config, "0009_import_tasks")
         assert conn.scalar(text("SELECT version_num FROM alembic_version")) == "0009_import_tasks"
         command.upgrade(config, "head")
-        assert (
-            conn.scalar(text("SELECT version_num FROM alembic_version")) == "0010_document_archive"
-        )
+        assert conn.scalar(text("SELECT version_num FROM alembic_version")) == MIGRATION_HEAD
 
 
 def test_nonempty_downgrade_refuses_history_loss(database: Engine) -> None:  # noqa: F811

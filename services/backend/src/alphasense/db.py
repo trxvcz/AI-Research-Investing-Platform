@@ -14,6 +14,10 @@ from alphasense.db_schema import (
     MIGRATION_HEAD,
     document_archives,
     document_reviews,
+    document_task_audits,
+    document_task_events,
+    document_tasks,
+    import_task_events,
     import_tasks,
     instruments,
     provider_quota_windows,
@@ -24,8 +28,12 @@ from alphasense.db_schema import (
     run_events,
     run_snapshots,
     sec_ingestions,
+    sec_schedule_commands,
+    sec_schedule_occurrences,
+    sec_schedules,
     worker_claims,
     worker_jobs,
+    worker_sessions,
 )
 from alphasense.instrument_records import decode_instrument
 from alphasense.report_contracts import ReportRevision
@@ -135,8 +143,16 @@ class ReportStore:
                     provider_quota_windows,
                     sec_ingestions,
                     import_tasks,
+                    import_task_events,
+                    sec_schedules,
+                    sec_schedule_commands,
+                    sec_schedule_occurrences,
                     document_archives,
                     document_reviews,
+                    document_tasks,
+                    document_task_events,
+                    document_task_audits,
+                    worker_sessions,
                 ):
                     connection.execute(select(table).limit(0))
         except SQLAlchemyError:
