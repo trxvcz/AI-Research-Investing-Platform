@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "command_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Command Id",
+      "type": "string"
+    },
+    "expected_revision": {
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "command_id",
+    "expected_revision",
+    "enabled"
+  ],
+  "title": "ScheduleCommand",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:schedule-command:1.0"
+}

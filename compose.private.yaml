@@ -1,0 +1,127 @@
+name: alphasense-private
+
+x-application: &application
+  image: alphasense-private-app:${ALPHASENSE_PRIVATE_IMAGE_TAG:-local}
+  build:
+    context: .
+    dockerfile: deploy/private/Dockerfile
+    args:
+      BUILD_GIT_SHA: ${ALPHASENSE_BUILD_GIT_SHA:?Set the repository build revision}
+  user: "10001:10001"
+  init: true
+  read_only: true
+  tmpfs: ["/tmp:rw,noexec,nosuid,size=64m"]
+  cap_drop: ["ALL"]
+  security_opt: ["no-new-privileges:true"]
+  restart: unless-stopped
+  stop_grace_period: 30s
+  depends_on:
+    db:
+      condition: service_healthy
+  environment: &application-environment
+    ALPHASENSE_DATABASE_URL_FILE: /run/secrets/database_url
+  secrets: [database_url]
+  volumes: ["sec_catalog:/app/.local-postgres/sec-catalog"]
+  networks: [database]
+
+services:
+  db:
+    image: postgres:17.11
+    user: postgres
+    environment:
+      POSTGRES_USER: alphasense
+      POSTGRES_DB: alphasense
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets: [postgres_password]
+    volumes: ["postgres_private:/var/lib/postgresql/data"]
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m", "/var/run/postgresql:rw,nosuid,size=16m,mode=0777"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "alphasense", "-d", "alphasense"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    stop_grace_period: 30s
+    networks: [database]
+
+  api:
+    <<: *application
+    command: [api]
+    environment:
+      <<: *application-environment
+      ALPHASENSE_PRIVATE_AUTH_FILE: /run/secrets/private_access
+      ALPHASENSE_PRIVATE_ORIGIN: https://localhost:8443
+      ALPHASENSE_SEC_USER_AGENT_FILE: /run/secrets/sec_user_agent
+    secrets: [database_url, private_access, sec_user_agent]
+    networks: [database, edge]
+    healthcheck:
+      # 401 establishes protected HTTP liveness, not database readiness.
+      test: ["CMD", "python", "-c", "import http.client,sys; c=http.client.HTTPConnection('127.0.0.1',8080,timeout=3); c.request('GET','/health',headers={'Host':'localhost:8443'}); sys.exit(0 if c.getresponse().status==401 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+
+  sec-worker:
+    <<: *application
+    command: [sec-worker]
+    environment:
+      <<: *application-environment
+      ALPHASENSE_SEC_USER_AGENT_FILE: /run/secrets/sec_user_agent
+    secrets: [database_url, sec_user_agent]
+    networks: [database, source_egress]
+
+  document-worker:
+    <<: *application
+    command: [document-worker]
+
+  scheduler:
+    <<: *application
+    command: [scheduler]
+
+  migrate:
+    <<: *application
+    profiles: [ops]
+    command: [migrate]
+    restart: "no"
+
+  proxy:
+    image: caddy:2-alpine
+    ports: ["127.0.0.1:8443:8443"]
+    volumes:
+      - ./deploy/private/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_private_data:/data
+      - caddy_private_config:/config
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=32m"]
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    stop_grace_period: 30s
+    networks: [edge]
+
+secrets:
+  database_url:
+    file: ${ALPHASENSE_PRIVATE_SECRETS_DIR:-./.local-postgres/private-deploy}/database-url.txt
+  postgres_password:
+    file: ${ALPHASENSE_PRIVATE_SECRETS_DIR:-./.local-postgres/private-deploy}/postgres-password.txt
+  private_access:
+    file: ${ALPHASENSE_PRIVATE_SECRETS_DIR:-./.local-postgres/private-deploy}/access.json
+  sec_user_agent:
+    file: ${ALPHASENSE_PRIVATE_SECRETS_DIR:-./.local-postgres/private-deploy}/sec-user-agent.txt
+
+volumes:
+  postgres_private:
+  sec_catalog:
+  caddy_private_data:
+  caddy_private_config:
+
+networks:
+  database:
+    internal: true
+  edge:
+  source_egress:

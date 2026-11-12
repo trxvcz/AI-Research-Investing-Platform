@@ -1,0 +1,26 @@
+{
+  "development": {
+    "max_parallel": 3,
+    "roles": [
+      "architect",
+      "backend",
+      "quant",
+      "frontend",
+      "ai-integration",
+      "qa"
+    ],
+    "integration_owner": "coordinator"
+  },
+  "runtime": {
+    "order": [
+      "data",
+      "fundamental",
+      "technical",
+      "strategy_optional",
+      "report",
+      "reviewer"
+    ],
+    "max_parallel_assets": 2,
+    "review_required": true
+  }
+}

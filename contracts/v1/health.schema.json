@@ -1,0 +1,35 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "const": "ok",
+      "default": "ok",
+      "title": "Status",
+      "type": "string"
+    },
+    "mode": {
+      "default": "validation-only",
+      "enum": [
+        "validation-only",
+        "postgresql"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "research_only": {
+      "const": true,
+      "default": true,
+      "title": "Research Only",
+      "type": "boolean"
+    },
+    "external_providers_enabled": {
+      "default": false,
+      "title": "External Providers Enabled",
+      "type": "boolean"
+    }
+  },
+  "title": "HealthResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:health:1.0"
+}

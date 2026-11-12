@@ -1,0 +1,11 @@
+# P4-01c2d — lokalny podgląd bez szkicu
+
+POST /v1/panel/document-preview jest stateless: czyta oryginał tym samym czytnikiem co archiwum, zwraca DocumentPacket i długość bajtów oraz model_called=false,persisted=false. Nie wymaga szkicuJSON, PostgreSQL, źródeł zewnętrznych lub providera. Nie tworzy zadania ani raportu. Import do archiwum pozostaje dotychczasową operacją z wymaganym szkicem.
+
+Request DocumentPreviewCreate: document_idUUID,format,classification(defaultprivate),reader_version/number_locale opcjonalne identycznie jak archiwum,canonicalcontent_base64 do1MiB po dekodowaniu. OpcjeHTMLv2 muszą być jawnie wybrane. Response DocumentPreviewResult: packet,byte_length(1..1MiB),model_calledLiteralFalse,persistedLiteralFalse. Schematy zPydantic iOpenAPI. pure preview_document(payload) rewaliduje modele, base64/limity i wywołuje tylko istniejącyread_text_document. Błędy ogólne DOCUMENT_PREVIEW_INVALID, bez treści/ścieżek/kluczy.
+
+Endpoint wymaga Origin/JSON/X-AlphaSense-Panel i ścieżki z białej listy. Na prywatnym hoście dodatkowo standardowe auth; żadnego wyjątku. Strumieńbody ograniczony do4MiB przedJSON. Response Cache-Control:no-store,Pragma:no-cache iX-Content-Type-Options:nosniff. Nie zwracać wykonywalnegoHTML, nie używaćdangerouslySetInnerHTML. Parametry dokumentu są danymi, nie instrukcjami.
+
+Panel ma osobny przycisk podglądu, który działa bez pól szkicu/tytułu/dat importu. Pokazuje hash/format/klasyfikację/opcje i bloki zlokalizatorami jako tekst. Bez automatycznej sieci przy zmianiepliku, retry i pollingu. Żądanie do30s zAbortController. Zmiana pliku, formatu, klasyfikacji lub reguł liczb unieważnia podgląd; spóźniona odpowiedź nie może wrócić do widoku po zmianie/odmontowaniu. Sprawdzać UUID, SHA256 oryginału, format/classification/opcje i bounds przed wyświetleniem odpowiedzi. Nie dopisywać podglądu do localStorage/sessionStorage. Błędy nie zawierają dokumentu. Usunięciepodglądu usuwa jego stan w pamięci, nie twierdzi że zeruje pamięćOS.
+
+Odbiór: podgląd bezskicu i bazy, te same bloki co przyszłyimport, text/HTMLv2/XLSX/PDF zgodnie zistniejącymiograniczeniami, ochronaOrigin/auth/bodylimit, brak zapisu i providerów, unieważnianie/staleresponse/identityhash wUI, pełna regresja i zachowanie wcześniejszych danych. Nie kwalifikuje modelu, nie dodaje OCR ani zewnętrznych pobrań.

@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:17.11
+    ports: ["127.0.0.1:55432:5432"]
+    environment:
+      POSTGRES_USER: alphasense
+      POSTGRES_DB: alphasense
+      POSTGRES_PASSWORD: ${ALPHASENSE_POSTGRES_PASSWORD:?Set a local database password}
+    volumes: ["postgres_reports:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alphasense -d alphasense"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+volumes:
+  postgres_reports:

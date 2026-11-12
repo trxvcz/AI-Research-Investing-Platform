@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "document_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Document Id",
+      "type": "string"
+    },
+    "format": {
+      "enum": [
+        "text",
+        "html",
+        "xlsx",
+        "pdf"
+      ],
+      "title": "Format",
+      "type": "string"
+    },
+    "classification": {
+      "default": "private",
+      "enum": [
+        "public",
+        "private",
+        "secret"
+      ],
+      "title": "Classification",
+      "type": "string"
+    },
+    "reader_version": {
+      "anyOf": [
+        {
+          "const": "table-text-v2",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reader Version"
+    },
+    "number_locale": {
+      "anyOf": [
+        {
+          "const": "en-US",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Number Locale"
+    },
+    "content_base64": {
+      "maxLength": 1398104,
+      "minLength": 4,
+      "title": "Content Base64",
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_id",
+    "format",
+    "content_base64"
+  ],
+  "title": "DocumentPreviewCreate",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-preview-create:1.0"
+}

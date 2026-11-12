@@ -1,0 +1,2 @@
+# Keep synthetic snapshot bytes and sealed report fixtures stable across OSes.
+services/backend/tests/fixtures/*.json text eol=lf

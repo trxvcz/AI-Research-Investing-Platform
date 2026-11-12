@@ -1,0 +1,88 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "cik": {
+      "maxLength": 10,
+      "minLength": 10,
+      "not": {
+        "enum": [
+          "0000000000"
+        ]
+      },
+      "pattern": "^[0-9]{10}$",
+      "title": "Cik",
+      "type": "string"
+    },
+    "symbol": {
+      "maxLength": 32,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+      "title": "Symbol",
+      "type": "string"
+    },
+    "exchange_mic": {
+      "enum": [
+        "XNAS",
+        "XNYS"
+      ],
+      "title": "Exchange Mic",
+      "type": "string"
+    },
+    "instrument_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Instrument Id",
+      "type": "string"
+    },
+    "run_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "revenue_concept": {
+      "default": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "enum": [
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "Revenues",
+        "SalesRevenueNet"
+      ],
+      "title": "Revenue Concept",
+      "type": "string"
+    },
+    "pipeline_version": {
+      "default": "sec-fundamentals-v1",
+      "enum": [
+        "sec-fundamentals-v1",
+        "sec-fundamentals-v2"
+      ],
+      "title": "Pipeline Version",
+      "type": "string"
+    },
+    "refresh": {
+      "default": false,
+      "title": "Refresh",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "cik",
+    "symbol",
+    "exchange_mic",
+    "instrument_id",
+    "run_id"
+  ],
+  "title": "SecImportRequest",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:sec-import-request:1.0"
+}

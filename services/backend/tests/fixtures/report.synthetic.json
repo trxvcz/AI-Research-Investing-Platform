@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "report_id": "f8550d24-5200-42fe-b715-a564af5c8c42",
+  "revision_id": "72589ef2-5137-41f3-92ec-d3681e6d2e6a",
+  "parent_revision_id": null,
+  "revision": 1,
+  "generated_at_utc": "2024-02-02T00:00:00Z",
+  "input": {
+    "schema_version": "1.0",
+    "instrument_id": "DEMO-EQUITY",
+    "asset_type": "equity",
+    "as_of": "2024-02-01T00:00:00Z",
+    "data_origin": "synthetic",
+    "observations": [
+      {
+        "metric": "revenue",
+        "unit": "USD",
+        "currency": "USD",
+        "period_start": "2023-01-01T00:00:00Z",
+        "period_end": "2023-12-31T23:59:59Z",
+        "status": "available",
+        "value": 0.0,
+        "source_id": "synthetic-demo",
+        "snapshot_id": "synthetic-snapshot-1",
+        "event_time": "2024-01-15T00:00:00Z",
+        "available_at": "2024-01-16T00:00:00Z"
+      },
+      {
+        "metric": "net_margin",
+        "unit": "ratio",
+        "currency": null,
+        "period_start": "2023-01-01T00:00:00Z",
+        "period_end": "2023-12-31T23:59:59Z",
+        "status": "missing",
+        "value": null,
+        "reason": "Synthetic fixture has no net income input"
+      }
+    ]
+  },
+  "status": "partial",
+  "methodology_version": "synthetic-envelope-fixture-1",
+  "pipeline_git_sha": "6d7e7269fe72199c365b157a456ddab399f85e93",
+  "sources": [
+    {
+      "source_id": "synthetic-demo",
+      "snapshot_id": "synthetic-snapshot-1",
+      "sha256": "9c84ea83cd9226b865f29f1e0011f84401b21021384037b1e701cd0ebc976e65",
+      "url": null,
+      "retrieved_at": "2024-01-16T00:00:00Z",
+      "license": "generated fixture"
+    }
+  ],
+  "fundamental_section": {
+    "status": "complete",
+    "findings": [
+      {
+        "kind": "fact",
+        "text": "Synthetic revenue input equals zero.",
+        "observation_indexes": [
+          0
+        ],
+        "method": null
+      }
+    ],
+    "reason": null
+  },
+  "technical_section": {
+    "status": "blocked",
+    "findings": [],
+    "reason": "No prices"
+  },
+  "synthesis_section": {
+    "status": "blocked",
+    "findings": [],
+    "reason": "No research synthesis implemented"
+  },
+  "scenario_section": {
+    "status": "not_applicable",
+    "findings": [],
+    "reason": "Envelope fixture only"
+  },
+  "uncertainties": [
+    "No external source was verified"
+  ],
+  "limitations": [
+    "Synthetic fixture; not investment evidence"
+  ],
+  "disclaimer": "Research only. No order execution or personalized investment advice.",
+  "model_provenance": null,
+  "prompt_template_version": null,
+  "chart_artifact_ids": [],
+  "input_sha256": "c0848c372ceb553efac67181a00a1d5acb9ee3bc8d2735914d11fbdd25873386",
+  "checksum": "cb3e1d071ff1daa0994bc007268ce7fd057e40bf013c3b11f0da33ba52d3e9a2"
+}

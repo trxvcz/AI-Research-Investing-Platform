@@ -1,0 +1,15 @@
+node_modules/
+apps/panel/dist/
+.env
+.env.*
+!.env.example
+artifacts/
+__pycache__/
+.venv/
+.pytest_cache/
+.pytest-*/
+.mypy_cache/
+.ruff_cache/
+*.py[cod]
+.local-postgres/
+

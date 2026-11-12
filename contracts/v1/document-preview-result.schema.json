@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "DocumentBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Block Id",
+          "type": "string"
+        },
+        "locator": {
+          "maxLength": 256,
+          "minLength": 1,
+          "title": "Locator",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 32768,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "block_id",
+        "locator",
+        "text"
+      ],
+      "title": "DocumentBlock",
+      "type": "object"
+    },
+    "DocumentPacket": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "document_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "text",
+            "html",
+            "xlsx",
+            "pdf"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "classification": {
+          "enum": [
+            "public",
+            "private",
+            "secret"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/DocumentBlock"
+          },
+          "maxItems": 512,
+          "minItems": 1,
+          "title": "Blocks",
+          "type": "array"
+        },
+        "reader_version": {
+          "anyOf": [
+            {
+              "const": "table-text-v2",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reader Version"
+        },
+        "number_locale": {
+          "anyOf": [
+            {
+              "const": "en-US",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Locale"
+        }
+      },
+      "required": [
+        "document_id",
+        "sha256",
+        "format",
+        "classification",
+        "blocks"
+      ],
+      "title": "DocumentPacket",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "packet": {
+      "$ref": "#/$defs/DocumentPacket"
+    },
+    "byte_length": {
+      "maximum": 1048576,
+      "minimum": 1,
+      "title": "Byte Length",
+      "type": "integer"
+    },
+    "model_called": {
+      "const": false,
+      "default": false,
+      "title": "Model Called",
+      "type": "boolean"
+    },
+    "persisted": {
+      "const": false,
+      "default": false,
+      "title": "Persisted",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "packet",
+    "byte_length"
+  ],
+  "title": "DocumentPreviewResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-preview-result:1.0"
+}

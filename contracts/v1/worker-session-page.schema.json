@@ -1,0 +1,219 @@
+{
+  "$defs": {
+    "WorkerSessionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Session Id",
+          "type": "string"
+        },
+        "worker_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Worker Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "sec_import",
+            "document_validation",
+            "sec_scheduler"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "once",
+            "forever"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "process_id": {
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Process Id",
+          "type": "integer"
+        },
+        "implementation_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Implementation Sha256",
+          "type": "string"
+        },
+        "started_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Started At",
+          "type": "string"
+        },
+        "heartbeat_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Heartbeat At",
+          "type": "string"
+        },
+        "stopped_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stopped At"
+        },
+        "stop_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "completed",
+                "interrupted",
+                "error"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stop Reason"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "enum": [
+                "WORKER_RUNTIME_FAILED",
+                "WORKER_MONITOR_FAILED"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error Code"
+        },
+        "status": {
+          "enum": [
+            "online",
+            "stale",
+            "stopped"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "contact_expires_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Contact Expires At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id",
+        "worker_id",
+        "kind",
+        "mode",
+        "process_id",
+        "implementation_sha256",
+        "started_at",
+        "heartbeat_at",
+        "stopped_at",
+        "stop_reason",
+        "error_code",
+        "status",
+        "observed_at",
+        "contact_expires_at"
+      ],
+      "title": "WorkerSessionRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/WorkerSessionRecord"
+      },
+      "maxItems": 50,
+      "title": "Items",
+      "type": "array"
+    },
+    "next_after_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Next After Id"
+    },
+    "observed_at": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "Observed At",
+      "type": "string"
+    },
+    "stale_after_seconds": {
+      "const": 45,
+      "default": 45,
+      "title": "Stale After Seconds",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "items",
+    "next_after_id",
+    "observed_at"
+  ],
+  "title": "WorkerSessionPage",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:worker-session-page:1.0"
+}

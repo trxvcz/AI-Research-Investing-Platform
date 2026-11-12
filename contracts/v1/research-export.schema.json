@@ -1,0 +1,1863 @@
+{
+  "$defs": {
+    "AbsentObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Unit",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "period_start": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "missing",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "null"
+        },
+        "reason": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "currency",
+        "period_start",
+        "period_end",
+        "status",
+        "value",
+        "reason"
+      ],
+      "title": "AbsentObservation",
+      "type": "object"
+    },
+    "AiAnalysisRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "report_checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Report Checksum",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "running",
+            "completed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Created At",
+          "type": "string"
+        },
+        "finished_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Finished At"
+        },
+        "model_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "prompt_version": {
+          "default": "report-synthesis-v1",
+          "enum": [
+            "report-synthesis-v1",
+            "report-history-v2"
+          ],
+          "title": "Prompt Version",
+          "type": "string"
+        },
+        "analysis": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AiNarrative"
+            },
+            {
+              "$ref": "#/$defs/AiHistoryNarrative"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Analysis"
+        },
+        "evidence_context": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AiHistoryContext"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z][A-Z0-9_]{0,127}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Error Code"
+        },
+        "reserved_pln": {
+          "const": "1.00",
+          "default": "1.00",
+          "title": "Reserved Pln",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "report_id",
+        "revision",
+        "report_checksum",
+        "status",
+        "created_at",
+        "finished_at",
+        "model_id",
+        "analysis",
+        "error_code"
+      ],
+      "title": "AiAnalysisRecord",
+      "type": "object"
+    },
+    "AiClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "observation_indexes": {
+          "items": {
+            "maximum": 999,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Observation Indexes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "observation_indexes"
+      ],
+      "title": "AiClaim",
+      "type": "object"
+    },
+    "AiHistoryClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "state",
+            "trend",
+            "question"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_indexes": {
+          "items": {
+            "maximum": 63,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Evidence Indexes",
+          "type": "array"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "enum": [
+                "increase",
+                "decrease",
+                "unchanged"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "evidence_indexes",
+        "direction"
+      ],
+      "title": "AiHistoryClaim",
+      "type": "object"
+    },
+    "AiHistoryComparison": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "comparison",
+          "default": "comparison",
+          "title": "Kind",
+          "type": "string"
+        },
+        "index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "previous_index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Previous Index",
+          "type": "integer"
+        },
+        "current_index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Current Index",
+          "type": "integer"
+        },
+        "delta_value": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Value"
+        },
+        "delta_percent": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Percent"
+        },
+        "comparison_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "NON_POSITIVE_BASE",
+                "PERIODS_NOT_COMPARABLE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Comparison Reason"
+        }
+      },
+      "required": [
+        "index",
+        "metric",
+        "previous_index",
+        "current_index",
+        "delta_value",
+        "delta_percent",
+        "comparison_reason"
+      ],
+      "title": "AiHistoryComparison",
+      "type": "object"
+    },
+    "AiHistoryContext": {
+      "additionalProperties": false,
+      "properties": {
+        "context_version": {
+          "const": "report-history-context-v1",
+          "default": "report-history-context-v1",
+          "title": "Context Version",
+          "type": "string"
+        },
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "report_checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Report Checksum",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "methodology_version": {
+          "const": "sec-comparatives-v1",
+          "default": "sec-comparatives-v1",
+          "title": "Methodology Version",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "comparison": "#/$defs/AiHistoryComparison",
+                "fact": "#/$defs/AiHistoryFact"
+              },
+              "propertyName": "kind"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/AiHistoryFact"
+              },
+              {
+                "$ref": "#/$defs/AiHistoryComparison"
+              }
+            ]
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "maxLength": 1200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 16,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        },
+        "context_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Context Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "report_id",
+        "revision",
+        "report_checksum",
+        "as_of",
+        "evidence",
+        "limitations",
+        "context_sha256"
+      ],
+      "title": "AiHistoryContext",
+      "type": "object"
+    },
+    "AiHistoryFact": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "fact",
+          "default": "fact",
+          "title": "Kind",
+          "type": "string"
+        },
+        "index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Unit",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "value": {
+          "maxLength": 128,
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Available At",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceProvenance"
+        },
+        "report_observation_index": {
+          "anyOf": [
+            {
+              "maximum": 999,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Report Observation Index"
+        },
+        "filing_accession": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9]{10}-[0-9]{2}-[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Filing Accession"
+        }
+      },
+      "required": [
+        "index",
+        "metric",
+        "unit",
+        "currency",
+        "value",
+        "period_start",
+        "period_end",
+        "available_at",
+        "source",
+        "report_observation_index",
+        "filing_accession"
+      ],
+      "title": "AiHistoryFact",
+      "type": "object"
+    },
+    "AiHistoryNarrative": {
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "items": {
+            "$ref": "#/$defs/AiHistoryClaim"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Summary",
+          "type": "array"
+        },
+        "strengths": {
+          "items": {
+            "$ref": "#/$defs/AiHistoryClaim"
+          },
+          "maxItems": 6,
+          "title": "Strengths",
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/AiHistoryClaim"
+          },
+          "maxItems": 6,
+          "title": "Risks",
+          "type": "array"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/AiHistoryClaim"
+          },
+          "maxItems": 6,
+          "title": "Questions",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "maxLength": 1200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "strengths",
+        "risks",
+        "questions",
+        "limitations"
+      ],
+      "title": "AiHistoryNarrative",
+      "type": "object"
+    },
+    "AiNarrative": {
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "items": {
+            "$ref": "#/$defs/AiClaim"
+          },
+          "maxItems": 6,
+          "minItems": 1,
+          "title": "Summary",
+          "type": "array"
+        },
+        "strengths": {
+          "items": {
+            "$ref": "#/$defs/AiClaim"
+          },
+          "maxItems": 6,
+          "title": "Strengths",
+          "type": "array"
+        },
+        "risks": {
+          "items": {
+            "$ref": "#/$defs/AiClaim"
+          },
+          "maxItems": 6,
+          "title": "Risks",
+          "type": "array"
+        },
+        "questions": {
+          "items": {
+            "$ref": "#/$defs/AiClaim"
+          },
+          "maxItems": 6,
+          "title": "Questions",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "maxLength": 1200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 12,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "summary",
+        "strengths",
+        "risks",
+        "questions",
+        "limitations"
+      ],
+      "title": "AiNarrative",
+      "type": "object"
+    },
+    "AvailableObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Unit",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "period_start": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "status": {
+          "const": "available",
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        },
+        "source_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "event_time": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Event Time",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Available At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "currency",
+        "period_start",
+        "period_end",
+        "status",
+        "value",
+        "source_id",
+        "snapshot_id",
+        "event_time",
+        "available_at"
+      ],
+      "title": "AvailableObservation",
+      "type": "object"
+    },
+    "FinancialHistory": {
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "report_checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Report Checksum",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "methodology_version": {
+          "const": "sec-comparatives-v1",
+          "default": "sec-comparatives-v1",
+          "title": "Methodology Version",
+          "type": "string"
+        },
+        "basis": {
+          "const": "latest_filing_comparatives",
+          "default": "latest_filing_comparatives",
+          "title": "Basis",
+          "type": "string"
+        },
+        "series": {
+          "items": {
+            "$ref": "#/$defs/FinancialHistorySeries"
+          },
+          "maxItems": 4,
+          "title": "Series",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "report_id",
+        "revision",
+        "report_checksum",
+        "as_of",
+        "series",
+        "limitations"
+      ],
+      "title": "FinancialHistory",
+      "type": "object"
+    },
+    "FinancialHistoryPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "filing_date": {
+          "format": "date",
+          "title": "Filing Date",
+          "type": "string"
+        },
+        "delta_value": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Value"
+        },
+        "delta_percent": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Percent"
+        },
+        "comparison_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "NO_PRIOR_PERIOD",
+                "PERIODS_NOT_COMPARABLE",
+                "NON_POSITIVE_BASE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Comparison Reason"
+        }
+      },
+      "required": [
+        "period_start",
+        "period_end",
+        "value",
+        "filing_date",
+        "delta_value",
+        "delta_percent",
+        "comparison_reason"
+      ],
+      "title": "FinancialHistoryPoint",
+      "type": "object"
+    },
+    "FinancialHistorySeries": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "revenue",
+            "net_income",
+            "operating_cash_flow",
+            "capital_expenditures"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "currency": {
+          "const": "USD",
+          "default": "USD",
+          "title": "Currency",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "partial",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "source_snapshot_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Source Snapshot Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Available At",
+          "type": "string"
+        },
+        "filing_accession": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Filing Accession"
+        },
+        "points": {
+          "items": {
+            "$ref": "#/$defs/FinancialHistoryPoint"
+          },
+          "maxItems": 3,
+          "title": "Points",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "status",
+        "reason",
+        "source_snapshot_id",
+        "source_sha256",
+        "source_url",
+        "available_at",
+        "filing_accession",
+        "points"
+      ],
+      "title": "FinancialHistorySeries",
+      "type": "object"
+    },
+    "FinancialRatioPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "net_margin",
+            "operating_cash_flow_margin",
+            "capex_to_revenue",
+            "free_cash_flow_margin"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value_percent": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value Percent"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "MISSING_INPUT",
+                "PERIOD_MISMATCH",
+                "FILING_MISMATCH",
+                "NON_POSITIVE_REVENUE",
+                "NEGATIVE_CAPEX"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Available At"
+        },
+        "operands": {
+          "items": {
+            "$ref": "#/$defs/RatioOperand"
+          },
+          "maxItems": 3,
+          "title": "Operands",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "period_start",
+        "period_end",
+        "status",
+        "value_percent",
+        "reason",
+        "available_at",
+        "operands"
+      ],
+      "title": "FinancialRatioPoint",
+      "type": "object"
+    },
+    "FinancialRatios": {
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "report_checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Report Checksum",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "methodology_version": {
+          "const": "sec-ratios-v1",
+          "default": "sec-ratios-v1",
+          "title": "Methodology Version",
+          "type": "string"
+        },
+        "history": {
+          "$ref": "#/$defs/FinancialHistory"
+        },
+        "ratios": {
+          "items": {
+            "$ref": "#/$defs/FinancialRatioPoint"
+          },
+          "maxItems": 12,
+          "title": "Ratios",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "report_id",
+        "revision",
+        "report_checksum",
+        "as_of",
+        "history",
+        "ratios",
+        "limitations"
+      ],
+      "title": "FinancialRatios",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "fact",
+            "calculation",
+            "assumption",
+            "interpretation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Text",
+          "type": "string"
+        },
+        "observation_indexes": {
+          "items": {
+            "maximum": 999,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 1000,
+          "title": "Observation Indexes",
+          "type": "array"
+        },
+        "method": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "minLength": 1,
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\S(?:.*\\S)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Method"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "observation_indexes",
+        "method"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "RatioOperand": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "revenue",
+            "net_income",
+            "operating_cash_flow",
+            "capital_expenditures"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "source_snapshot_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Source Snapshot Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "value",
+        "source_snapshot_id",
+        "source_sha256"
+      ],
+      "title": "RatioOperand",
+      "type": "object"
+    },
+    "ReportRevision": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "parent_revision_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent Revision Id"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "generated_at_utc": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Generated At Utc",
+          "type": "string"
+        },
+        "input": {
+          "$ref": "#/$defs/ResearchInput"
+        },
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "blocked",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "methodology_version": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Methodology Version",
+          "type": "string"
+        },
+        "pipeline_git_sha": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$",
+          "title": "Pipeline Git Sha",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/SourceProvenance"
+          },
+          "maxItems": 1000,
+          "title": "Sources",
+          "type": "array"
+        },
+        "fundamental_section": {
+          "$ref": "#/$defs/ReportSection"
+        },
+        "technical_section": {
+          "$ref": "#/$defs/ReportSection"
+        },
+        "synthesis_section": {
+          "$ref": "#/$defs/ReportSection"
+        },
+        "scenario_section": {
+          "$ref": "#/$defs/ReportSection"
+        },
+        "uncertainties": {
+          "items": {
+            "maxLength": 512,
+            "minLength": 1,
+            "not": {
+              "pattern": "\\s$"
+            },
+            "pattern": "^\\S(?:.*\\S)?$",
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Uncertainties",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "maxLength": 512,
+            "minLength": 1,
+            "not": {
+              "pattern": "\\s$"
+            },
+            "pattern": "^\\S(?:.*\\S)?$",
+            "type": "string"
+          },
+          "maxItems": 32,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        },
+        "disclaimer": {
+          "const": "Research only. No order execution or personalized investment advice.",
+          "title": "Disclaimer",
+          "type": "string"
+        },
+        "model_provenance": {
+          "title": "Model Provenance",
+          "type": "null"
+        },
+        "prompt_template_version": {
+          "title": "Prompt Template Version",
+          "type": "null"
+        },
+        "chart_artifact_ids": {
+          "items": {
+            "maxLength": 128,
+            "minLength": 1,
+            "not": {
+              "pattern": "\\s$"
+            },
+            "pattern": "^\\S(?:.*\\S)?$",
+            "type": "string"
+          },
+          "maxItems": 0,
+          "title": "Chart Artifact Ids",
+          "type": "array"
+        },
+        "input_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Input Sha256",
+          "type": "string"
+        },
+        "checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Checksum",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "report_id",
+        "revision_id",
+        "parent_revision_id",
+        "revision",
+        "generated_at_utc",
+        "input",
+        "status",
+        "methodology_version",
+        "pipeline_git_sha",
+        "sources",
+        "fundamental_section",
+        "technical_section",
+        "synthesis_section",
+        "scenario_section",
+        "uncertainties",
+        "limitations",
+        "disclaimer",
+        "model_provenance",
+        "prompt_template_version",
+        "chart_artifact_ids",
+        "input_sha256",
+        "checksum"
+      ],
+      "title": "ReportRevision",
+      "type": "object"
+    },
+    "ReportSection": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "blocked",
+            "failed",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "findings": {
+          "items": {
+            "$ref": "#/$defs/Finding"
+          },
+          "maxItems": 100,
+          "title": "Findings",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\S(?:.*\\S)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "status",
+        "findings",
+        "reason"
+      ],
+      "title": "ReportSection",
+      "type": "object"
+    },
+    "ResearchInput": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "instrument_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Instrument Id",
+          "type": "string"
+        },
+        "asset_type": {
+          "enum": [
+            "equity",
+            "etf",
+            "commodity"
+          ],
+          "title": "Asset Type",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "data_origin": {
+          "enum": [
+            "synthetic",
+            "live"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "observations": {
+          "items": {
+            "discriminator": {
+              "mapping": {
+                "available": "#/$defs/AvailableObservation",
+                "missing": "#/$defs/AbsentObservation",
+                "not_applicable": "#/$defs/AbsentObservation"
+              },
+              "propertyName": "status"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/$defs/AvailableObservation"
+              },
+              {
+                "$ref": "#/$defs/AbsentObservation"
+              }
+            ]
+          },
+          "maxItems": 1000,
+          "minItems": 1,
+          "title": "Observations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "schema_version",
+        "instrument_id",
+        "asset_type",
+        "as_of",
+        "data_origin",
+        "observations"
+      ],
+      "title": "ResearchInput",
+      "type": "object"
+    },
+    "SourceProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "minLength": 1,
+              "pattern": "^[hH][tT][tT][pP][sS]?://",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Url"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "license": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "License",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "snapshot_id",
+        "sha256",
+        "url",
+        "retrieved_at",
+        "license"
+      ],
+      "title": "SourceProvenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "export_version": {
+      "const": "research-export-v1",
+      "default": "research-export-v1",
+      "title": "Export Version",
+      "type": "string"
+    },
+    "report": {
+      "$ref": "#/$defs/ReportRevision"
+    },
+    "ai_analysis": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AiAnalysisRecord"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "financial_ratios": {
+      "$ref": "#/$defs/FinancialRatios"
+    },
+    "limitations": {
+      "items": {
+        "maxLength": 2000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Limitations",
+      "type": "array"
+    },
+    "checksum": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Checksum",
+      "type": "string"
+    }
+  },
+  "required": [
+    "report",
+    "ai_analysis",
+    "financial_ratios",
+    "limitations",
+    "checksum"
+  ],
+  "title": "ResearchExport",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:research-export:1.0"
+}

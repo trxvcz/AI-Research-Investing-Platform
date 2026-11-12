@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "instrument_id": "4fd132ae-72ce-4265-967f-e37756c7a69e",
+  "symbol": "DEMO",
+  "exchange_mic": "XNAS",
+  "currency": "USD",
+  "display_name": "Synthetic registry fixture",
+  "asset_type": "equity",
+  "data_origin": "synthetic",
+  "as_of": "2024-02-01T00:00:00Z",
+  "available_at": "2024-01-16T00:00:00Z",
+  "source_id": "synthetic-registry",
+  "source_url": null,
+  "license": "generated fixture"
+}

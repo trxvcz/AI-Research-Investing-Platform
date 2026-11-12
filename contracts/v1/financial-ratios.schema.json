@@ -1,0 +1,478 @@
+{
+  "$defs": {
+    "FinancialHistory": {
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "report_checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Report Checksum",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "methodology_version": {
+          "const": "sec-comparatives-v1",
+          "default": "sec-comparatives-v1",
+          "title": "Methodology Version",
+          "type": "string"
+        },
+        "basis": {
+          "const": "latest_filing_comparatives",
+          "default": "latest_filing_comparatives",
+          "title": "Basis",
+          "type": "string"
+        },
+        "series": {
+          "items": {
+            "$ref": "#/$defs/FinancialHistorySeries"
+          },
+          "maxItems": 4,
+          "title": "Series",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "report_id",
+        "revision",
+        "report_checksum",
+        "as_of",
+        "series",
+        "limitations"
+      ],
+      "title": "FinancialHistory",
+      "type": "object"
+    },
+    "FinancialHistoryPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "filing_date": {
+          "format": "date",
+          "title": "Filing Date",
+          "type": "string"
+        },
+        "delta_value": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Value"
+        },
+        "delta_percent": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Percent"
+        },
+        "comparison_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "NO_PRIOR_PERIOD",
+                "PERIODS_NOT_COMPARABLE",
+                "NON_POSITIVE_BASE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Comparison Reason"
+        }
+      },
+      "required": [
+        "period_start",
+        "period_end",
+        "value",
+        "filing_date",
+        "delta_value",
+        "delta_percent",
+        "comparison_reason"
+      ],
+      "title": "FinancialHistoryPoint",
+      "type": "object"
+    },
+    "FinancialHistorySeries": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "revenue",
+            "net_income",
+            "operating_cash_flow",
+            "capital_expenditures"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "currency": {
+          "const": "USD",
+          "default": "USD",
+          "title": "Currency",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "partial",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "source_snapshot_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Source Snapshot Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "source_url": {
+          "title": "Source Url",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Available At",
+          "type": "string"
+        },
+        "filing_accession": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Filing Accession"
+        },
+        "points": {
+          "items": {
+            "$ref": "#/$defs/FinancialHistoryPoint"
+          },
+          "maxItems": 3,
+          "title": "Points",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "status",
+        "reason",
+        "source_snapshot_id",
+        "source_sha256",
+        "source_url",
+        "available_at",
+        "filing_accession",
+        "points"
+      ],
+      "title": "FinancialHistorySeries",
+      "type": "object"
+    },
+    "FinancialRatioPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "net_margin",
+            "operating_cash_flow_margin",
+            "capex_to_revenue",
+            "free_cash_flow_margin"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value_percent": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value Percent"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "MISSING_INPUT",
+                "PERIOD_MISMATCH",
+                "FILING_MISMATCH",
+                "NON_POSITIVE_REVENUE",
+                "NEGATIVE_CAPEX"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Reason"
+        },
+        "available_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Available At"
+        },
+        "operands": {
+          "items": {
+            "$ref": "#/$defs/RatioOperand"
+          },
+          "maxItems": 3,
+          "title": "Operands",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "period_start",
+        "period_end",
+        "status",
+        "value_percent",
+        "reason",
+        "available_at",
+        "operands"
+      ],
+      "title": "FinancialRatioPoint",
+      "type": "object"
+    },
+    "RatioOperand": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "revenue",
+            "net_income",
+            "operating_cash_flow",
+            "capital_expenditures"
+          ],
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "source_snapshot_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Source Snapshot Id",
+          "type": "string"
+        },
+        "source_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "value",
+        "source_snapshot_id",
+        "source_sha256"
+      ],
+      "title": "RatioOperand",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "report_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Report Id",
+      "type": "string"
+    },
+    "revision": {
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "report_checksum": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Report Checksum",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "methodology_version": {
+      "const": "sec-ratios-v1",
+      "default": "sec-ratios-v1",
+      "title": "Methodology Version",
+      "type": "string"
+    },
+    "history": {
+      "$ref": "#/$defs/FinancialHistory"
+    },
+    "ratios": {
+      "items": {
+        "$ref": "#/$defs/FinancialRatioPoint"
+      },
+      "maxItems": 12,
+      "title": "Ratios",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "maxLength": 2000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "title": "Limitations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "report_id",
+    "revision",
+    "report_checksum",
+    "as_of",
+    "history",
+    "ratios",
+    "limitations"
+  ],
+  "title": "FinancialRatios",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:financial-ratios:1.0"
+}

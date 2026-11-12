@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "instrument_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Instrument Id",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "data_origin": {
+      "enum": [
+        "synthetic",
+        "live"
+      ],
+      "title": "Data Origin",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "partial",
+        "blocked"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "available_count": {
+      "minimum": 0,
+      "title": "Available Count",
+      "type": "integer"
+    },
+    "missing_count": {
+      "minimum": 0,
+      "title": "Missing Count",
+      "type": "integer"
+    },
+    "not_applicable_count": {
+      "minimum": 0,
+      "title": "Not Applicable Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_version",
+    "instrument_id",
+    "as_of",
+    "data_origin",
+    "status",
+    "available_count",
+    "missing_count",
+    "not_applicable_count"
+  ],
+  "title": "ValidationResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:validation-result:1.0"
+}

@@ -1,0 +1,215 @@
+{
+  "$defs": {
+    "CandidateFact": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "value_token": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Value Token",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "scale": {
+          "enum": [
+            1,
+            1000,
+            1000000
+          ],
+          "title": "Scale",
+          "type": "integer"
+        },
+        "currency": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "consolidated",
+            "separate",
+            "unknown"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/FactEvidence"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "value_token",
+        "value",
+        "scale",
+        "currency",
+        "period_start",
+        "period_end",
+        "scope",
+        "evidence"
+      ],
+      "title": "CandidateFact",
+      "type": "object"
+    },
+    "FactEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "block_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Block Id",
+          "type": "string"
+        },
+        "quote": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "title": "Quote",
+          "type": "string"
+        }
+      },
+      "required": [
+        "block_id",
+        "quote"
+      ],
+      "title": "FactEvidence",
+      "type": "object"
+    },
+    "FactReview": {
+      "additionalProperties": false,
+      "properties": {
+        "fact": {
+          "$ref": "#/$defs/CandidateFact"
+        },
+        "status": {
+          "enum": [
+            "needs_review",
+            "rejected"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason_code": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Reason Code",
+          "type": "string"
+        }
+      },
+      "required": [
+        "fact",
+        "status",
+        "reason_code"
+      ],
+      "title": "FactReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "document_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Document Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "blocked",
+        "rejected",
+        "needs_review"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "facts": {
+      "items": {
+        "$ref": "#/$defs/FactReview"
+      },
+      "maxItems": 64,
+      "title": "Facts",
+      "type": "array"
+    },
+    "error_code": {
+      "anyOf": [
+        {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Error Code"
+    }
+  },
+  "required": [
+    "document_id",
+    "provider_id",
+    "status",
+    "facts",
+    "error_code"
+  ],
+  "title": "DocumentAgentResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-agent-result:1.0"
+}

@@ -1,0 +1,51 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "command_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Command Id",
+      "type": "string"
+    },
+    "expected_revision": {
+      "maximum": 10000,
+      "minimum": 0,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "fact_index": {
+      "maximum": 63,
+      "minimum": 0,
+      "title": "Fact Index",
+      "type": "integer"
+    },
+    "verdict": {
+      "enum": [
+        "accepted",
+        "rejected"
+      ],
+      "title": "Verdict",
+      "type": "string"
+    },
+    "note": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "command_id",
+    "expected_revision",
+    "fact_index",
+    "verdict",
+    "note"
+  ],
+  "title": "DocumentReviewCommand",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-review-command:1.0"
+}

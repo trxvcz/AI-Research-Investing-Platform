@@ -1,0 +1,218 @@
+{
+  "$defs": {
+    "BenchmarkCaseResult": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "data_origin": {
+          "enum": [
+            "synthetic",
+            "user_supplied"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "true_positives": {
+          "minimum": 0,
+          "title": "True Positives",
+          "type": "integer"
+        },
+        "false_positives": {
+          "minimum": 0,
+          "title": "False Positives",
+          "type": "integer"
+        },
+        "false_negatives": {
+          "minimum": 0,
+          "title": "False Negatives",
+          "type": "integer"
+        },
+        "evidence_rejections": {
+          "minimum": 0,
+          "title": "Evidence Rejections",
+          "type": "integer"
+        },
+        "invalid_response": {
+          "title": "Invalid Response",
+          "type": "boolean"
+        },
+        "expected_abstention": {
+          "title": "Expected Abstention",
+          "type": "boolean"
+        },
+        "successful_abstention": {
+          "title": "Successful Abstention",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "case_id",
+        "data_origin",
+        "true_positives",
+        "false_positives",
+        "false_negatives",
+        "evidence_rejections",
+        "invalid_response",
+        "expected_abstention",
+        "successful_abstention"
+      ],
+      "title": "BenchmarkCaseResult",
+      "type": "object"
+    },
+    "BenchmarkRatio": {
+      "additionalProperties": false,
+      "properties": {
+        "numerator": {
+          "minimum": 0,
+          "title": "Numerator",
+          "type": "integer"
+        },
+        "denominator": {
+          "minimum": 0,
+          "title": "Denominator",
+          "type": "integer"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "pattern": "^(0\\.[0-9]{6}|1\\.000000)$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "numerator",
+        "denominator",
+        "value"
+      ],
+      "title": "BenchmarkRatio",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scorer_version": {
+      "const": "document-offline-v1",
+      "default": "document-offline-v1",
+      "title": "Scorer Version",
+      "type": "string"
+    },
+    "suite_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Sha256",
+      "type": "string"
+    },
+    "responses_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Responses Sha256",
+      "type": "string"
+    },
+    "response_origin": {
+      "enum": [
+        "hand_authored_reference",
+        "saved_unverified_response"
+      ],
+      "title": "Response Origin",
+      "type": "string"
+    },
+    "qualification_status": {
+      "const": "not_qualified_offline",
+      "default": "not_qualified_offline",
+      "title": "Qualification Status",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/BenchmarkCaseResult"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    },
+    "true_positives": {
+      "minimum": 0,
+      "title": "True Positives",
+      "type": "integer"
+    },
+    "false_positives": {
+      "minimum": 0,
+      "title": "False Positives",
+      "type": "integer"
+    },
+    "false_negatives": {
+      "minimum": 0,
+      "title": "False Negatives",
+      "type": "integer"
+    },
+    "evidence_rejections": {
+      "minimum": 0,
+      "title": "Evidence Rejections",
+      "type": "integer"
+    },
+    "invalid_responses": {
+      "minimum": 0,
+      "title": "Invalid Responses",
+      "type": "integer"
+    },
+    "expected_abstentions": {
+      "minimum": 0,
+      "title": "Expected Abstentions",
+      "type": "integer"
+    },
+    "successful_abstentions": {
+      "minimum": 0,
+      "title": "Successful Abstentions",
+      "type": "integer"
+    },
+    "precision": {
+      "$ref": "#/$defs/BenchmarkRatio"
+    },
+    "recall": {
+      "$ref": "#/$defs/BenchmarkRatio"
+    }
+  },
+  "required": [
+    "suite_sha256",
+    "responses_sha256",
+    "response_origin",
+    "cases",
+    "true_positives",
+    "false_positives",
+    "false_negatives",
+    "evidence_rejections",
+    "invalid_responses",
+    "expected_abstentions",
+    "successful_abstentions",
+    "precision",
+    "recall"
+  ],
+  "title": "BenchmarkResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-benchmark-result:1.0"
+}

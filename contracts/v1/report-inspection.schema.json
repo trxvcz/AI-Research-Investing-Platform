@@ -1,0 +1,161 @@
+{
+  "$defs": {
+    "LegacyInspection": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "const": "legacy-m0",
+          "default": "legacy-m0",
+          "title": "Format",
+          "type": "string"
+        },
+        "report_id": {
+          "minLength": 1,
+          "title": "Report Id",
+          "type": "string"
+        },
+        "legacy_status": {
+          "enum": [
+            "demo",
+            "partial",
+            "blocked",
+            "complete",
+            "failed"
+          ],
+          "title": "Legacy Status",
+          "type": "string"
+        },
+        "migration_status": {
+          "const": "blocked_missing_provenance",
+          "default": "blocked_missing_provenance",
+          "title": "Migration Status",
+          "type": "string"
+        },
+        "missing_fields": {
+          "default": [
+            "observation_available_at",
+            "observation_periods",
+            "snapshot_provenance"
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "const": "observation_available_at",
+              "type": "string"
+            },
+            {
+              "const": "observation_periods",
+              "type": "string"
+            },
+            {
+              "const": "snapshot_provenance",
+              "type": "string"
+            }
+          ],
+          "title": "Missing Fields",
+          "type": "array"
+        }
+      },
+      "required": [
+        "report_id",
+        "legacy_status"
+      ],
+      "title": "LegacyInspection",
+      "type": "object"
+    },
+    "V1Inspection": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "const": "v1",
+          "default": "v1",
+          "title": "Format",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "report_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Report Id",
+          "type": "string"
+        },
+        "revision_id": {
+          "format": "uuid",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "revision": {
+          "exclusiveMinimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "blocked",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "data_origin": {
+          "enum": [
+            "synthetic",
+            "live"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "checksum": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Checksum",
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "report_id",
+        "revision_id",
+        "revision",
+        "status",
+        "data_origin",
+        "checksum"
+      ],
+      "title": "V1Inspection",
+      "type": "object"
+    }
+  },
+  "discriminator": {
+    "mapping": {
+      "legacy-m0": "#/$defs/LegacyInspection",
+      "v1": "#/$defs/V1Inspection"
+    },
+    "propertyName": "format"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/LegacyInspection"
+    },
+    {
+      "$ref": "#/$defs/V1Inspection"
+    }
+  ],
+  "title": "RootModel[Annotated[Union[LegacyInspection, V1Inspection], FieldInfo(annotation=NoneType, required=True, discriminator='format')]]",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:report-inspection:1.0"
+}

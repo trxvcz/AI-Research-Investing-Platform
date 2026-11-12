@@ -1,0 +1,28 @@
+{
+  "sources": [
+    {
+      "id": "synthetic-demo",
+      "enabled": true,
+      "license": "generated fixture",
+      "asset_types": [
+        "equity",
+        "commodity"
+      ]
+    },
+    {
+      "id": "licensed-provider-placeholder",
+      "enabled": false,
+      "endpoint": null,
+      "license": null,
+      "rate_limit": null
+    }
+  ],
+  "required_fields": [
+    "as_of",
+    "available_at",
+    "currency",
+    "unit",
+    "source_id"
+  ],
+  "stale_data": "block"
+}

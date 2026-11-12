@@ -1,0 +1,223 @@
+{
+  "$defs": {
+    "BenchmarkCase": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "issuer_label": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Issuer Label",
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "text",
+            "html",
+            "xlsx",
+            "pdf"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "reader_version": {
+          "anyOf": [
+            {
+              "const": "table-text-v2",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reader Version"
+        },
+        "number_locale": {
+          "anyOf": [
+            {
+              "const": "en-US",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Locale"
+        },
+        "classification": {
+          "enum": [
+            "public",
+            "private",
+            "secret"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "data_origin": {
+          "enum": [
+            "synthetic",
+            "user_supplied"
+          ],
+          "title": "Data Origin",
+          "type": "string"
+        },
+        "content_base64": {
+          "maxLength": 1398104,
+          "minLength": 4,
+          "title": "Content Base64",
+          "type": "string"
+        },
+        "document_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Document Sha256",
+          "type": "string"
+        },
+        "source_available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Source Available At",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "expected_facts": {
+          "items": {
+            "$ref": "#/$defs/GoldFact"
+          },
+          "maxItems": 64,
+          "title": "Expected Facts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "case_id",
+        "issuer_label",
+        "format",
+        "classification",
+        "data_origin",
+        "content_base64",
+        "document_sha256",
+        "source_available_at",
+        "as_of",
+        "expected_facts"
+      ],
+      "title": "BenchmarkCase",
+      "type": "object"
+    },
+    "GoldFact": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "currency": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "consolidated",
+            "separate"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "value",
+        "currency",
+        "period_start",
+        "period_end",
+        "scope"
+      ],
+      "title": "GoldFact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "suite_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/BenchmarkCase"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "suite_id",
+    "cases"
+  ],
+  "title": "BenchmarkSuite",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-benchmark-suite:1.0"
+}

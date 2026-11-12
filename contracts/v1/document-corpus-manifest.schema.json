@@ -1,0 +1,291 @@
+{
+  "$defs": {
+    "CorpusCase": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "issuer_label": {
+          "maxLength": 128,
+          "minLength": 1,
+          "title": "Issuer Label",
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "text",
+            "html",
+            "pdf",
+            "xlsx"
+          ],
+          "title": "Format",
+          "type": "string"
+        },
+        "reader_version": {
+          "anyOf": [
+            {
+              "const": "table-text-v2",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reader Version"
+        },
+        "number_locale": {
+          "anyOf": [
+            {
+              "const": "en-US",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Locale"
+        },
+        "source_file": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Source File",
+          "type": "string"
+        },
+        "source_url": {
+          "format": "uri",
+          "minLength": 1,
+          "not": {
+            "anyOf": [
+              {
+                "pattern": "[\\x00-\\x1f\\x7f]"
+              },
+              {
+                "pattern": "^[hH][tT][tT][pP][sS]://[^/?#]*@"
+              }
+            ]
+          },
+          "pattern": "^[hH][tT][tT][pP][sS]://",
+          "title": "Source Url",
+          "type": "string"
+        },
+        "source_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Sha256",
+          "type": "string"
+        },
+        "first_seen_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "First Seen At",
+          "type": "string"
+        },
+        "as_of": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "As Of",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "source_locator": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Source Locator",
+          "type": "string"
+        },
+        "annotation_status": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "independently_reviewed"
+          ],
+          "title": "Annotation Status",
+          "type": "string"
+        },
+        "reviewer_note": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Reviewer Note",
+          "type": "string"
+        },
+        "gold": {
+          "items": {
+            "$ref": "#/$defs/GoldFact"
+          },
+          "maxItems": 64,
+          "title": "Gold",
+          "type": "array"
+        },
+        "sampling": {
+          "default": "whole_document",
+          "enum": [
+            "whole_document",
+            "exact_byte_ranges"
+          ],
+          "title": "Sampling",
+          "type": "string"
+        },
+        "ranges": {
+          "items": {
+            "$ref": "#/$defs/CorpusRange"
+          },
+          "maxItems": 32,
+          "title": "Ranges",
+          "type": "array"
+        }
+      },
+      "required": [
+        "case_id",
+        "issuer_label",
+        "format",
+        "source_file",
+        "source_url",
+        "source_sha256",
+        "first_seen_at",
+        "as_of",
+        "title",
+        "source_locator",
+        "gold"
+      ],
+      "title": "CorpusCase",
+      "type": "object"
+    },
+    "CorpusRange": {
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "maximum": 16777216,
+          "minimum": 0,
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "maximum": 16777216,
+          "minimum": 1,
+          "title": "End",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "CorpusRange",
+      "type": "object"
+    },
+    "GoldFact": {
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "value": {
+          "maxLength": 128,
+          "minLength": 1,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "currency": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[A-Z]{3}$",
+          "title": "Currency",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date",
+          "title": "Period End",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "consolidated",
+            "separate"
+          ],
+          "title": "Scope",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "value",
+        "currency",
+        "period_start",
+        "period_end",
+        "scope"
+      ],
+      "title": "GoldFact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "suite_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\S(?:.*\\S)?$",
+      "title": "Suite Id",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/CorpusCase"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "suite_id",
+    "cases"
+  ],
+  "title": "CorpusManifest",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-corpus-manifest:1.0"
+}

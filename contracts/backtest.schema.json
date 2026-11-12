@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/alphasense/backtest.schema.json",
+  "title": "backtest",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "strategy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dataset_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "code_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "cost_assumptions": {
+      "type": "object"
+    },
+    "trials": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "oos_windows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "rejected",
+        "validated",
+        "insufficient_data"
+      ]
+    }
+  },
+  "required": [
+    "strategy_id",
+    "dataset_hash",
+    "code_version",
+    "seed",
+    "cost_assumptions",
+    "trials",
+    "oos_windows",
+    "metrics",
+    "status"
+  ]
+}

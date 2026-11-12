@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/alphasense/strategy.schema.json",
+  "title": "strategy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hypothesis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "universe": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "feature": {
+      "enum": [
+        "sma_cross"
+      ]
+    },
+    "lookback": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 252
+    },
+    "execution": {
+      "const": "next_bar"
+    },
+    "max_weight": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": [
+    "id",
+    "hypothesis",
+    "universe",
+    "feature",
+    "lookback",
+    "execution",
+    "max_weight"
+  ]
+}

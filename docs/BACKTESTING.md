@@ -1,0 +1,6 @@
+# Strategy discovery i walidacja
+LLM proponuje hipotezę w ograniczonym JSON DSL: instrument universe, features, reguły entry/exit, sizing, constraints i benchmark. Zakaz eval i dowolnego kodu. Rejestruj wszystkie próby, również odrzucone; ogranicz liczbę przeszukiwań.
+Dane point-in-time z delistingami, corporate actions, dostępnością raportów, kalendarzem, FX i metodą continuous futures. Sygnał na zamknięciu t realizowany najwcześniej na następnej dostępnej sesji; respektuj opóźnienia publikacji.
+Uwzględnij prowizję, spread, slippage, płynność, borrow/short restrictions, roll i finansowanie. Metryki: zwrot netto, drawdown, turnover, ekspozycja, ryzyko i benchmark; annualizacja zgodna z rynkiem. Nie publikuj Sharpe dla zbyt krótkiej próby bez ostrzeżenia.
+Chronologiczny train/validation/test, purging/embargo zgodnie z horyzontem labeli. Walk-forward: fit wyłącznie na train każdego okna, parametry zamrożone na kolejnym OOS, złącz tylko OOS; końcowy holdout użyty raz. Korekta multiple testing, stabilność parametrów, bootstrap uwzględniający zależności i sensitivity kosztów. Zapisz seed, kod, snapshot i wszystkie triale. Paper monitor porównuje drift i execution assumptions.
+Starter nie zawiera wyników ani kompletnego backtestera. services/strategies blokuje backtest do implementacji M4.

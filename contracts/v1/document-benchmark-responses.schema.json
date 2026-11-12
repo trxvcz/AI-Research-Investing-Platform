@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "BenchmarkResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "document_sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Document Sha256",
+          "type": "string"
+        },
+        "raw_json": {
+          "maxLength": 262144,
+          "minLength": 1,
+          "title": "Raw Json",
+          "type": "string"
+        }
+      },
+      "required": [
+        "case_id",
+        "document_sha256",
+        "raw_json"
+      ],
+      "title": "BenchmarkResponse",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "suite_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Suite Sha256",
+      "type": "string"
+    },
+    "response_origin": {
+      "enum": [
+        "hand_authored_reference",
+        "saved_unverified_response"
+      ],
+      "title": "Response Origin",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/BenchmarkResponse"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "title": "Cases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "suite_sha256",
+    "response_origin",
+    "cases"
+  ],
+  "title": "BenchmarkResponses",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:document-benchmark-responses:1.0"
+}
