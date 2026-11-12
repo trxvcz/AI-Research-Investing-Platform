@@ -12,4 +12,8 @@ API: GET `/v1/panel/reports/{report_id}/{revision}/research-export` oraz `/resea
 
 To dokument badawczy, bez wyceny, prognozy kursu i rekomendacji. Komparatywy mogą być przekształcone i nie odtwarzają wiedzy inwestora w dawnym roku. GPW, automatyczna ekstrakcja dokumentów i hostingVPS nadal wymagają odrębnych etapów.
 
-Odbiór: w toku.
+Odbiór rzeczywisty2026-11-12: GOOGL i AAPL, każda w warianciev1/v2 oraz bezAI; cztery wybrane eksporty AI zwalidowano modelem, powtórne żądania dały identyczne bajtyJSON. Potwierdzono attachment/no-store/nosniff/CSP, brak skryptów i zapisane sumy kontrolne. Raporty, stare/noweAIhashy i38PLN rezerwy pozostały niezmienione.
+
+W panelu potwierdzono linki do dokładnie wybranej wersjiAI; samodzielny HTML Apple otwarto osobno i sprawdzono tekst oraz wygląd. Tabele zachowują dokładne wartości; identyfikacja zawiera instrumentUUID bez zgadywania nazwy emitenta. Wartości i daty są obecnie zapisane technicznie, bez skracania kwot.
+
+Testy eksportu42/42PASS; panel106/106, Node9/9, TypeScript/Vite, Ruff/format, mypy87modułów, schematy/OpenAPI i pipcheckPASS. Pełna regresja PostgreSQL:1701PASS/1SKIP (brak symlinkówWindows),489.75s. NiezależnyQA przejrzał model/API i wskazał poprawione wiązanie źródeł oraz kompletność obserwacjiHTML. Podagenci osiągnęli limit przed końcowym podpisaniem całości; końcowy przegląd bezpieczeństwa i odbiór wykonał koordynator. Bez nowych zależności, migracji i wdrożeniaVPS.

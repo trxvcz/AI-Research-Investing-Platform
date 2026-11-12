@@ -1,5 +1,9 @@
 # AlphaSense starter
 
+## Eksport gotowej analizy
+
+Przy zapisanej analizie AI wybierz **Pobierz pełną analizę HTML** lub **JSON**. Eksport zawiera wybraną wersję narracji, cytowania, historię, wskaźniki i źródła. HTML można czytać bez aplikacji; pobranie nie wywołuje modelu. [Zakres i ograniczenia](docs/RESEARCH_EXPORT.md).
+
 ## Wykresy wyników i wskaźników
 
 Wybierz metrykę na wykresie i wskaż punkt myszą lub klawiaturą, aby zobaczyć dokładną wartość i okres. Braki oraz nieporównywalne okresy przerywają linię; tabele i źródła pozostają dostępne. [Zakres](docs/HISTORY_CHARTS.md).

@@ -2,7 +2,7 @@
 
 ## Eksport gotowej analizy — 2026-11-12
 
-- [ ] P5-02a: deterministyczny pełny eksport JSON i statyczny HTML, wybrany zapisanyAIv1/v2 lub jawny brakAI, historia/wskaźniki/dowody i kontrola tożsamości. [Zakres](docs/RESEARCH_EXPORT.md). Implementacja i odbiór w toku.
+- [x] P5-02a: deterministyczny pełny eksport JSON i statyczny HTML, wybrany zapisanyAIv1/v2 lub jawny brakAI, historia/wskaźniki/dowody i kontrola tożsamości. [Zakres](docs/RESEARCH_EXPORT.md). Implementacja i rzeczywisty odbiór zakończone.
 
 
 ## Wykresy historii — 2026-11-12
@@ -174,3 +174,5 @@ Odbiór AI z historią2026-11-12:1617PythonPASS/1SKIP w pełnym przebiegu Postgr
 Odbiór wskaźników2026-11-12:1649PythonPASS/1SKIP w pełnej regresji PostgreSQL; osobno końcowe42testy wskaźników/API PASS, w tym10przypadków dodanych po kolekcji pełnego przebiegu. Panel98/98, Node9/9, build/Ruff/format/mypy84modułów/schematy/OpenAPI/pipcheckPASS. NiezależnyQA bez blokerów; rzeczywisteGOOGL3wyniki+9braków, AAPL12wyników, walidator frontendowy i UI dowodówPASS. Poprzednie raporty/AIhashy/budżet38PLN i podpisana implementacjaAI niezmienione po restarcie panelu. Bez migracji, nowych źródeł, modelcalls i wdrożeniaVPS.
 
 Odbiór wykresów2026-11-12:106/106testów panelu, w tym8nowych przypadków geometrii/braków/precyzji, Node9/9, TypeScript/Vite i schematy/OpenAPIPASS. NiezależnyQA bez blokerów, dodatkowe próby wartości skrajnych/gap/immutabilityPASS. UI potwierdził rzeczywisteGOOGL, wybór punktu Enter, dokładną wartość, reset szczegółów po zmianie metryki i jawny brak danych przepływowych. Kontrola raportów/AIhashy i budżetu38PLN bez zmian; sygnaturaAI/history zgodna. Brak nowego przebieguPython — kodbackendu niezmieniony.
+
+Odbiór eksportu2026-11-12:1701PythonPASS/1SKIP w jednym pełnym przebiegu PostgreSQL,42testy eksportuPASS; panel106/106, Node9/9, build/Ruff/format/mypy87modułów/schematy/OpenAPI/pipcheckPASS. RzeczywisteGOOGL/AAPL: starszeAIv1, noweAIv2 i bezAI, JSON+HTML; powtórnyJSON identyczny, crossreportAI409. Panelpokazujelinki zexactUUID; standaloneHTMLAppleczytelny. Raporty/AIhashy/budżet38PLN/podpisanycoreAI niezmienione po restarcie panelu. Niezależny przegląd częściowy przed limitem podagentów; poprawkiźródeł/anchorów/pełnychobserwacjiHTML i końcowy przegląd wykonał koordynator. Bez migracji, nowych pobrań/modelcalls i wdrożeniaVPS.
