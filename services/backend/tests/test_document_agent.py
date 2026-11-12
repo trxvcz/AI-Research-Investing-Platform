@@ -10,7 +10,12 @@ import pytest
 from pydantic import ValidationError
 from test_provider_policy import NOW, QuotaSpy, grant, policy
 
-from alphasense.document_agent import parse_value_token, run_agent, validate_draft
+from alphasense.document_agent import (
+    build_document_request,
+    parse_value_token,
+    run_agent,
+    validate_draft,
+)
 from alphasense.document_contracts import CandidateFact, DocumentPacket
 from alphasense.provider_policy import FreeOnlyGateway
 
@@ -45,6 +50,31 @@ def fact(**updates: Any) -> dict[str, Any]:
 
 def draft(*facts: dict[str, Any]) -> str:
     return json.dumps({"schema_version": "1.0", "facts": list(facts)})
+
+
+def test_shared_prompt_builder_is_pure_and_matches_agent_payload() -> None:
+    source = packet()
+    expected = build_document_request(source)
+    user = json.loads(expected["messages"][1]["content"])
+    assert set(user) == {"document", "output_schema"}
+    assert user["document"] == source.model_dump(mode="json")
+    assert "untrusted data" in expected["messages"][0]["content"]
+
+    class Gateway:
+        def invoke(self, provider_id: str, payload: object, *, classification: str) -> str:
+            assert provider_id == "evaluation"
+            assert classification == "public"
+            assert payload == expected
+            return draft()
+
+    assert run_agent(source, Gateway(), "evaluation").error_code == "NO_FACTS"
+    assert build_document_request(source) == expected
+
+
+def test_shared_prompt_builder_revalidates_mutated_packet() -> None:
+    source = packet().model_copy(update={"classification": "unknown"})
+    with pytest.raises(ValidationError):
+        build_document_request(source)
 
 
 @pytest.mark.parametrize(

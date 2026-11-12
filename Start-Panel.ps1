@@ -12,6 +12,10 @@ if (-not (Test-Panel)) {
         throw 'Brak zbudowanego panelu. W apps/panel wykonaj npm ci oraz npm run build.'
     }
     $env:PYTHONPATH = Join-Path $PSScriptRoot 'services/backend/src'
+    if (Test-Path -LiteralPath '.local-postgres/ai-analysis-settings.json') {
+        $env:ALPHASENSE_AI_SETTINGS_FILE = Join-Path $PSScriptRoot '.local-postgres/ai-analysis-settings.json'
+        $env:ALPHASENSE_AI_ENV_FILE = Join-Path $PSScriptRoot '.env'
+    }
     if (-not $env:ALPHASENSE_DATABASE_URL) {
         $env:ALPHASENSE_DATABASE_URL = (Get-Content -Raw -LiteralPath '.local-postgres/dev-connection.json' | ConvertFrom-Json).url
     }

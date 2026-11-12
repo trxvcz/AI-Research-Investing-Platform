@@ -11,6 +11,8 @@ WRITE_PATHS = frozenset(
         "/v1/panel/tasks",
         "/v1/panel/catalog/refresh",
         "/v1/panel/documents",
+        "/v1/panel/document-preview",
+        "/v1/panel/ai-analyses",
         "/v1/panel/document-tasks",
         "/v1/panel/schedules",
     }

@@ -1,5 +1,7 @@
 # ADR-0001 — Python/React jako cel, Node jako demonstrator
 
+Aktualizacja2026-11-11: zachowujemy Python/FastAPI/React/PostgreSQL. Właściciel osobno dopuścił Gemini Paid do syntezy raportów,50PLNłącznie bez odnowienia, obecnykluczPaidpotwierdzony. Darmowe źródła i zakaz płatnych fallbacków pozostają; nie jest to aktywacja dowolnych modeli lub ekstrakcji dokumentów. [Konkretny zakres](../AI_ANALYSIS.md). Historyczna decyzja free-only poniżej obowiązuje poza tym jawnym wyjątkiem.
+
 Data: 2026-10-30. Status: ACCEPTED — opcja A zatwierdzona przez właściciela odpowiedzią „dawaj” po przedstawieniu rekomendacji i dokumentów. Rozpoczynamy pierwszy przyrost fazy 1.
 
 ## Kontekst

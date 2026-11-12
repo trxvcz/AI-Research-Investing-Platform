@@ -237,6 +237,32 @@
           "minItems": 1,
           "title": "Blocks",
           "type": "array"
+        },
+        "reader_version": {
+          "anyOf": [
+            {
+              "const": "table-text-v2",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reader Version"
+        },
+        "number_locale": {
+          "anyOf": [
+            {
+              "const": "en-US",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Number Locale"
         }
       },
       "required": [
@@ -426,10 +452,37 @@
       "enum": [
         "text",
         "html",
-        "xlsx"
+        "xlsx",
+        "pdf"
       ],
       "title": "Format",
       "type": "string"
+    },
+    "reader_version": {
+      "anyOf": [
+        {
+          "const": "table-text-v2",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reader Version"
+    },
+    "number_locale": {
+      "anyOf": [
+        {
+          "const": "en-US",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Number Locale"
     },
     "classification": {
       "enum": [

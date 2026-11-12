@@ -1,5 +1,34 @@
 # Zadania
 
+## Eksport gotowej analizy — 2026-11-12
+
+- [ ] P5-02a: deterministyczny pełny eksport JSON i statyczny HTML, wybrany zapisanyAIv1/v2 lub jawny brakAI, historia/wskaźniki/dowody i kontrola tożsamości. [Zakres](docs/RESEARCH_EXPORT.md). Implementacja i odbiór w toku.
+
+
+## Wykresy historii — 2026-11-12
+
+- [x] P5-01a: interaktywne wykresy wyników i wskaźników z istniejących zweryfikowanych danych, wybór metryki/punktu, dokładne wartości i okresy, klawiatura, przerwy przy brakach/nieporównywalności; tabele i dowody zachowane. [Odbiór](docs/HISTORY_CHARTS.md). Bez pobrań, migracji i modelcalls.
+
+
+## Wskaźniki fundamentalne — 2026-11-12
+
+- [x] P2-04a: wskaźniki marż/przepływów z archiwum SEC, zgodne okresy/publikacja, dokładna arytmetyka i niezależna walidacja panelu, wzory/dowody; bezLLM i zmian starych raportów. [Zakres](docs/FINANCIAL_RATIOS.md). Odbiór rzeczywistego HTTP/UI i niezależnyQA zakończone.
+
+## Gotowa interpretacja AI — 2026-11-11
+
+- [x] P4-02a: polska narracja AI z cytowaniami dostępnych obserwacji, zapis związany z dokładną rewizją raportu, jawny przycisk generacji, historia i odczyt bez kolejnych wywołań. [Zakres i użycie](docs/AI_ANALYSIS.md).
+- [x] P4-02b: osobna zgoda Gemini Paid, potwierdzenie obecnego klucza Paid/Tier1, nieodnawialne 50PLN i atomowa rezerwacja 1PLN na próbę w PostgreSQL; bez refundów/retry/fallbacku. Migracja0015 po backupie i kontroli zachowania raportów. FreeOnlyGateway niezmieniony.
+- [x] P4-02c: nowy pilot narracji v3:3/3 syntetyczne odpowiedzi i niezależna ocena semantyczna; rzeczywiste zapisane GOOGL/AAPL, idempotentny odczyt i ponowne żądanie bez naliczenia kolejnej próby. Pierwsza odrzucona próba v2 zachowana i liczona.6PLN rezerwacji,44PLN pozostało. To zakres pilota, nie uniwersalna kwalifikacja lub wynik benchmarku ekstrakcji.
+- [ ] P4-02d: szerszy benchmark narracji i zakresów długu, rozszerzenie porównywalnej historii/danych; odświeżenie przeglądu cen/warunków przed wygaśnięciem pilota bez resetu limitu. GPW/predykcje/Oracle nadal osobnymi etapami.
+- [x] P4-02d1: odczyt maks3rocznych okresów z dokładnych archiwów raportu SEC, kwoty/r/r, kontrola tej samej publikacji i porównywalności, tabela panelu i pochodzenie; bezLLM lub zmiany starych raportów. [Zakres](docs/FINANCIAL_HISTORY.md). GOOGL2serie iAAPL4serie po3okresy2023–2025, bez nowych rezerwacji.
+- [x] P4-02d2: zamrożony kontekst historii i cytowania, prompt report-history-v2, migracja0016 z zachowaniem v1/budżetu, ograniczona kwalifikacja4scenariuszy i rzeczywisteGOOGL/AAPL. [Zakres i ograniczenia](docs/AI_HISTORY_ANALYSIS.md). Szerszy benchmark pozostaje P4-02d.
+
+Odbiór historii2026-11-11:1555PythonPASS/1SKIP wpełnejregresji, panel83/83, Node9/9 i buildPASS; Ruff/format/mypy/schematy/OpenAPI/pipcheckPASS.37testów parsera i4API, niezależnyQA oraz rzeczywistearchiwa/HTTP/walidatorpaneluPASS. Jednostki sprawdzone na raportachSEC(unitcurrency), późniejsze publikacje nie zastępują kotwicy. TabelaGOOGL2023–2025 potwierdzona winterfejsie; raporty/AIhashy i44PLN rezerwy bez zmian. Bez migracji, nowych pobrańSEC, generacjiLLM i wdrożeniaOracle.
+
+Odbiór:1512PythonPASS/1SKIP, osobno1rzeczywistybackup/restore nowego audytu i limituPASS oraz30testówAPI po końcowej poprawcehealth/ready. Panel73/73, Node9/9 i buildPASS; Ruff/format/mypy/schematy/OpenAPIPASS.22testy PostgreSQL obejmują współbieżność64prób->50rezerwacji, niezmienność i brak resetu. Apple przydatna z widoczną uwagą o ograniczonym zakresie dwóch części długu; oryginalne teksty AI zachowane. Odbiór interfejsu potwierdził rzeczywiste wyniki, nowszy raportdomyślnie i schowane zaplecze.
+
+Końcowy restart lokalnych usług zachował oba zapisane wyniki i44PLN pozostałego limitu; /ready200 pokazuje aktywneAI. Nowa kopia pg_dump po analizach, bez kolejnych generacji. Oracle nadal niewdrożone.
+
 ## Kronos — plan dodatkowej funkcji i hostingu, 2026-11-02
 
 - [x] Uzupełnić architekturę i master plan o opcjonalne scenariusze cenowe, osobny worker, kontrakty do zaprojektowania, cache i bramki; opisać lokalny pilot oraz warunkowe warianty hostingu. To ukończona dokumentacja, nie wdrożona funkcja.
@@ -98,6 +127,17 @@ Kontrola Gemini przed pilotem: klucz lokalny poprawny (models.list200), projekt 
 
 - [x] P4-01b1: jednorazowy autoryzowany pilot Gemini na danychsyntetycznych, HTTP200, szkic z poprawnym cytatem i liczbą needs_review, rezerwałączna0.894845PLN<1PLN. Nie jest to kwalifikacja jakości ani aktywacja stałegoPaid.
 - [ ] P4-01b2: wielodokumentowy benchmark i jawny budżet operacyjny/bezpłatny projekt przed integracją modelu z kolejką i raportami.
+- [x] P4-01b2a: lokalny evaluator zapisanych szkiców, zamrożone dokumenty/gold/odpowiedzi z hashami, dokładne metryki TP/FP/FN i abstencje, CLI oraz syntetyczny zestaw regresyjny. [Użycie i ograniczenia](docs/DOCUMENT_BENCHMARK.md). To test narzędzia oceny, bez kwalifikacji Gemini, wywołań modeli i zmiany provider-policy.
+- [x] P4-01b2b: prywatny corpus builder/verifier z oryginałami i dokładnymi wycinkami, datami i gold; lokalne materiały ORLEN/Microsoft/Apple oraz niezależny przegląd adnotacji. [Zakres](docs/BENCHMARK_CORPUS.md). Zestaw ujawnił ograniczenia istniejącego parsera tabel i separatorów; nie wykonano benchmarku modelu ani aktywacji źródeł.
+- [x] P4-01b2c: wersjonowane czytanie tabel HTML i jawne reguły en-US, zachowanie odtwarzania starych dokumentów/hashów, utrwalanie opcji w archiwum/korpusie, panel i CLI. [Zakres i odbiór](docs/TABLE_READER_V2.md). Ręczny test rzeczywistych próbek daje5TP/0FP/0FN i1abstencję; nie jest to wynik modelu.
+- [x] P4-01b2d1: zamrożony protokół developerskiego pomiaru GeminiFree, potwierdzenie konta powiązane lokalnie z kluczem,8syntetycznych promptów bezgold, trwała rezerwacja oraz adapter jawnego receipt odpowiedzi. [Rzeczywisty przebieg i ograniczenia](docs/GEMINI_FREE_QUALIFICATION.md). Pierwszy pomiar zatrzymany przed siecią przez błąd instrumentacji;0generacji, bez ponowienia. Poprawka audytu sprawdzana offline.
+- [ ] P4-01b2d2: nowy ograniczony przebieg po poprawce audytu, wszystkie8odpowiedzi i ocena zamrożonego progu. Dotychczasowy przebieg nie daje wyniku jakości ani kwalifikacji rzeczywistych raportów. Provider/worker nadal wyłączone.
+
+Odbiór przygotowaniaGeminiFree2026-11-11:1470PythonPASS/1SKIP w pełnej regresji PostgreSQL oraz osobno dodatkowy test rzeczywistego konstruktoraHTTPS bezsieci; transporty63/63, panel61/61, Node9/9 i buildPASS. Ruff/format/mypy/schematy/OpenAPI/pipcheckPASS. Niezależny przegląd poprawionego adaptera bez blokujących uwag. Pierwszy pomiar0generacji: lokalny błąd instrumentacji, potwierdzony reprodukcją offline;1rezerwacja zachowana, brak retry, jakości nie oceniono. /ready200; bez migracji i zmian produkcyjnej polityki modelu.
+
+Odbiór korpusu2026-11-10:1392PythonPASS,1SKIP (symlinkWindows); zakresPOSIX59/59PASS bezsieci. Odbiór tabelv2 2026-11-11:1443PythonPASS i1SKIP w pełnym przebiegu, osobno2/2nowych testówCLI; panel56/56, Node9/9 i buildPASS, Linux43/43PASS. Ruff/format/mypy/schematy/OpenAPIPASS. Końcowy przegląd wykonał koordynator po limicie podagenta; korpus i gold miały wcześniejszy niezależnyQA. Po wznowieniuDocker i zatwierdzonej rotacji lokalnego hasła baza/panel/3roleworkerów działają, wcześniejszyGOOGL200. Bez migracji, nowych wywołań modeli i wdrożeniaOracle.
+
+Odbiór evaluatora2026-11-10:1334PythonPASS w jednym pełnym przebiegu, w tym50nowych testów, Node9/9 i panel53/53PASS; Ruff/format/mypy/schematy/OpenAPI/pipcheckPASS. NiezależnyQA bez blokujących uwag. Referencyjne odpowiedzi ręczne i kontrolowane błędy semantyczne ocenione zgodnie z oczekiwaniem; zawsze not_qualified_offline. Bez migracji, modelcalls, zmianAPI/panelu i wdrożeniaOracle.
 
 Końcowy odbiór agenta dokumentowego 2026-11-10: 987 Python PASS na PostgreSQL Docker, Node 9/9 PASS, Ruff/format/mypy/schematy/OpenAPI PASS. Konfiguracja --env-file działa bez ujawniania wartości. Po pilocie nie wykonano kolejnych generacji; zapis odpowiedzi odtworzono offline. Bez migracji i bez aktywacji płatnego providera.
 
@@ -108,6 +148,12 @@ Odbiór archiwum 2026-11-10: 1039 Python PASS w jednym końcowym przebiegu, pane
 
 - [x] P4-01c2a: trwała kolejka dokumentów, niezależny worker weryfikacji zapisanych szkiców offline, lease/heartbeat/fencing, odzyskiwanie, historia etapów i niezmienny audyt; panel zlecania i nadzoru. Tryb modelowy jawnie zablokowany przed wywołaniem dostawcy. [Zakres i odbiór](docs/DOCUMENT_TASKS.md).
 - [ ] P4-01c2b: dopuścić operacyjne użycie modelu po kwalifikacji/polityce danych/budżecie i wdrożyć audyt faktycznych promptów, odpowiedzi, tokenów oraz kosztów; przyjmowanie samego dokumentu do ekstrakcji pozostaje do wykonania. Dotychczasowy audyt offline nie jest audytem wywołania LLM.
+- [x] P4-01c2c: wspólny czytnik tekstowych PDF, lokalizatory stron, ograniczony proces Windows/Linux, archiwum i kolejka walidacji offline, wybór PDF w panelu i regenerowane kontrakty. [Zakres i ograniczenia](docs/PDF_READER.md). Brak OCR, nowych wywołań modeli i publikacji faktów.
+- [x] P4-01c2d: podgląd dokumentu bez szkicuJSON i bez zapisu, wspólny czytnik/ustawienia, chroniony statelessendpoint i limity, panel z kontrolą hash/tożsamości i unieważnianiem spóźnionych wyników. [Użycie i odbiór](docs/DOCUMENT_PREVIEW.md). Archiwum nadal wymaga szkicu; model nie jest uruchamiany.
+
+Odbiór podglądu2026-11-11:1464PythonPASS i1SKIP w końcowym pełnym przebiegu, panel61/61, Node9/9 i buildPASS; Linux19/19testówpodgląduPASS bezsieci/bazy/sekretów. Ruff/format/mypy/schematy/OpenAPIPASS. RzeczywistyPOST podglądu200 zezgodnymhashem iHTMLv2; liczniki archiwum/zadań/raportów bez zmian. /ready/panel/wcześniejszyGOOGL200 i3roleworkerów online. Końcowy przegląd koordynatora po wcześniejszym limicie podagenta; brak deklaracji wizualnego odbioru formularza. Bez migracji, modeli i nowych pobrań.
+
+Odbiór PDF2026-11-10:1284PythonPASS w jednym końcowym przebiegu, panel53/53, Node9/9 i buildPASS; Ruff/format/mypy/schematy/OpenAPI/pipcheckPASS. NiezależnyQA bez pozostałych blokerów po poprawce rzeczywistego procesu timeout naWindows. Limity pamięci sprawdzone naWindows iLinux; lokalny panel i3rodzaje wykonawców działają, wcześniejszyGOOGL200. Archiwum i workerPDF sprawdzone na syntetycznych danych PostgreSQL. Bez migracji, nowych pobrańSEC, wywołań modeli i wdrożeniaOracle.
 
 Odbiór kolejki dokumentów 2026-11-10: 1069 Python PASS, panel40/40, Node9/9 i buildPASS; Ruff/format/mypy/schematy/OpenAPI PASS. Migracja0011 po backupie, wcześniejsze dane zachowane. Zadanie utworzone przyciskiem przetrwało restart API i zakończyło się w osobnym procesie z audytem. Test odtworzenia kopii odzyskał przerwaną próbę jako kolejną, zachowując historię. Worker lokalny działa w tle, launcher nie duplikuje procesu. Niezależny QA bez pozostałych blokerów po poprawkach współbieżnego odczytu i odświeżania UI. Żadnych nowych wywołań modeli, publikacji metryk lub wdrożenia VPS.
 
@@ -120,3 +166,11 @@ Odbiór kolejki dokumentów 2026-11-10: 1069 Python PASS, panel40/40, Node9/9 i 
 Odbiór rejestru wykonawców2026-11-10:1110PythonPASS w jednym pełnym przebiegu, panel46/46, Node9/9 i buildPASS; Ruff/format/mypy/schematy/OpenAPIPASS. Migracja0012 po backupie i kontrola zachowania danych. Dwa rzeczywiste workery odnawiają heartbeat bez nowych zadań; próby normalnego i nagłego zakończenia wykazały stopped oraz stale. Odtworzenie kopii zachowuje historię sesji. Odbiór wizualny potwierdził wygaszanie aktualności po pauzie i nowy stan po wznowieniu. Końcowy przegląd przeprowadził koordynator; niezależne QA podagenta nieukończone wskutek limitu użycia. Bez nowych wywołań modeli i wdrożenia VPS.
 
 Odbiór historiiSEC i schedulera2026-11-10:1153PythonPASS w jednym pełnym przebiegu, panel53/53, Node9/9 i buildPASS; Ruff/format/mypy/schematy/OpenAPIPASS. Migracje0013/0014 po backupie z zachowaniem wcześniejszych danych; starsze zadanie ma jawny legacy_snapshot. Test odtworzenia kopii zachowuje harmonogram, potwierdzenia i historię bez powtórnego dispatchu. Niezależny QA bez pozostałych P1/P2 po ograniczeniu odczytu historii. Scheduler działa z pustą konfiguracją; spółki i terminy wybiera użytkownik. Trzy procesy mają aktualne heartbeat. Bez nowych pobrań SEC i wywołań modeli podczas odbioru; VPS nie wdrożono.
+
+
+Odbiór AI z historią2026-11-12:1617PythonPASS/1SKIP w pełnym przebiegu PostgreSQL, panel89/89, Node9/9 i buildPASS; Ruff/format179plików, mypy82modułów, schematy/OpenAPI i pipcheckPASS. NiezależnyQA4scenariuszy oraz2rzeczywistych analizPASS z ograniczeniami jakości opisanymi w docs/AI_HISTORY_ANALYSIS.md. Migracja0016 po backupie zachowała stare raporty/AI/audyt/limit. GOOGL/AAPL v1 i v2 oraz38PLN pozostałej rezerwy przetrwały restart; zapisano nową kopię PostgreSQL. Walidator panelu potwierdził rzeczywisteSHA-256 obu wersji, interfejs pokazał nową analizęGOOGL i dowody trendu; trzy roleworkerów online.6wywołań w etapie, bez nowych pobrańSEC i bez wdrożeniaVPS.
+
+
+Odbiór wskaźników2026-11-12:1649PythonPASS/1SKIP w pełnej regresji PostgreSQL; osobno końcowe42testy wskaźników/API PASS, w tym10przypadków dodanych po kolekcji pełnego przebiegu. Panel98/98, Node9/9, build/Ruff/format/mypy84modułów/schematy/OpenAPI/pipcheckPASS. NiezależnyQA bez blokerów; rzeczywisteGOOGL3wyniki+9braków, AAPL12wyników, walidator frontendowy i UI dowodówPASS. Poprzednie raporty/AIhashy/budżet38PLN i podpisana implementacjaAI niezmienione po restarcie panelu. Bez migracji, nowych źródeł, modelcalls i wdrożeniaVPS.
+
+Odbiór wykresów2026-11-12:106/106testów panelu, w tym8nowych przypadków geometrii/braków/precyzji, Node9/9, TypeScript/Vite i schematy/OpenAPIPASS. NiezależnyQA bez blokerów, dodatkowe próby wartości skrajnych/gap/immutabilityPASS. UI potwierdził rzeczywisteGOOGL, wybór punktu Enter, dokładną wartość, reset szczegółów po zmianie metryki i jawny brak danych przepływowych. Kontrola raportów/AIhashy i budżetu38PLN bez zmian; sygnaturaAI/history zgodna. Brak nowego przebieguPython — kodbackendu niezmieniony.

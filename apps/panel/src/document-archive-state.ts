@@ -1,7 +1,7 @@
 /** Imports are claims, never proof of a model invocation. Types come from the API. */
 import type {components} from './schema';
 type Model=components['schemas'];
-export type ArchiveCreate=Required<Model['DocumentArchiveCreate']>;
+export type ArchiveCreate=Required<Omit<Model['DocumentArchiveCreate'],'reader_version'|'number_locale'>>&Pick<Model['DocumentArchiveCreate'],'reader_version'|'number_locale'>;
 export type ReviewCommand=Model['DocumentReviewCommand'];
 export type ReviewEvent=Model['DocumentReviewEvent'];
 export type ArchiveRecord=Model['DocumentArchiveRecord'];
@@ -56,10 +56,17 @@ export function latestReviews(events:ReviewEvent[]):Map<number,ReviewEvent> {
   return result;
 }
 
-export function assertArchiveIdentity(record:Pick<ArchiveRecord,'archive_id'|'packet'|'result'>, id:string):void {
-  if(record.archive_id!==id||record.packet.document_id!==id||record.result.document_id!==id) {
+export function assertArchiveIdentity(record:Pick<ArchiveRecord,'archive_id'|'packet'|'result'|'reader_version'|'number_locale'>, id:string):void {
+  if(record.archive_id!==id||record.packet.document_id!==id||record.result.document_id!==id
+    ||(record.reader_version??null)!==(record.packet.reader_version??null)
+    ||(record.number_locale??null)!==(record.packet.number_locale??null)) {
     throw Error('Otrzymany dokument ma inną tożsamość. Odśwież archiwum.');
   }
+}
+
+export function documentReadingOptions(format:ArchiveCreate['format'],locale:''|'en-US'):Pick<ArchiveCreate,'reader_version'|'number_locale'> {
+  if(locale!==''&&locale!=='en-US')throw Error('Nieobsługiwany zapis liczb.');
+  return format==='html'?{reader_version:'table-text-v2',...(locale?{number_locale:locale}:{})}:{};
 }
 
 /** A retry must keep both the UUID and the exact immutable request. */

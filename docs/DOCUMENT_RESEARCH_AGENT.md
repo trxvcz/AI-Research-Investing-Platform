@@ -10,7 +10,7 @@ Wynik to szkic `needs_review`, `rejected` albo `blocked`. Nie jest automatycznie
 
 ## Bieżący zakres
 
-Wspólne czytniki: tekst UTF-8, statyczny HTML oraz XLSX. PDF/OCR jest jawnie nieobsługiwany w tym przyroście. XLSX wymaga kontroli ZIP/XML, limitów dekompresji, ścieżek i relacji; makra, odwołania zewnętrzne i formuły są odrzucane. Formuł nie wykonujemy ani nie uznajemy starych cachedvalues za dowód. HTML nie jest pełnym rendererem CSS, a odczytane bloki są wyłącznie tekstem.
+Wspólne czytniki: tekst UTF-8, statyczny HTML, XLSX oraz tekstowy PDF w osobnym procesie z limitami. [Zakres PDF i ograniczenia](PDF_READER.md); OCR pozostaje nieobsługiwany. XLSX wymaga kontroli ZIP/XML, limitów dekompresji, ścieżek i relacji; makra, odwołania zewnętrzne i formuły są odrzucane. Formuł nie wykonujemy ani nie uznajemy starych cachedvalues za dowód. HTML nie jest pełnym rendererem CSS, a odczytane bloki są wyłącznie tekstem.
 
 Kontrakty: document-packet.schema.json, document-extraction-draft.schema.json oraz document-agent-result.schema.json. Nowe moduły nie zmieniają starszych raportów SEC. Obecna kolejka analityczna nadal obsługuje pipeline SEC; wpięcie zadań dokumentowych i bezpieczna publikacja wymagają osobnego kontraktu i bramek jakości.
 
@@ -21,6 +21,8 @@ Z ustawionym `PYTHONPATH=services/backend/src` można uruchomić `python scripts
 `--live` korzysta z GeminiTransport za istniejącym FreeOnlyGateway i trwałą quotaPostgreSQL. Brak dopuszczonego provideragrantu blokuje wywołanie. Wyjątki dostawcy nie ujawniają dokumentu ani klucza. Brak retry, płatnego fallbacku, narzędzi i groundingsearch.
 
 ## Konfiguracja Gemini
+
+Do oceny zapisanych odpowiedzi służy [lokalny benchmark](DOCUMENT_BENCHMARK.md). Pracuje offline i nie odblokowuje modelu. Zestaw syntetyczny testuje poprawność evaluatora; kwalifikacja na rzeczywistych dokumentach różnych emitentów pozostaje do wykonania.
 
 Klucz pozostaje w `GEMINI_API_KEY` lub `GOOGLE_API_KEY` w środowisku procesu, model w `ALPHASENSE_GEMINI_MODEL`. Nie wklejać klucza do czatu ani do Git. Dostawca nie jest włączony w polityce tego przyrostu. Przed pierwszym wywołaniem trzeba sprawdzić bieżący model, projektFree/billing, twardą blokadę opłat, warunki danych, zmierzyć jakość i zatwierdzić grant z limitem. Prywatnych lub tajnych plików nie dopuszczamy do zewnętrznego modelu; początkowy kandydat to public_only.
 

@@ -41,7 +41,7 @@ def test_equivalent_offsets_and_private_default() -> None:
         {"as_of": "2026-01-01"},
         {"as_of": 1767258000},
         {"title": "   "},
-        {"format": "pdf"},
+        {"format": "docm"},
         {"api_key": "never-accepted"},
     ],
 )

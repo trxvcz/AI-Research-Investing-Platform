@@ -70,7 +70,7 @@ def test_html_only_retains_visible_text_and_no_executable_markup():
     assert [b.text for b in result.blocks] == ["Issuer & Group", "Revenue 123 PLN"]
 
 
-@pytest.mark.parametrize("format", ["pdf", "unknown"])
+@pytest.mark.parametrize("format", ["unknown"])
 def test_unsupported_formats_are_explicit(format):
     with pytest.raises(DocumentReadError, match="DOCUMENT_FORMAT_UNSUPPORTED"):
         read(b"a", format)

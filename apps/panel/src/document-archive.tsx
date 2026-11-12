@@ -1,6 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {QueueDocumentTask} from './document-tasks';
-import {assertArchiveIdentity, assertReviewIdentity, bytesToBase64, checkChronology, explicitTimestamp, latestReviews, MAX_DOCUMENT_BYTES, MAX_DRAFT_BYTES, requireFileSize, selectImportAttempt} from './document-archive-state';
+import {PreviewDocument} from './document-preview';
+import {assertArchiveIdentity, assertReviewIdentity, bytesToBase64, checkChronology, documentReadingOptions, explicitTimestamp, latestReviews, MAX_DOCUMENT_BYTES, MAX_DRAFT_BYTES, requireFileSize, selectImportAttempt} from './document-archive-state';
 import type {ArchiveCreate, ArchivePage, ArchiveRecord, ReviewCommand, ReviewEvent} from './document-archive-state';
 
 const base='/v1/panel/documents';
@@ -67,6 +68,7 @@ export function DocumentArchive({onTaskQueued}:{onTaskQueued?:()=>void}={}){
 function ImportDocument({onImported}:{onImported:(id:string)=>void}){
   const [title,setTitle]=useState('');
   const [format,setFormat]=useState<ArchiveCreate['format']>('text');
+  const [numberLocale,setNumberLocale]=useState<''|'en-US'>('');
   const [classification,setClassification]=useState<ArchiveCreate['classification']>('private');
   const [document,setDocument]=useState<File>();
   const [draft,setDraft]=useState<File>();
@@ -109,20 +111,23 @@ function ImportDocument({onImported}:{onImported:(id:string)=>void}){
       const [bytes,draftBytes]=await Promise.all([document.arrayBuffer(),draft.arrayBuffer()]);
       const draft_json=new TextDecoder('utf-8',{fatal:true}).decode(draftBytes);
       if(!draft_json.trim())throw Error('Szkic JSON jest pusty.');
-      const attempt=selectImportAttempt({title:title.trim(),instrument_id:null,format,classification,content_base64:bytesToBase64(new Uint8Array(bytes)),draft_json,provider_id:provider.trim()||'offline-import',model_id:model.trim()||null,prompt_version:prompt.trim()||null,source_available_at,as_of},undefined,()=>crypto.randomUUID());
+      const readingOptions=documentReadingOptions(format,numberLocale);
+      const attempt=selectImportAttempt({title:title.trim(),instrument_id:null,format,...readingOptions,classification,content_base64:bytesToBase64(new Uint8Array(bytes)),draft_json,provider_id:provider.trim()||'offline-import',model_id:model.trim()||null,prompt_version:prompt.trim()||null,source_available_at,as_of},undefined,()=>crypto.randomUUID());
       if(!mounted.current)return;
       setPending(attempt);await send(attempt);
     }catch(failure){if(mounted.current){setError(failure instanceof Error?failure.message:'Nie można odczytać plików.');setBusy(false);lock.current=false;}}
   };
   return <details><summary>Dodaj dokument i szkic</summary>
-    <p>Dokument: maks. 1 MiB; szkic JSON UTF-8: maks. 256 KiB. Obsługiwane formaty to tekst, statyczny HTML i XLSX bez formuł. PDF/OCR nie jest jeszcze obsługiwany.</p>
+    <PreviewDocument file={document} format={format} classification={classification} numberLocale={numberLocale}/>
+    <p>Dokument: maks. 1 MiB; szkic JSON UTF-8: maks. 256 KiB. Format: tekst, statyczny HTML, XLSX bez formuł lub tekstowy PDF (maks. 100 stron). PDF wymaga tekstu na każdej stronie; skany bez warstwy tekstowej, szyfrowanie i aktywna zawartość są odrzucane. OCR pozostaje niedostępny. Układ kolumn i zgodność tekstu z obrazem wymagają przeglądu oryginału.</p>
     <form onSubmit={event=>{event.preventDefault();void submit();}}>
       <fieldset disabled={busy||!!pending}>
         <legend>Import lokalny</legend>
         <label htmlFor="document-title">Tytuł</label><input id="document-title" required maxLength={128} value={title} onChange={event=>setTitle(event.target.value)}/>
-        <label htmlFor="document-file">Dokument źródłowy</label><input id="document-file" type="file" accept=".txt,.text,.html,.htm,.xlsx" required onChange={event=>{const file=event.target.files?.[0];setDocument(file);if(file&&!title)setTitle(file.name.slice(0,128));}}/>
-        <label htmlFor="document-format">Format dokumentu</label><select id="document-format" value={format} onChange={event=>setFormat(event.target.value as ArchiveCreate['format'])}><option value="text">Tekst UTF-8</option><option value="html">Statyczny HTML</option><option value="xlsx">XLSX</option></select>
+        <label htmlFor="document-file">Dokument źródłowy</label><input id="document-file" type="file" accept=".txt,.text,.html,.htm,.xlsx,.pdf,application/pdf" required onChange={event=>{const file=event.target.files?.[0];setDocument(file);if(file&&!title)setTitle(file.name.slice(0,128));}}/>
+        <label htmlFor="document-format">Format dokumentu</label><select id="document-format" value={format} onChange={event=>setFormat(event.target.value as ArchiveCreate['format'])}><option value="text">Tekst UTF-8</option><option value="html">Statyczny HTML</option><option value="xlsx">XLSX</option><option value="pdf">Tekstowy PDF (bez OCR)</option></select>
         <label htmlFor="document-draft">Zapisany szkic JSON</label><input id="document-draft" type="file" accept=".json,application/json" required onChange={event=>setDraft(event.target.files?.[0])}/>
+        {format==='html'&&<><p>Nowy import HTML zachowuje granice komórek tabeli. Szkic powinien odnosić się do bloków tego odczytu. Wybierz zapis liczb zgodny z dokumentem; ustawienie pozostanie zapisane z importem.</p><label htmlFor="document-number-locale">Zapis liczb w HTML</label><select id="document-number-locale" value={numberLocale} onChange={event=>setNumberLocale(event.target.value as ''|'en-US')}><option value="">Niezadeklarowany — ostrożna walidacja</option><option value="en-US">en-US: 1,234.56 oznacza 1234.56</option></select></>}
         <label htmlFor="document-classification">Klasyfikacja dokumentu</label><select id="document-classification" value={classification} onChange={event=>setClassification(event.target.value as ArchiveCreate['classification'])}><option value="private">Prywatny</option><option value="public">Publiczny</option><option value="secret">Tajny</option></select>
         <p>W każdej klasyfikacji import pozostaje lokalny. Zmiana na „Publiczny” nie uruchamia wysyłki do dostawcy.</p>
         <label htmlFor="document-available">Dostępny od — data ze strefą</label><input id="document-available" required value={available} placeholder="2026-11-10T12:00:00+01:00" onChange={event=>setAvailable(event.target.value)}/>
@@ -163,6 +168,7 @@ function DocumentDetails({archiveId,reload,onChanged,onTaskQueued}:{archiveId:st
   return <article aria-labelledby="selected-document-title">
     <h3 id="selected-document-title">{record.title}</h3>
     <p>Walidacja szkicu: {statuses[record.validation_status]} · {record.format} · {record.classification} · rewizja przeglądu {record.review_revision}</p>
+    {record.format==='html'&&<p>Odczyt tabel: {record.reader_version==='table-text-v2'?'z zachowaniem granic komórek':'wcześniejsza wersja'}. Zapis liczb: {record.number_locale??'niezadeklarowany'}.</p>}
     <p>Import z niezweryfikowanym pochodzeniem. Deklarowany dostawca: {record.provider_id}; model: {record.model_id??'nie podano'}; prompt: {record.prompt_version??'nie podano'}.</p>
     <p>Dostępny od {time(record.source_available_at)}. Stan analizy na {time(record.as_of)}. Zapisano {time(record.created_at)}.</p>
     <details><summary>Tożsamość i sumy kontrolne</summary><p>Archiwum: <code>{record.archive_id}</code></p><p>SHA-256 dokumentu: <code>{record.document_sha256}</code></p><p>SHA-256 szkicu: <code>{record.draft_sha256}</code></p></details>

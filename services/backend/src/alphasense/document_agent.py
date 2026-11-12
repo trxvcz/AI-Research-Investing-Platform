@@ -13,11 +13,13 @@ from alphasense.document_contracts import (
     DocumentPacket,
     ExtractionDraft,
     FactReview,
+    NumberLocale,
 )
 from alphasense.provider_contracts import DataClassification
 from alphasense.provider_policy import ProviderDenied
 
 MAX_DRAFT_BYTES = 256 * 1024
+DOCUMENT_PROMPT_VERSION = "document-facts-v1"
 
 
 class DocumentGateway(Protocol):
@@ -39,8 +41,10 @@ def _constant(_value: str) -> None:
     raise ValueError("Non-finite JSON number")
 
 
-def parse_value_token(token: str) -> Decimal:
+def parse_value_token(token: str, *, number_locale: NumberLocale | None = None) -> Decimal:
     """Parse explicit PL/EN grouping conservatively; 1,234 is ambiguous and refused."""
+    if number_locale not in (None, "en-US"):
+        raise ValueError("Unsupported number locale")
     if not isinstance(token, str) or not 1 <= len(token) <= 128 or token != token.strip():
         raise ValueError("Invalid financial token")
     negative = token.startswith("(") and token.endswith(")")
@@ -53,7 +57,11 @@ def parse_value_token(token: str) -> Decimal:
         token = token[1:]
     if not token or not re.fullmatch(r"[0-9., \u00a0\u202f]+", token):
         raise ValueError("Invalid financial token")
-    if any(c in token for c in " \u00a0\u202f"):
+    if number_locale == "en-US":
+        if not re.fullmatch(r"(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(?:\.[0-9]+)?", token):
+            raise ValueError("Invalid declared English grouping")
+        token = token.replace(",", "")
+    elif any(c in token for c in " \u00a0\u202f"):
         # A single consistent space character may group thousands, never decimal digits.
         spaces = {c for c in token if c in " \u00a0\u202f"}
         if len(spaces) != 1:
@@ -147,7 +155,9 @@ def _check_fact(packet: DocumentPacket, fact: CandidateFact) -> str:
     try:
         with localcontext() as context:
             context.prec = 256
-            parsed = parse_value_token(fact.value_token) * fact.scale
+            parsed = (
+                parse_value_token(fact.value_token, number_locale=packet.number_locale) * fact.scale
+            )
             if parsed != Decimal(fact.value):
                 return "VALUE_MISMATCH"
     except (ValueError, InvalidOperation):
@@ -194,11 +204,10 @@ def validate_draft(
     )
 
 
-def run_agent(
-    packet: DocumentPacket, gateway: DocumentGateway, provider_id: str
-) -> DocumentAgentResult:
+def build_document_request(packet: DocumentPacket) -> dict[str, object]:
+    """Build the shared prompt without a gateway, credentials, gold or invocation."""
     checked = DocumentPacket.model_validate(packet.model_dump(mode="python"))
-    payload = {
+    return {
         "messages": [
             {
                 "role": "system",
@@ -224,6 +233,13 @@ def run_agent(
             },
         ]
     }
+
+
+def run_agent(
+    packet: DocumentPacket, gateway: DocumentGateway, provider_id: str
+) -> DocumentAgentResult:
+    checked = DocumentPacket.model_validate(packet.model_dump(mode="python"))
+    payload = build_document_request(checked)
     try:
         result = gateway.invoke(provider_id, payload, classification=checked.classification)
     except ProviderDenied as error:

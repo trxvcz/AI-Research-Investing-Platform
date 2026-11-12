@@ -1,5 +1,39 @@
 # AlphaSense starter
 
+## Wykresy wyników i wskaźników
+
+Wybierz metrykę na wykresie i wskaż punkt myszą lub klawiaturą, aby zobaczyć dokładną wartość i okres. Braki oraz nieporównywalne okresy przerywają linię; tabele i źródła pozostają dostępne. [Zakres](docs/HISTORY_CHARTS.md).
+
+## Rentowność i przepływy
+
+Panel oblicza marżę netto, marżę przepływów operacyjnych, relację nakładów do przychodów i marżę uproszczonego FCF dla dostępnych okresów. Każdy wynik ma wzór i dowody źródłowe; niezgodne lub brakujące dane pozostają niedostępne. Bez wywołań modelu. [Użycie i ograniczenia](docs/FINANCIAL_RATIOS.md).
+
+## Porównanie wyników z trzech lat
+
+Pod analizą AI panel pokazuje roczne przychody, zysk i dostępne przepływy z maksymalnie trzech okresów oraz zmianę r/r. Wykorzystuje istniejące oryginały SEC, bez nowych pobrań i wywołań modelu. [Użycie i ograniczenia](docs/FINANCIAL_HISTORY.md). Nowe analizy AI wykorzystują zamrożony kontekst tych okresów; wcześniejsze wyniki pozostają niezmienione. [Analiza AI z historią](docs/AI_HISTORY_ANALYSIS.md).
+
+## Gotowa analiza AI
+
+Panel pokazuje polskie podsumowanie, mocne strony, ryzyka i pytania z odwołaniami do liczb w raporcie. Zapisano rzeczywiste analizy GOOGL i AAPL; nowe generowanie wymaga kliknięcia, a zapisane wyniki otwierają się bez kolejnych opłat. Właściciel dopuścił Gemini Paid z łącznym, nieodnawialnym limitem 50 PLN egzekwowanym przez trwałe rezerwacje. [Jak używać i ograniczenia](docs/AI_ANALYSIS.md). GPW i predykcje pozostają do wykonania.
+
+## Podgląd dokumentu bez szkicu
+
+Panel pozwala odczytać plik i sprawdzić bloki, lokalizatory oraz ustawienia liczb bez szkicuJSON. Podgląd jest lokalny, bez zapisu do bazy i bez wywołania modelu. [Użycie i ograniczenia](docs/DOCUMENT_PREVIEW.md).
+
+## Ocena jakości szkiców
+
+Przygotowano ograniczony [benchmark developerski Gemini Free](docs/GEMINI_FREE_QUALIFICATION.md). Pierwszy przebieg zatrzymał lokalny błąd instrumentacji przed wysłaniem dokumentu; poprawiono adapter audytu i sprawdzono go offline. Nie ma jeszcze wyniku jakości modelu ani aktywnego modelowego workera.
+
+Nowe importyHTML mają [wersjonowany czytnik tabel](docs/TABLE_READER_V2.md) oraz jawny wybór zapisu liczb en-US. Zachowuje to granice komórek i poprawnie odczytuje np.281,724 po zadeklarowaniu reguł, bez zmiany dawnych archiwów.
+
+Lokalny benchmark porównuje zapisane odpowiedzi z oczekiwanymi faktami: metryką, wartością, walutą, okresem, zakresem i dowodami. Dołączone próbki są syntetyczne, a odpowiedzi ręczne; wynik nie kwalifikuje modelu i nie uruchamia Gemini. [Użycie i interpretacja](docs/DOCUMENT_BENCHMARK.md).
+
+Dodano także [lokalny korpus z pochodzeniem próbek](docs/BENCHMARK_CORPUS.md): oryginały, dokładne wycinki, daty i gold. Pierwsze rzeczywiste materiały obejmują ORLEN, Microsoft i Apple; pozostają prywatne, bez wysyłania do modeli. Wykryte ograniczenia czytania tabel są opisane jawnie.
+
+## Tekstowe raporty PDF
+
+Wspólny czytnik dokumentów obsługuje tekstowe PDF z numerami stron, limitami zasobów i importem do archiwum. Nadal potrzebny jest zapisany szkic JSON; import nie wywołuje modelu. OCR, automatyczna publikacja faktów i adapter GPW pozostają dalszymi zadaniami. [Zakres i użycie](docs/PDF_READER.md).
+
 ## Prywatny wariant wdrożenia
 
 Dodano osobny pakiet FastAPI/React/PostgreSQL z logowaniem właściciela, HTTPS przez Caddy, izolowaną bazą i polityką restartu kontenerów. Sprawdzony lokalnie w osobnym projekcie; VPS pozostaje do uruchomienia i odbioru. [Instrukcja i ograniczenia](docs/PRIVATE_DEPLOYMENT.md).

@@ -19,6 +19,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("file", type=Path)
     parser.add_argument("--format", choices=("text", "html", "xlsx", "pdf"), required=True)
+    parser.add_argument("--reader-version", choices=("table-text-v2",))
+    parser.add_argument("--number-locale", choices=("en-US",))
     parser.add_argument(
         "--classification", choices=("public", "private", "secret"), default="private"
     )
@@ -35,11 +37,29 @@ def main() -> int:
             raw = stream.read(1048577)
         if len(raw) > 1048576:
             raise ValueError("Document too large")
+        raw_sha256 = hashlib.sha256(raw).hexdigest()
+        identity = (
+            raw_sha256
+            if args.reader_version is None and args.number_locale is None
+            else (
+                json.dumps(
+                    {
+                        "sha256": raw_sha256,
+                        "reader_version": args.reader_version,
+                        "number_locale": args.number_locale,
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+            )
+        )
         packet = read_text_document(
             raw,
-            document_id=uuid5(NAMESPACE_URL, hashlib.sha256(raw).hexdigest()),
+            document_id=uuid5(NAMESPACE_URL, identity),
             classification=args.classification,
             format=args.format,
+            reader_version=args.reader_version,
+            number_locale=args.number_locale,
         )
         if args.draft:
             with args.draft.open("r", encoding="utf-8") as stream:
@@ -72,6 +92,10 @@ def main() -> int:
                 "blocks": len(packet.blocks),
                 "model_called": False,
             }
+            if packet.reader_version is not None:
+                result["reader_version"] = packet.reader_version
+            if packet.number_locale is not None:
+                result["number_locale"] = packet.number_locale
         serialized = json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
         if args.output:
             with args.output.open("x", encoding="utf-8") as stream:

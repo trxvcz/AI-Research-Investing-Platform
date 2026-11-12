@@ -5,7 +5,13 @@ from typing import Annotated, Literal, Self
 from pydantic import Field, StringConstraints, model_validator
 
 from alphasense.contracts import Contract, Identifier, Timestamp
-from alphasense.document_contracts import DocumentAgentResult, DocumentPacket
+from alphasense.document_contracts import (
+    DocumentAgentResult,
+    DocumentPacket,
+    NumberLocale,
+    ReaderVersion,
+    validate_reader_options,
+)
 from alphasense.provider_contracts import DataClassification
 from alphasense.report_contracts import ReportUUID, Sha256
 
@@ -18,7 +24,11 @@ class DocumentArchiveCreate(Contract):
     archive_id: ReportUUID
     title: Title
     instrument_id: ReportUUID | None = None
-    format: Literal["text", "html", "xlsx"]
+    format: Literal["text", "html", "xlsx", "pdf"]
+    reader_version: ReaderVersion | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    number_locale: NumberLocale | None = Field(default=None, exclude_if=lambda value: value is None)
     classification: DataClassification = "private"
     content_base64: Annotated[str, StringConstraints(strict=True, min_length=4, max_length=1398104)]
     draft_json: Annotated[str, StringConstraints(strict=True, min_length=1, max_length=262144)]
@@ -31,6 +41,7 @@ class DocumentArchiveCreate(Contract):
 
     @model_validator(mode="after")
     def chronology(self) -> Self:
+        validate_reader_options(self.format, self.reader_version, self.number_locale)
         if self.source_available_at > self.as_of:
             raise ValueError("Source was not available as of the requested time")
         if not self.title.strip():
@@ -62,7 +73,11 @@ class DocumentArchiveSummary(Contract):
     archive_id: ReportUUID
     title: Title
     instrument_id: ReportUUID | None
-    format: Literal["text", "html", "xlsx"]
+    format: Literal["text", "html", "xlsx", "pdf"]
+    reader_version: ReaderVersion | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    number_locale: NumberLocale | None = Field(default=None, exclude_if=lambda value: value is None)
     classification: DataClassification
     document_sha256: Sha256
     draft_sha256: Sha256
@@ -76,6 +91,11 @@ class DocumentArchiveSummary(Contract):
     validation_status: Literal["blocked", "rejected", "needs_review"]
     fact_count: Annotated[int, Field(strict=True, ge=0, le=64)]
     review_revision: Revision
+
+    @model_validator(mode="after")
+    def reader_options(self) -> Self:
+        validate_reader_options(self.format, self.reader_version, self.number_locale)
+        return self
 
 
 class DocumentArchiveRecord(DocumentArchiveSummary):

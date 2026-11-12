@@ -19,6 +19,8 @@ class DocumentBodyLimit:
             or scope.get("method") != "POST"
             or not (
                 path == "/v1/panel/documents"
+                or path == "/v1/panel/document-preview"
+                or path == "/v1/panel/ai-analyses"
                 or path.startswith("/v1/panel/documents/")
                 or path == "/v1/panel/document-tasks"
                 or path == "/v1/panel/schedules"
@@ -28,8 +30,12 @@ class DocumentBodyLimit:
             await self.app(scope, receive, send)
             return
         limit = (
-            MAX_DOCUMENT_IMPORT_BODY if path == "/v1/panel/documents" else MAX_DOCUMENT_REVIEW_BODY
+            MAX_DOCUMENT_IMPORT_BODY
+            if path in {"/v1/panel/documents", "/v1/panel/document-preview"}
+            else MAX_DOCUMENT_REVIEW_BODY
         )
+        if path == "/v1/panel/ai-analyses":
+            limit = 4096
         buffered = bytearray()
         while True:
             message = await receive()

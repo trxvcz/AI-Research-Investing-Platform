@@ -27,6 +27,7 @@ def implementation_fingerprint() -> str:
         "document_archive_contracts.py",
         "document_agent.py",
         "document_readers.py",
+        "pdf_reader.py",
         "document_contracts.py",
     ):
         digest.update(name.encode("ascii") + b"\x00" + (root / name).read_bytes())

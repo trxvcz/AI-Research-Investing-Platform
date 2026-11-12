@@ -18,8 +18,118 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 
-MIGRATION_HEAD = "0014_sec_schedules"
+MIGRATION_HEAD = "0016_ai_history_context"
 metadata = MetaData()
+
+ai_budget_controls = Table(
+    "ai_budget_controls",
+    metadata,
+    Column("scope", String(64), primary_key=True),
+    Column("budget_grosz", Integer, nullable=False),
+    Column("reserved_grosz", Integer, nullable=False),
+    Column(
+        "created_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    CheckConstraint("scope='ai-analysis-pilot-20261111'", name="ck_ai_budget_scope"),
+    CheckConstraint("budget_grosz=5000", name="ck_ai_budget_limit"),
+    CheckConstraint(
+        "reserved_grosz BETWEEN 0 AND 5000 AND reserved_grosz % 100=0", name="ck_ai_budget_reserved"
+    ),
+)
+
+ai_budget_reservations = Table(
+    "ai_budget_reservations",
+    metadata,
+    Column("request_id", UUID(as_uuid=True), primary_key=True),
+    Column("scope", String(64), ForeignKey("ai_budget_controls.scope"), nullable=False),
+    Column("kind", String(16), nullable=False),
+    Column("amount_grosz", Integer, nullable=False),
+    Column(
+        "created_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=text("clock_timestamp()"),
+    ),
+    CheckConstraint("kind IN ('analysis','qualification')", name="ck_ai_reservation_kind"),
+    CheckConstraint("amount_grosz=100", name="ck_ai_reservation_amount"),
+)
+
+ai_analyses = Table(
+    "ai_analyses",
+    metadata,
+    Column(
+        "request_id",
+        UUID(as_uuid=True),
+        ForeignKey("ai_budget_reservations.request_id"),
+        primary_key=True,
+    ),
+    Column(
+        "revision_id",
+        UUID(as_uuid=True),
+        ForeignKey("report_revisions.revision_id"),
+        nullable=False,
+    ),
+    Column("report_id", UUID(as_uuid=True), nullable=False),
+    Column("revision", Integer, nullable=False),
+    Column("report_checksum", String(64), nullable=False),
+    Column("model_id", String(128), nullable=False),
+    Column("prompt_version", String(32), nullable=False),
+    Column("status", String(16), nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Column("finished_at", DateTime(timezone=True)),
+    Column("analysis", JSONB(none_as_null=True)),
+    Column("evidence_context", JSONB(none_as_null=True)),
+    Column("error_code", String(64)),
+    Column("audit", JSONB(none_as_null=True)),
+    CheckConstraint("revision >= 1", name="ck_ai_analysis_revision"),
+    CheckConstraint("report_checksum ~ '^[a-f0-9]{64}$'", name="ck_ai_analysis_checksum"),
+    CheckConstraint("model_id ~ '^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$'", name="ck_ai_analysis_model"),
+    CheckConstraint(
+        "prompt_version IN ('report-synthesis-v1','report-history-v2')",
+        name="ck_ai_analysis_prompt",
+    ),
+    CheckConstraint(
+        "(prompt_version='report-synthesis-v1' AND evidence_context IS NULL) OR "
+        "(prompt_version='report-history-v2' AND evidence_context IS NOT NULL AND "
+        "jsonb_typeof(evidence_context)='object' AND "
+        "octet_length(evidence_context::text)<=262144 AND "
+        "evidence_context ?& ARRAY['context_version','report_id','revision','report_checksum',"
+        "'as_of','evidence','limitations','context_sha256','methodology_version'] AND "
+        "jsonb_typeof(evidence_context->'context_version')='string' AND "
+        "evidence_context->>'context_version'='report-history-context-v1' AND "
+        "jsonb_typeof(evidence_context->'methodology_version')='string' AND "
+        "evidence_context->>'methodology_version'='sec-comparatives-v1' AND "
+        "jsonb_typeof(evidence_context->'report_id')='string' AND "
+        "evidence_context->>'report_id'=report_id::text AND "
+        "evidence_context->'revision'=to_jsonb(revision) AND "
+        "jsonb_typeof(evidence_context->'report_checksum')='string' AND "
+        "evidence_context->>'report_checksum'=report_checksum AND "
+        "jsonb_typeof(evidence_context->'as_of')='string' AND "
+        "jsonb_typeof(evidence_context->'context_sha256')='string' AND "
+        "evidence_context->>'context_sha256' ~ '^[a-f0-9]{64}$' AND "
+        "jsonb_typeof(evidence_context->'evidence')='array' AND "
+        "jsonb_array_length(evidence_context->'evidence') BETWEEN 1 AND 64 AND "
+        "jsonb_typeof(evidence_context->'limitations')='array')",
+        name="ck_ai_analysis_context",
+    ),
+    CheckConstraint("status IN ('running','completed','failed')", name="ck_ai_analysis_status"),
+    CheckConstraint("finished_at IS NULL OR finished_at >= created_at", name="ck_ai_analysis_time"),
+    CheckConstraint(
+        "(status='running' AND finished_at IS NULL AND analysis IS NULL AND "
+        "error_code IS NULL AND audit IS NULL) OR (status='completed' AND "
+        "finished_at IS NOT NULL AND analysis IS NOT NULL AND "
+        "jsonb_typeof(analysis)='object' AND error_code IS NULL AND audit IS NOT NULL AND "
+        "jsonb_typeof(audit)='object') OR (status='failed' AND finished_at IS NOT NULL AND "
+        "analysis IS NULL AND error_code IS NOT NULL AND "
+        "error_code ~ '^[A-Z][A-Z0-9_]{0,63}$' AND audit IS NOT NULL AND "
+        "jsonb_typeof(audit)='object')",
+        name="ck_ai_analysis_result",
+    ),
+    Index("ix_ai_analysis_report", "report_id", "revision", "created_at"),
+)
 
 worker_sessions = Table(
     "worker_sessions",

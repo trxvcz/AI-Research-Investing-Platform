@@ -1,5 +1,9 @@
 # AlphaSense AI Research Platform — Master Plan for Codex
 
+## Decyzja właściciela — 2026-11-11: synteza raportów Gemini Paid
+
+Właściciel dopuścił Gemini Paid z limitem50PLN, interpretowanym jako łączny bez odnawiania, i potwierdził Paid/Tier1 obecnego klucza. Wyjątek dotyczy generowania polskiej interpretacji zapisanych danych SEC, nie płatnych źródeł, automatycznego fallbacku, zleceń lub dowolnych zewnętrznych wywołań. PostgreSQL egzekwuje rezerwację1PLN na próbę i idempotencję. [Wdrożony zakres i ograniczenia](docs/AI_ANALYSIS.md). GPW, predykcje i wdrożenie VPS pozostają planem.
+
 ## Aktualizacja planu — 2026-11-02: opcjonalny Kronos
 
 Status: zaplanowano, nie wdrożono. Źródłem szczegółowej decyzji jest [architektura Kronosa i hostingu](docs/architecture/kronos-scenarios.md); kolejność i kryteria: [KR-00–KR-06](docs/roadmap/issues.md#kronos--opcjonalne-scenariusze-cenowe-2026-11-02). Obowiązuje research-only, darmowe źródła i brak płatnych fallbacków. Ta aktualizacja nie zezwala na zakup hostingu ani wywoływanie zewnętrznych modeli.

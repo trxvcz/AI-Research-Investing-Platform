@@ -1814,6 +1814,453 @@
         }
       }
     },
+    "/v1/panel/document-preview": {
+      "post": {
+        "tags": [
+          "document-preview"
+        ],
+        "summary": "Preview",
+        "operationId": "preview_v1_panel_document_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocumentPreviewCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentPreviewResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/ai-budget": {
+      "get": {
+        "tags": [
+          "ai-analysis"
+        ],
+        "summary": "Budget",
+        "operationId": "budget_v1_panel_ai_budget_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiBudget"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/ai-analyses": {
+      "get": {
+        "tags": [
+          "ai-analysis"
+        ],
+        "summary": "Analyses",
+        "operationId": "analyses_v1_panel_ai_analyses_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AiAnalysisRecord"
+                  },
+                  "title": "Response Analyses V1 Panel Ai Analyses Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ai-analysis"
+        ],
+        "summary": "Create Analysis",
+        "operationId": "create_analysis_v1_panel_ai_analyses_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiAnalysisCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiAnalysisRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/ai-analyses/{request_id}": {
+      "get": {
+        "tags": [
+          "ai-analysis"
+        ],
+        "summary": "Analysis",
+        "operationId": "analysis_v1_panel_ai_analyses__request_id__get",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AiAnalysisRecord"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/reports/{report_id}/{revision}/financial-history": {
+      "get": {
+        "tags": [
+          "financial-history"
+        ],
+        "summary": "Financial History",
+        "operationId": "financial_history_v1_panel_reports__report_id___revision__financial_history_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialHistory"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/reports/{report_id}/{revision}/financial-ratios": {
+      "get": {
+        "tags": [
+          "financial-ratios"
+        ],
+        "summary": "Financial Ratios",
+        "operationId": "financial_ratios_v1_panel_reports__report_id___revision__financial_ratios_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialRatios"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/reports/{report_id}/{revision}/research-export": {
+      "get": {
+        "tags": [
+          "research-export"
+        ],
+        "summary": "Research Export Json",
+        "operationId": "research_export_json_v1_panel_reports__report_id___revision__research_export_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          },
+          {
+            "name": "ai_request_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ai Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResearchExport"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/panel/reports/{report_id}/{revision}/research-export/html": {
+      "get": {
+        "tags": [
+          "research-export"
+        ],
+        "summary": "Research Export Html",
+        "operationId": "research_export_html_v1_panel_reports__report_id___revision__research_export_html_get",
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Report Id"
+            }
+          },
+          {
+            "name": "revision",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "title": "Revision"
+            }
+          },
+          {
+            "name": "ai_request_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ai Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/panel/document-tasks": {
       "post": {
         "tags": [
@@ -2538,6 +2985,744 @@
         ],
         "title": "AbsentObservation"
       },
+      "AiAnalysisCreate": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "report_id",
+          "revision"
+        ],
+        "title": "AiAnalysisCreate"
+      },
+      "AiAnalysisRecord": {
+        "properties": {
+          "request_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Request Id"
+          },
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "report_checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Report Checksum"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "running",
+              "completed",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "created_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "model_id": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Model Id"
+          },
+          "prompt_version": {
+            "type": "string",
+            "enum": [
+              "report-synthesis-v1",
+              "report-history-v2"
+            ],
+            "title": "Prompt Version",
+            "default": "report-synthesis-v1"
+          },
+          "analysis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AiNarrative"
+              },
+              {
+                "$ref": "#/components/schemas/AiHistoryNarrative"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analysis"
+          },
+          "evidence_context": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AiHistoryContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]{0,127}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "reserved_pln": {
+            "type": "string",
+            "const": "1.00",
+            "title": "Reserved Pln",
+            "default": "1.00"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "request_id",
+          "report_id",
+          "revision",
+          "report_checksum",
+          "status",
+          "created_at",
+          "finished_at",
+          "model_id",
+          "analysis",
+          "error_code"
+        ],
+        "title": "AiAnalysisRecord"
+      },
+      "AiBudget": {
+        "properties": {
+          "budget_pln": {
+            "type": "string",
+            "const": "50.00",
+            "title": "Budget Pln",
+            "default": "50.00"
+          },
+          "reserved_pln": {
+            "type": "string",
+            "pattern": "^(?:[0-9]|[1-4][0-9]|50)\\.00$",
+            "title": "Reserved Pln"
+          },
+          "remaining_pln": {
+            "type": "string",
+            "pattern": "^(?:[0-9]|[1-4][0-9]|50)\\.00$",
+            "title": "Remaining Pln"
+          },
+          "reservation_per_attempt_pln": {
+            "type": "string",
+            "const": "1.00",
+            "title": "Reservation Per Attempt Pln",
+            "default": "1.00"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "reserved_pln",
+          "remaining_pln",
+          "enabled",
+          "reason"
+        ],
+        "title": "AiBudget"
+      },
+      "AiClaim": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 1200,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "observation_indexes": {
+            "items": {
+              "type": "integer",
+              "maximum": 999.0,
+              "minimum": 0.0
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Observation Indexes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text",
+          "observation_indexes"
+        ],
+        "title": "AiClaim"
+      },
+      "AiHistoryClaim": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "state",
+              "trend",
+              "question"
+            ],
+            "title": "Kind"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 1200,
+            "minLength": 1,
+            "title": "Text"
+          },
+          "evidence_indexes": {
+            "items": {
+              "type": "integer",
+              "maximum": 63.0,
+              "minimum": 0.0
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Evidence Indexes"
+          },
+          "direction": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "increase",
+                  "decrease",
+                  "unchanged"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Direction"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "kind",
+          "text",
+          "evidence_indexes",
+          "direction"
+        ],
+        "title": "AiHistoryClaim"
+      },
+      "AiHistoryComparison": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "comparison",
+            "title": "Kind",
+            "default": "comparison"
+          },
+          "index": {
+            "type": "integer",
+            "maximum": 63.0,
+            "minimum": 0.0,
+            "title": "Index"
+          },
+          "metric": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Metric"
+          },
+          "previous_index": {
+            "type": "integer",
+            "maximum": 63.0,
+            "minimum": 0.0,
+            "title": "Previous Index"
+          },
+          "current_index": {
+            "type": "integer",
+            "maximum": 63.0,
+            "minimum": 0.0,
+            "title": "Current Index"
+          },
+          "delta_value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta Value"
+          },
+          "delta_percent": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta Percent"
+          },
+          "comparison_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "NON_POSITIVE_BASE",
+                  "PERIODS_NOT_COMPARABLE"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "index",
+          "metric",
+          "previous_index",
+          "current_index",
+          "delta_value",
+          "delta_percent",
+          "comparison_reason"
+        ],
+        "title": "AiHistoryComparison"
+      },
+      "AiHistoryContext": {
+        "properties": {
+          "context_version": {
+            "type": "string",
+            "const": "report-history-context-v1",
+            "title": "Context Version",
+            "default": "report-history-context-v1"
+          },
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "report_checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Report Checksum"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "methodology_version": {
+            "type": "string",
+            "const": "sec-comparatives-v1",
+            "title": "Methodology Version",
+            "default": "sec-comparatives-v1"
+          },
+          "evidence": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AiHistoryFact"
+                },
+                {
+                  "$ref": "#/components/schemas/AiHistoryComparison"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "kind",
+                "mapping": {
+                  "comparison": "#/components/schemas/AiHistoryComparison",
+                  "fact": "#/components/schemas/AiHistoryFact"
+                }
+              }
+            },
+            "type": "array",
+            "maxItems": 64,
+            "minItems": 1,
+            "title": "Evidence"
+          },
+          "limitations": {
+            "items": {
+              "type": "string",
+              "maxLength": 1200,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 16,
+            "minItems": 1,
+            "title": "Limitations"
+          },
+          "context_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Context Sha256"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "revision",
+          "report_checksum",
+          "as_of",
+          "evidence",
+          "limitations",
+          "context_sha256"
+        ],
+        "title": "AiHistoryContext"
+      },
+      "AiHistoryFact": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "fact",
+            "title": "Kind",
+            "default": "fact"
+          },
+          "index": {
+            "type": "integer",
+            "maximum": 63.0,
+            "minimum": 0.0,
+            "title": "Index"
+          },
+          "metric": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Metric"
+          },
+          "unit": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^\\S(?:.*\\S)?$",
+            "title": "Unit"
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^[A-Z]{3}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Currency"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+            "title": "Value"
+          },
+          "period_start": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Period End"
+          },
+          "available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Available At"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceProvenance"
+          },
+          "report_observation_index": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 999.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Observation Index"
+          },
+          "filing_accession": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9]{10}-[0-9]{2}-[0-9]{6}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filing Accession"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "index",
+          "metric",
+          "unit",
+          "currency",
+          "value",
+          "period_start",
+          "period_end",
+          "available_at",
+          "source",
+          "report_observation_index",
+          "filing_accession"
+        ],
+        "title": "AiHistoryFact"
+      },
+      "AiHistoryNarrative": {
+        "properties": {
+          "summary": {
+            "items": {
+              "$ref": "#/components/schemas/AiHistoryClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Summary"
+          },
+          "strengths": {
+            "items": {
+              "$ref": "#/components/schemas/AiHistoryClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Strengths"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/components/schemas/AiHistoryClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Risks"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/AiHistoryClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Questions"
+          },
+          "limitations": {
+            "items": {
+              "type": "string",
+              "maxLength": 1200,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "summary",
+          "strengths",
+          "risks",
+          "questions",
+          "limitations"
+        ],
+        "title": "AiHistoryNarrative"
+      },
+      "AiNarrative": {
+        "properties": {
+          "summary": {
+            "items": {
+              "$ref": "#/components/schemas/AiClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Summary"
+          },
+          "strengths": {
+            "items": {
+              "$ref": "#/components/schemas/AiClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Strengths"
+          },
+          "risks": {
+            "items": {
+              "$ref": "#/components/schemas/AiClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Risks"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/AiClaim"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Questions"
+          },
+          "limitations": {
+            "items": {
+              "type": "string",
+              "maxLength": 1200,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "summary",
+          "strengths",
+          "risks",
+          "questions",
+          "limitations"
+        ],
+        "title": "AiNarrative"
+      },
       "AvailableObservation": {
         "properties": {
           "metric": {
@@ -2937,9 +4122,34 @@
             "enum": [
               "text",
               "html",
-              "xlsx"
+              "xlsx",
+              "pdf"
             ],
             "title": "Format"
+          },
+          "reader_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "table-text-v2"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reader Version"
+          },
+          "number_locale": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "en-US"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number Locale"
           },
           "classification": {
             "type": "string",
@@ -3113,9 +4323,34 @@
             "enum": [
               "text",
               "html",
-              "xlsx"
+              "xlsx",
+              "pdf"
             ],
             "title": "Format"
+          },
+          "reader_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "table-text-v2"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reader Version"
+          },
+          "number_locale": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "en-US"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number Locale"
           },
           "classification": {
             "type": "string",
@@ -3323,9 +4558,34 @@
             "enum": [
               "text",
               "html",
-              "xlsx"
+              "xlsx",
+              "pdf"
             ],
             "title": "Format"
+          },
+          "reader_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "table-text-v2"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reader Version"
+          },
+          "number_locale": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "en-US"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number Locale"
           },
           "classification": {
             "type": "string",
@@ -3556,6 +4816,30 @@
             "maxItems": 512,
             "minItems": 1,
             "title": "Blocks"
+          },
+          "reader_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "table-text-v2"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reader Version"
+          },
+          "number_locale": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "en-US"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number Locale"
           }
         },
         "additionalProperties": false,
@@ -3568,6 +4852,109 @@
           "blocks"
         ],
         "title": "DocumentPacket"
+      },
+      "DocumentPreviewCreate": {
+        "properties": {
+          "document_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Document Id"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "text",
+              "html",
+              "xlsx",
+              "pdf"
+            ],
+            "title": "Format"
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "public",
+              "private",
+              "secret"
+            ],
+            "title": "Classification",
+            "default": "private"
+          },
+          "reader_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "table-text-v2"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reader Version"
+          },
+          "number_locale": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "en-US"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number Locale"
+          },
+          "content_base64": {
+            "type": "string",
+            "maxLength": 1398104,
+            "minLength": 4,
+            "title": "Content Base64"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "document_id",
+          "format",
+          "content_base64"
+        ],
+        "title": "DocumentPreviewCreate"
+      },
+      "DocumentPreviewResult": {
+        "properties": {
+          "packet": {
+            "$ref": "#/components/schemas/DocumentPacket"
+          },
+          "byte_length": {
+            "type": "integer",
+            "maximum": 1048576.0,
+            "minimum": 1.0,
+            "title": "Byte Length"
+          },
+          "model_called": {
+            "type": "boolean",
+            "const": false,
+            "title": "Model Called",
+            "default": false
+          },
+          "persisted": {
+            "type": "boolean",
+            "const": false,
+            "title": "Persisted",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "packet",
+          "byte_length"
+        ],
+        "title": "DocumentPreviewResult"
       },
       "DocumentReviewCommand": {
         "properties": {
@@ -4242,6 +5629,435 @@
         ],
         "title": "FactReview"
       },
+      "FinancialHistory": {
+        "properties": {
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "report_checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Report Checksum"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "methodology_version": {
+            "type": "string",
+            "const": "sec-comparatives-v1",
+            "title": "Methodology Version",
+            "default": "sec-comparatives-v1"
+          },
+          "basis": {
+            "type": "string",
+            "const": "latest_filing_comparatives",
+            "title": "Basis",
+            "default": "latest_filing_comparatives"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialHistorySeries"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "title": "Series"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "revision",
+          "report_checksum",
+          "as_of",
+          "series",
+          "limitations"
+        ],
+        "title": "FinancialHistory"
+      },
+      "FinancialHistoryPoint": {
+        "properties": {
+          "period_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Period End"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+            "title": "Value"
+          },
+          "filing_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Filing Date"
+          },
+          "delta_value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta Value"
+          },
+          "delta_percent": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delta Percent"
+          },
+          "comparison_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "NO_PRIOR_PERIOD",
+                  "PERIODS_NOT_COMPARABLE",
+                  "NON_POSITIVE_BASE"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "period_start",
+          "period_end",
+          "value",
+          "filing_date",
+          "delta_value",
+          "delta_percent",
+          "comparison_reason"
+        ],
+        "title": "FinancialHistoryPoint"
+      },
+      "FinancialHistorySeries": {
+        "properties": {
+          "metric": {
+            "type": "string",
+            "enum": [
+              "revenue",
+              "net_income",
+              "operating_cash_flow",
+              "capital_expenditures"
+            ],
+            "title": "Metric"
+          },
+          "currency": {
+            "type": "string",
+            "const": "USD",
+            "title": "Currency",
+            "default": "USD"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "partial",
+              "unavailable"
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "source_snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Source Snapshot Id"
+          },
+          "source_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Sha256"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "available_at": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "Available At"
+          },
+          "filing_accession": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filing Accession"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialHistoryPoint"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Points"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric",
+          "status",
+          "reason",
+          "source_snapshot_id",
+          "source_sha256",
+          "source_url",
+          "available_at",
+          "filing_accession",
+          "points"
+        ],
+        "title": "FinancialHistorySeries"
+      },
+      "FinancialRatioPoint": {
+        "properties": {
+          "metric": {
+            "type": "string",
+            "enum": [
+              "net_margin",
+              "operating_cash_flow_margin",
+              "capex_to_revenue",
+              "free_cash_flow_margin"
+            ],
+            "title": "Metric"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Period End"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "unavailable"
+            ],
+            "title": "Status"
+          },
+          "value_percent": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Percent"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "MISSING_INPUT",
+                  "PERIOD_MISMATCH",
+                  "FILING_MISMATCH",
+                  "NON_POSITIVE_REVENUE",
+                  "NEGATIVE_CAPEX"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "available_at": {
+            "anyOf": [
+              {
+                "not": {
+                  "pattern": "\\s$"
+                },
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Available At"
+          },
+          "operands": {
+            "items": {
+              "$ref": "#/components/schemas/RatioOperand"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Operands"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric",
+          "period_start",
+          "period_end",
+          "status",
+          "value_percent",
+          "reason",
+          "available_at",
+          "operands"
+        ],
+        "title": "FinancialRatioPoint"
+      },
+      "FinancialRatios": {
+        "properties": {
+          "report_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Report Id"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision"
+          },
+          "report_checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Report Checksum"
+          },
+          "as_of": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+            "format": "date-time",
+            "title": "As Of"
+          },
+          "methodology_version": {
+            "type": "string",
+            "const": "sec-ratios-v1",
+            "title": "Methodology Version",
+            "default": "sec-ratios-v1"
+          },
+          "history": {
+            "$ref": "#/components/schemas/FinancialHistory"
+          },
+          "ratios": {
+            "items": {
+              "$ref": "#/components/schemas/FinancialRatioPoint"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Ratios"
+          },
+          "limitations": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report_id",
+          "revision",
+          "report_checksum",
+          "as_of",
+          "history",
+          "ratios",
+          "limitations"
+        ],
+        "title": "FinancialRatios"
+      },
       "Finding": {
         "properties": {
           "kind": {
@@ -4340,7 +6156,6 @@
           },
           "external_providers_enabled": {
             "type": "boolean",
-            "const": false,
             "title": "External Providers Enabled",
             "default": false
           }
@@ -5263,6 +7078,51 @@
         ],
         "title": "PanelRunPage"
       },
+      "RatioOperand": {
+        "properties": {
+          "metric": {
+            "type": "string",
+            "enum": [
+              "revenue",
+              "net_income",
+              "operating_cash_flow",
+              "capital_expenditures"
+            ],
+            "title": "Metric"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+            "title": "Value"
+          },
+          "source_snapshot_id": {
+            "not": {
+              "pattern": "\\s$"
+            },
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+            "format": "uuid",
+            "title": "Source Snapshot Id"
+          },
+          "source_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Sha256"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric",
+          "value",
+          "source_snapshot_id",
+          "source_sha256"
+        ],
+        "title": "RatioOperand"
+      },
       "ReportRevision": {
         "properties": {
           "schema_version": {
@@ -5516,6 +7376,60 @@
           "reason"
         ],
         "title": "ReportSection"
+      },
+      "ResearchExport": {
+        "properties": {
+          "export_version": {
+            "type": "string",
+            "const": "research-export-v1",
+            "title": "Export Version",
+            "default": "research-export-v1"
+          },
+          "report": {
+            "$ref": "#/components/schemas/ReportRevision"
+          },
+          "ai_analysis": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AiAnalysisRecord"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "financial_ratios": {
+            "$ref": "#/components/schemas/FinancialRatios"
+          },
+          "limitations": {
+            "items": {
+              "type": "string",
+              "maxLength": 2000,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 8,
+            "minItems": 1,
+            "title": "Limitations"
+          },
+          "checksum": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Checksum"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "report",
+          "ai_analysis",
+          "financial_ratios",
+          "limitations",
+          "checksum"
+        ],
+        "title": "ResearchExport"
       },
       "ResearchInput": {
         "properties": {

@@ -166,7 +166,7 @@ class HealthResult(Contract):
     status: Literal["ok"] = "ok"
     mode: Literal["validation-only", "postgresql"] = "validation-only"
     research_only: Literal[True] = True
-    external_providers_enabled: Literal[False] = False
+    external_providers_enabled: bool = False
 
 
 def summarize(payload: ResearchInput) -> ValidationResult:

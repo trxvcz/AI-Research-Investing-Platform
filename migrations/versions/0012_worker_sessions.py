@@ -33,7 +33,8 @@ CREATE TABLE worker_sessions (
 	CONSTRAINT ck_worker_session_stop CHECK (
         (stopped_at IS NULL AND stop_reason IS NULL AND error_code IS NULL)
         OR (stopped_at IS NOT NULL AND stop_reason IS NOT NULL
-        AND stopped_at >= heartbeat_at AND stop_reason IN ('completed','interrupted') AND error_code IS NULL)
+        AND stopped_at >= heartbeat_at AND stop_reason IN ('completed','interrupted')
+        AND error_code IS NULL)
         OR (stopped_at IS NOT NULL AND stop_reason IS NOT NULL AND error_code IS NOT NULL
         AND stopped_at >= heartbeat_at AND stop_reason='error'
         AND error_code IN ('WORKER_RUNTIME_FAILED','WORKER_MONITOR_FAILED')))

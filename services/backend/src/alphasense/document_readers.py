@@ -11,7 +11,14 @@ from typing import Literal
 from uuid import UUID
 from xml.etree import ElementTree as ET
 
-from alphasense.document_contracts import DocumentBlock, DocumentPacket
+from alphasense.document_contracts import (
+    DocumentBlock,
+    DocumentPacket,
+    NumberLocale,
+    ReaderVersion,
+    validate_reader_options,
+)
+from alphasense.pdf_reader import PDFReadError, read_pdf_blocks
 
 MAX_RAW = 1048576
 MAX_ENTRY = 2097152
@@ -50,13 +57,20 @@ class _Blocks:
 
 
 class _VisibleHTML(HTMLParser):
-    def __init__(self, blocks: _Blocks) -> None:
+    def __init__(self, blocks: _Blocks, *, preserve_cells: bool = False) -> None:
         super().__init__(convert_charrefs=True)
         self.blocks = blocks
         self.parts: list[str] = []
         self.stack: list[tuple[str, bool]] = []
+        self.preserve_cells = preserve_cells
 
     def flush(self) -> None:
+        if self.preserve_cells:
+            if not any(part.strip() and part != "|" for part in self.parts):
+                self.parts = []
+                return
+            if self.parts and self.parts[-1] == "|":
+                self.parts.pop()
         self.blocks.add(f"html:block:{len(self.blocks.items) + 1}", " ".join(self.parts))
         self.parts = []
 
@@ -72,7 +86,10 @@ class _VisibleHTML(HTMLParser):
                 for rule in ("display:none", "visibility:hidden")
             )
         )
-        if tag in {"p", "div", "tr", "li", "section", "h1", "h2", "h3", "br"}:
+        inside_cell = self.preserve_cells and any(name in {"td", "th"} for name, _ in self.stack)
+        if tag in {"p", "div", "tr", "li", "section", "h1", "h2", "h3", "br"} and (
+            not inside_cell or tag == "tr"
+        ):
             self.flush()
         if tag not in {"br", "hr", "img", "input", "meta", "link", "wbr", "source", "area"}:
             if len(self.stack) >= 128:
@@ -80,7 +97,12 @@ class _VisibleHTML(HTMLParser):
             self.stack.append((tag, hidden or any(item[1] for item in self.stack)))
 
     def handle_endtag(self, tag: str) -> None:
-        if tag in {"p", "div", "tr", "li", "section", "h1", "h2", "h3"}:
+        inside_cell = self.preserve_cells and any(name in {"td", "th"} for name, _ in self.stack)
+        if self.preserve_cells and tag in {"td", "th"}:
+            self.parts.append("|")
+        if tag in {"p", "div", "tr", "li", "section", "h1", "h2", "h3"} and (
+            not inside_cell or tag == "tr"
+        ):
             self.flush()
         for index in range(len(self.stack) - 1, -1, -1):
             if self.stack[index][0] == tag:
@@ -243,13 +265,29 @@ def read_text_document(
     document_id: UUID,
     classification: Literal["public", "private", "secret"],
     format: Literal["text", "html", "xlsx", "pdf"],
+    reader_version: ReaderVersion | None = None,
+    number_locale: NumberLocale | None = None,
 ) -> DocumentPacket:
-    """Read generic document blocks; PDF/OCR and formulas are explicitly unsupported."""
+    """Read issuer-neutral blocks; OCR and spreadsheet formulas remain unsupported."""
     if not isinstance(raw, bytes) or not 1 <= len(raw) <= MAX_RAW:
         raise DocumentReadError("DOCUMENT_RAW_LIMIT")
+    try:
+        validate_reader_options(format, reader_version, number_locale)
+    except ValueError:
+        raise DocumentReadError("DOCUMENT_READER_OPTIONS_INVALID") from None
     blocks = _Blocks()
     if format == "xlsx":
         _xlsx(raw, blocks)
+    elif format == "pdf":
+        try:
+            pdf_blocks = read_pdf_blocks(raw)
+            # PDF parsing has its own process deadline; start the block-copy
+            # deadline after that bounded operation has completed.
+            blocks = _Blocks()
+            for locator, content in pdf_blocks:
+                blocks.add(locator, content)
+        except PDFReadError as error:
+            raise DocumentReadError(str(error)) from None
     elif format in {"text", "html"}:
         try:
             text = raw.decode("utf-8-sig")
@@ -261,7 +299,7 @@ def read_text_document(
             for number, line in enumerate(text.splitlines(), 1):
                 blocks.add(f"text:line:{number}", line)
         else:
-            parser = _VisibleHTML(blocks)
+            parser = _VisibleHTML(blocks, preserve_cells=reader_version == "table-text-v2")
             parser.feed(text)
             parser.close()
             parser.flush()
@@ -276,6 +314,8 @@ def read_text_document(
         format=format,
         classification=classification,
         blocks=blocks.items,
+        reader_version=reader_version,
+        number_locale=number_locale,
     )
 
 

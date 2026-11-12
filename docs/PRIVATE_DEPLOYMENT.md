@@ -2,7 +2,9 @@
 
 Pakiet FastAPI/PostgreSQL/React jest przygotowany i sprawdzony lokalnie w osobnym projekcie Compose. Nie jest to wdrożenie na VPS. Demonstrator Node i lokalny panel 8082 pozostają osobnymi procesami. Research-only; brak zleceń i nowych wywołań modeli.
 
-Docelowy dostawca VPS: Oracle Cloud, zgodnie z decyzją właściciela. Instancja, region, architektura CPU i dostęp SSH nie zostały jeszcze wskazane ani skonfigurowane. Ten zapis nie oznacza uruchomienia zasobów lub zgody na koszty infrastruktury. Procedura poniżej dotyczy prywatnego wdrożenia na wybranej instancji Linux.
+Docelowy dostawca VPS: Oracle Cloud, zgodnie z ostateczną decyzją właściciela po rozważeniu AWS. Instancja, region, architektura CPU i dostęp SSH nie zostały jeszcze wskazane ani skonfigurowane. Ten zapis nie oznacza uruchomienia zasobów lub zgody na koszty infrastruktury. Procedura poniżej dotyczy prywatnego wdrożenia na wybranej instancji Linux.
+
+Na pierwszy pilot wybieramy Ubuntu 24.04 LTS i proponujemy Ampere A1 (ARM), 2 OCPU, 12 GB RAM oraz dysk 50 GB, pod warunkiem dostępności i potwierdzenia bezpłatnego przydziału w koncie. Przed utworzeniem sprawdź sumę istniejących zasobów i [aktualne warunki Always Free](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm). Obraz aplikacji wymaga rzeczywistego odbioru na ARM. Dopuść TCP22 tylko z własnego publicznego IP; nie otwieraj portów bazy i panelu. PostgreSQL pozostaje w istniejącym Compose. Faktyczny odbiór wymaga sprawdzenia restartu hosta i odtworzenia kopii na Oracle Cloud.
 
 ## Pierwsze uruchomienie na Linuxie
 

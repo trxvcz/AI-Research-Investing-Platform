@@ -62,6 +62,8 @@ def _prepare(
             document_id=request.archive_id,
             classification=request.classification,
             format=request.format,
+            reader_version=request.reader_version,
+            number_locale=request.number_locale,
         )
         if _contains_nul(packet.model_dump(mode="json")):
             raise ValueError("Unstorable packet")
@@ -137,6 +139,8 @@ def _decode(connection: Connection, row: RowMapping) -> DocumentArchiveRecord:
                     "title",
                     "instrument_id",
                     "format",
+                    "reader_version",
+                    "number_locale",
                     "classification",
                     "provider_id",
                     "model_id",

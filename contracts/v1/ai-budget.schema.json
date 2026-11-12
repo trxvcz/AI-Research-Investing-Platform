@@ -1,0 +1,52 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "budget_pln": {
+      "const": "50.00",
+      "default": "50.00",
+      "title": "Budget Pln",
+      "type": "string"
+    },
+    "reserved_pln": {
+      "pattern": "^(?:[0-9]|[1-4][0-9]|50)\\.00$",
+      "title": "Reserved Pln",
+      "type": "string"
+    },
+    "remaining_pln": {
+      "pattern": "^(?:[0-9]|[1-4][0-9]|50)\\.00$",
+      "title": "Remaining Pln",
+      "type": "string"
+    },
+    "reservation_per_attempt_pln": {
+      "const": "1.00",
+      "default": "1.00",
+      "title": "Reservation Per Attempt Pln",
+      "type": "string"
+    },
+    "enabled": {
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "reserved_pln",
+    "remaining_pln",
+    "enabled",
+    "reason"
+  ],
+  "title": "AiBudget",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:ai-budget:1.0"
+}

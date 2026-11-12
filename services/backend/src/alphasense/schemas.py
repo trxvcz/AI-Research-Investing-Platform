@@ -6,6 +6,9 @@ from pathlib import Path
 
 from pydantic import BaseModel, RootModel
 
+from alphasense.ai_analysis_contracts import AiAnalysisCreate, AiAnalysisRecord, AiBudget
+from alphasense.ai_history_contracts import AiHistoryContext, AiHistoryNarrative
+from alphasense.benchmark_corpus import CorpusManifest, CorpusProvenance
 from alphasense.contracts import HealthResult, ResearchInput, ValidationResult
 from alphasense.document_archive_contracts import (
     DocumentArchiveCreate,
@@ -14,7 +17,13 @@ from alphasense.document_archive_contracts import (
     DocumentReviewCommand,
     DocumentReviewEvent,
 )
+from alphasense.document_benchmark_contracts import (
+    BenchmarkResponses,
+    BenchmarkResult,
+    BenchmarkSuite,
+)
 from alphasense.document_contracts import DocumentAgentResult, DocumentPacket, ExtractionDraft
+from alphasense.document_preview import DocumentPreviewCreate, DocumentPreviewResult
 from alphasense.document_task_contracts import (
     DocumentTaskAudit,
     DocumentTaskCreate,
@@ -22,6 +31,8 @@ from alphasense.document_task_contracts import (
     DocumentTaskPage,
     DocumentTaskRecord,
 )
+from alphasense.financial_history import FinancialHistory
+from alphasense.financial_ratios import FinancialRatios
 from alphasense.instrument_contracts import (
     InstrumentCreate,
     InstrumentPage,
@@ -31,6 +42,7 @@ from alphasense.instrument_contracts import (
 from alphasense.legacy import ReportInspection
 from alphasense.provider_contracts import ProviderGrant, ProviderPolicy
 from alphasense.report_contracts import ReportRevision
+from alphasense.research_export import ResearchExport
 from alphasense.run_contracts import (
     RunCommand,
     RunCreate,
@@ -62,6 +74,21 @@ from alphasense.worker_session_contracts import WorkerSessionPage, WorkerSession
 
 ROOT = Path(__file__).resolve().parents[4]
 MODELS: dict[str, type[BaseModel]] = {
+    "ai-history-context": AiHistoryContext,
+    "ai-history-narrative": AiHistoryNarrative,
+    "financial-history": FinancialHistory,
+    "financial-ratios": FinancialRatios,
+    "research-export": ResearchExport,
+    "ai-analysis-create": AiAnalysisCreate,
+    "ai-analysis-record": AiAnalysisRecord,
+    "ai-budget": AiBudget,
+    "document-preview-create": DocumentPreviewCreate,
+    "document-preview-result": DocumentPreviewResult,
+    "document-corpus-manifest": CorpusManifest,
+    "document-corpus-provenance": CorpusProvenance,
+    "document-benchmark-suite": BenchmarkSuite,
+    "document-benchmark-responses": BenchmarkResponses,
+    "document-benchmark-result": BenchmarkResult,
     "import-task-event-page": ImportTaskEventPage,
     "schedule-create": ScheduleCreate,
     "schedule-command": ScheduleCommand,

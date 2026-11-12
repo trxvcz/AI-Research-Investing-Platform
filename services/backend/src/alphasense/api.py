@@ -7,6 +7,9 @@ from fastapi import Depends, FastAPI, HTTPException, Path, Query, Request, Respo
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+from alphasense.ai_analysis import AiAnalysisDenied
+from alphasense.ai_analysis_api import router as ai_analysis_router
+from alphasense.ai_history_analysis import check_history_activation as check_activation
 from alphasense.archive_api import SnapshotBodyLimit
 from alphasense.archive_api import router as archive_router
 from alphasense.contracts import HealthResult, ResearchInput, ValidationResult, summarize
@@ -20,13 +23,17 @@ from alphasense.db import (
 )
 from alphasense.document_archive_api import router as document_router
 from alphasense.document_body_limit import DocumentBodyLimit
+from alphasense.document_preview_api import router as document_preview_router
 from alphasense.document_task_api import router as document_task_router
+from alphasense.financial_history_api import router as financial_history_router
+from alphasense.financial_ratios_api import router as financial_ratios_router
 from alphasense.instrument_api import router as instrument_router
 from alphasense.instruments import InstrumentConflict, InstrumentNotFound
 from alphasense.legacy import InvalidReportError, ReportInspection, inspect_report
 from alphasense.panel_api import router as panel_router
 from alphasense.panel_launch import router as panel_launch_router
 from alphasense.report_contracts import ReportRevision, ReportUUID
+from alphasense.research_export_api import router as research_export_router
 from alphasense.runs import RunConflict, RunNotFound
 from alphasense.schedule_api import router as schedule_router
 from alphasense.sec_catalog import router as sec_catalog_router
@@ -49,6 +56,11 @@ app.include_router(sec_catalog_router)
 app.include_router(task_router)
 app.include_router(schedule_router)
 app.include_router(document_router)
+app.include_router(document_preview_router)
+app.include_router(ai_analysis_router)
+app.include_router(financial_history_router)
+app.include_router(financial_ratios_router)
+app.include_router(research_export_router)
 app.include_router(document_task_router)
 app.include_router(worker_session_router)
 app.add_middleware(SnapshotBodyLimit)
@@ -110,11 +122,16 @@ async def invalid_request(_request: Request, error: RequestValidationError) -> J
 @app.get("/health", response_model=HealthResult)
 def health() -> HealthResult:
     """Liveness never opens a database connection."""
+    try:
+        check_activation()
+        external_enabled = True
+    except AiAnalysisDenied:
+        external_enabled = False
     return HealthResult(
         status="ok",
         mode="postgresql" if os.environ.get("ALPHASENSE_DATABASE_URL") else "validation-only",
         research_only=True,
-        external_providers_enabled=False,
+        external_providers_enabled=external_enabled,
     )
 
 

@@ -8,7 +8,7 @@ Ten przyrost dodaje lokalny import oryginalnego dokumentu i zapisanego szkicu JS
 
 Pochodzenie ma stałą wartość `unverified_offline_import`. Nazwa providera/modelu nie jest potwierdzeniem wykonania wywołania. Import nie przyjmuje klucza API, nie korzysta z Gemini i nie sprawdza billing. Klasyfikacja private jest domyślna; także secret pozostaje wyłącznie lokalnym zapisem. Ten etap nie rozszerza polityki wysyłania danych do dostawców.
 
-Oryginał jest ograniczony do 1 MiB, szkic do 256 KiB UTF-8. Czytnik dodatkowo ogranicza rozpakowanie XLSX. PDF/OCR pozostaje nieobsługiwany. Serwer ogranicza cały strumień JSON przed parsowaniem do 4 MiB, a komendę przeglądu do 16 KiB. Tekst lub HTML w panelu jest wyświetlany jako tekst; oryginał pobiera się jako attachment/octet-stream z nosniff.
+Oryginał jest ograniczony do 1 MiB, szkic do 256 KiB UTF-8. Czytnik dodatkowo ogranicza rozpakowanie XLSX. Tekstowy PDF jest obsługiwany przez [ograniczony czytnik lokalny](PDF_READER.md); OCR pozostaje niedostępny. Serwer ogranicza cały strumień JSON przed parsowaniem do 4 MiB, a komendę przeglądu do 16 KiB. Tekst lub HTML w panelu jest wyświetlany jako tekst; oryginał pobiera się jako attachment/octet-stream z nosniff.
 
 Serwer sam tworzy pakiet bloków i ponownie sprawdza szkic: dokładne cytaty, tokeny liczbowe i przeliczenie skali. Nie przyjmuje gotowego wyniku walidacji od klienta. Błędny szkic można zachować jako rejected/blocked do diagnostyki; nie daje to faktów do publikacji.
 
@@ -25,6 +25,10 @@ Przegląd jest sekwencją dopisywanych komend: UUID komendy, oczekiwana rewizja,
 Odczyt sprawdza zgodność bajtów, hashy, metadanych, pakietu, walidacji i ciągłości historii. Niezgodność blokuje odczyt. W tym przyroście używana jest bieżąca wersja czytnika/walidatora; przed zmianą ich semantyki potrzebna będzie jawna strategia wersjonowania i odczytu historycznych wyników.
 
 ## API i panel
+
+Przed importem można użyć [podglądu bez szkicuJSON](DOCUMENT_PREVIEW.md), aby sprawdzić odczytane bloki i ustawienia. Podgląd nie zapisuje dokumentu w archiwum i nie wywołuje modelu; właściwy import nadal wymaga szkicu.
+
+Nowe importyHTML obsługują [wersjonowany odczyt tabel i jawny zapis liczb](TABLE_READER_V2.md). Wcześniejsze archiwa bez tych opcji zachowują dotychczasowe odtwarzanie; ustawień istniejącego UUID nie można podmienić.
 
 - `POST /v1/panel/documents` — import lokalny i deterministyczna walidacja.
 - `GET /v1/panel/documents?after_id=UUID&limit=50&instrument_id=UUID` — strona metadanych; filtr instrumentu jest opcjonalny.

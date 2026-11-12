@@ -6,7 +6,8 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi==0.162.0", "pydantic==2.14.2", "uvicorn==0.54.0",
     "jsonschema[format]==4.26.0", "referencing==0.37.0",
-    "SQLAlchemy==2.1.6", "alembic==1.20.1", "psycopg[binary]==3.3.6"
+    "SQLAlchemy==2.1.6", "alembic==1.20.1", "psycopg[binary]==3.3.6",
+    "pypdf==7.0.1"
 ]
 
 [tool.setuptools.packages.find]

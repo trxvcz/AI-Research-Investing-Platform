@@ -12,6 +12,9 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from alphasense.db_schema import (
     MIGRATION_HEAD,
+    ai_analyses,
+    ai_budget_controls,
+    ai_budget_reservations,
     document_archives,
     document_reviews,
     document_task_audits,
@@ -134,6 +137,9 @@ class ReportStore:
                 connection.execute(select(report_revisions.c.revision_id).limit(0))
                 connection.execute(select(instruments.c.instrument_id).limit(0))
                 for table in (
+                    ai_analyses,
+                    ai_budget_controls,
+                    ai_budget_reservations,
                     raw_snapshots,
                     research_runs,
                     run_snapshots,

@@ -9,7 +9,8 @@
       "ES2022",
       "DOM"
     ],
-    "noEmit": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
     "src"

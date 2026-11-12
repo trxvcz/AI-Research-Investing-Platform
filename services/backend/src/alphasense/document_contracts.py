@@ -11,6 +11,8 @@ from alphasense.provider_contracts import DataClassification
 from alphasense.report_contracts import ReportUUID, Sha256
 
 MAX_DOCUMENT_TEXT_BYTES = 2 * 1024 * 1024
+ReaderVersion = Literal["table-text-v2"]
+NumberLocale = Literal["en-US"]
 BoundedText = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=32768)]
 Locator = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=256)]
 Quote = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=4096)]
@@ -45,6 +47,18 @@ class DocumentBlock(Contract):
     text: BoundedText
 
 
+def validate_reader_options(
+    format: str, reader_version: ReaderVersion | None, number_locale: NumberLocale | None
+) -> None:
+    """Options are explicit trusted inputs, never inferred from source contents."""
+    if reader_version not in (None, "table-text-v2") or number_locale not in (None, "en-US"):
+        raise ValueError("Unsupported document reader options")
+    if (reader_version is not None or number_locale is not None) and format != "html":
+        raise ValueError("Reader options require HTML")
+    if number_locale is not None and reader_version != "table-text-v2":
+        raise ValueError("Number locale requires versioned reader")
+
+
 class DocumentPacket(Contract):
     schema_version: Literal["1.0"] = "1.0"
     document_id: ReportUUID
@@ -52,9 +66,14 @@ class DocumentPacket(Contract):
     format: Literal["text", "html", "xlsx", "pdf"]
     classification: DataClassification
     blocks: Annotated[list[DocumentBlock], Field(min_length=1, max_length=512)]
+    reader_version: ReaderVersion | None = Field(
+        default=None, exclude_if=lambda value: value is None
+    )
+    number_locale: NumberLocale | None = Field(default=None, exclude_if=lambda value: value is None)
 
     @model_validator(mode="after")
     def bounded_unique_blocks(self) -> Self:
+        validate_reader_options(self.format, self.reader_version, self.number_locale)
         if len({item.block_id for item in self.blocks}) != len(self.blocks):
             raise ValueError("Duplicate block identity")
         if sum(len(item.text.encode("utf-8")) for item in self.blocks) > MAX_DOCUMENT_TEXT_BYTES:

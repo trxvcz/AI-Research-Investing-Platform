@@ -32,6 +32,7 @@ psycopg==3.3.6
 psycopg-binary==3.3.6
 pydantic==2.14.2
 pydantic_core==2.50.2
+pypdf==7.0.1
 Pygments==2.21.0
 pytest==9.2.0
 python-dateutil==3.0.0

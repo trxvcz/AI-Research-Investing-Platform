@@ -10,10 +10,19 @@ import math
 import os
 import re
 import ssl
+from dataclasses import dataclass, field
 from typing import Any
 
 MAX_REQUEST_BYTES = 3 * 1024 * 1024
 MAX_RESPONSE_BYTES = 256 * 1024
+
+
+@dataclass(frozen=True)
+class GeminiReceipt:
+    """Bounded successful response for explicit private audit; never auto-persisted."""
+
+    draft: str = field(repr=False)
+    raw_response: bytes = field(repr=False)
 
 
 class GeminiTransportError(Exception):
@@ -72,6 +81,10 @@ class GeminiTransport:
         self._tokens = max_completion_tokens
 
     def __call__(self, payload: object) -> str:
+        return self.generate_with_receipt(payload).draft
+
+    def generate_with_receipt(self, payload: object) -> GeminiReceipt:
+        """Use the same checks and single call, retaining the bounded JSON envelope."""
         if not isinstance(payload, dict) or set(payload) != {"messages"}:
             raise GeminiTransportError("GEMINI_REQUEST_INVALID")
         messages = payload["messages"]
@@ -206,7 +219,7 @@ class GeminiTransport:
             draft = "".join(texts)
             if not draft.strip():
                 raise GeminiTransportError("GEMINI_RESPONSE_SCHEMA")
-            return draft
+            return GeminiReceipt(draft=draft, raw_response=bytes(raw))
         except GeminiTransportError:
             raise
         except (OSError, http.client.HTTPException):

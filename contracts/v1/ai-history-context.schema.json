@@ -1,0 +1,393 @@
+{
+  "$defs": {
+    "AiHistoryComparison": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "comparison",
+          "default": "comparison",
+          "title": "Kind",
+          "type": "string"
+        },
+        "index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "previous_index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Previous Index",
+          "type": "integer"
+        },
+        "current_index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Current Index",
+          "type": "integer"
+        },
+        "delta_value": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Value"
+        },
+        "delta_percent": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "pattern": "^-?(?:0|[1-9][0-9]*)\\.[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Delta Percent"
+        },
+        "comparison_reason": {
+          "anyOf": [
+            {
+              "enum": [
+                "NON_POSITIVE_BASE",
+                "PERIODS_NOT_COMPARABLE"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Comparison Reason"
+        }
+      },
+      "required": [
+        "index",
+        "metric",
+        "previous_index",
+        "current_index",
+        "delta_value",
+        "delta_percent",
+        "comparison_reason"
+      ],
+      "title": "AiHistoryComparison",
+      "type": "object"
+    },
+    "AiHistoryFact": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "fact",
+          "default": "fact",
+          "title": "Kind",
+          "type": "string"
+        },
+        "index": {
+          "maximum": 63,
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "metric": {
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "maxLength": 64,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Unit",
+          "type": "string"
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "not": {
+                "pattern": "\\s$"
+              },
+              "pattern": "^[A-Z]{3}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Currency"
+        },
+        "value": {
+          "maxLength": 128,
+          "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "title": "Value",
+          "type": "string"
+        },
+        "period_start": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period Start",
+          "type": "string"
+        },
+        "period_end": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Period End",
+          "type": "string"
+        },
+        "available_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Available At",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceProvenance"
+        },
+        "report_observation_index": {
+          "anyOf": [
+            {
+              "maximum": 999,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Report Observation Index"
+        },
+        "filing_accession": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9]{10}-[0-9]{2}-[0-9]{6}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Filing Accession"
+        }
+      },
+      "required": [
+        "index",
+        "metric",
+        "unit",
+        "currency",
+        "value",
+        "period_start",
+        "period_end",
+        "available_at",
+        "source",
+        "report_observation_index",
+        "filing_accession"
+      ],
+      "title": "AiHistoryFact",
+      "type": "object"
+    },
+    "SourceProvenance": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "maxLength": 128,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "Snapshot Id",
+          "type": "string"
+        },
+        "sha256": {
+          "maxLength": 64,
+          "minLength": 64,
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "minLength": 1,
+              "pattern": "^[hH][tT][tT][pP][sS]?://",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Url"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+          "title": "Retrieved At",
+          "type": "string"
+        },
+        "license": {
+          "maxLength": 512,
+          "minLength": 1,
+          "not": {
+            "pattern": "\\s$"
+          },
+          "pattern": "^\\S(?:.*\\S)?$",
+          "title": "License",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "snapshot_id",
+        "sha256",
+        "url",
+        "retrieved_at",
+        "license"
+      ],
+      "title": "SourceProvenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "context_version": {
+      "const": "report-history-context-v1",
+      "default": "report-history-context-v1",
+      "title": "Context Version",
+      "type": "string"
+    },
+    "report_id": {
+      "format": "uuid",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+      "title": "Report Id",
+      "type": "string"
+    },
+    "revision": {
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "report_checksum": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Report Checksum",
+      "type": "string"
+    },
+    "as_of": {
+      "format": "date-time",
+      "not": {
+        "pattern": "\\s$"
+      },
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}[Tt]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:[Zz]|[+-]\\d{2}:\\d{2})$",
+      "title": "As Of",
+      "type": "string"
+    },
+    "methodology_version": {
+      "const": "sec-comparatives-v1",
+      "default": "sec-comparatives-v1",
+      "title": "Methodology Version",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "discriminator": {
+          "mapping": {
+            "comparison": "#/$defs/AiHistoryComparison",
+            "fact": "#/$defs/AiHistoryFact"
+          },
+          "propertyName": "kind"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/$defs/AiHistoryFact"
+          },
+          {
+            "$ref": "#/$defs/AiHistoryComparison"
+          }
+        ]
+      },
+      "maxItems": 64,
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "maxLength": 1200,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 16,
+      "minItems": 1,
+      "title": "Limitations",
+      "type": "array"
+    },
+    "context_sha256": {
+      "maxLength": 64,
+      "minLength": 64,
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Context Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "report_id",
+    "revision",
+    "report_checksum",
+    "as_of",
+    "evidence",
+    "limitations",
+    "context_sha256"
+  ],
+  "title": "AiHistoryContext",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:ai-history-context:1.0"
+}

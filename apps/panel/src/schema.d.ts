@@ -468,6 +468,143 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/panel/document-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview */
+        post: operations["preview_v1_panel_document_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/ai-budget": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Budget */
+        get: operations["budget_v1_panel_ai_budget_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/ai-analyses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Analyses */
+        get: operations["analyses_v1_panel_ai_analyses_get"];
+        put?: never;
+        /** Create Analysis */
+        post: operations["create_analysis_v1_panel_ai_analyses_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/ai-analyses/{request_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Analysis */
+        get: operations["analysis_v1_panel_ai_analyses__request_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/reports/{report_id}/{revision}/financial-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Financial History */
+        get: operations["financial_history_v1_panel_reports__report_id___revision__financial_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/reports/{report_id}/{revision}/financial-ratios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Financial Ratios */
+        get: operations["financial_ratios_v1_panel_reports__report_id___revision__financial_ratios_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/reports/{report_id}/{revision}/research-export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Research Export Json */
+        get: operations["research_export_json_v1_panel_reports__report_id___revision__research_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/panel/reports/{report_id}/{revision}/research-export/html": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Research Export Html */
+        get: operations["research_export_html_v1_panel_reports__report_id___revision__research_export_html_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/panel/document-tasks": {
         parameters: {
             query?: never;
@@ -714,6 +851,234 @@ export interface components {
             /** Reason */
             reason: string;
         };
+        /** AiAnalysisCreate */
+        AiAnalysisCreate: {
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /** Revision */
+            revision: number;
+        };
+        /** AiAnalysisRecord */
+        AiAnalysisRecord: {
+            /**
+             * Request Id
+             * Format: uuid
+             */
+            request_id: string;
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /** Revision */
+            revision: number;
+            /** Report Checksum */
+            report_checksum: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "running" | "completed" | "failed";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Finished At */
+            finished_at: string | null;
+            /** Model Id */
+            model_id: string;
+            /**
+             * Prompt Version
+             * @default report-synthesis-v1
+             * @enum {string}
+             */
+            prompt_version: "report-synthesis-v1" | "report-history-v2";
+            /** Analysis */
+            analysis: components["schemas"]["AiNarrative"] | components["schemas"]["AiHistoryNarrative"] | null;
+            evidence_context?: components["schemas"]["AiHistoryContext"] | null;
+            /** Error Code */
+            error_code: string | null;
+            /**
+             * Reserved Pln
+             * @default 1.00
+             * @constant
+             */
+            reserved_pln: "1.00";
+        };
+        /** AiBudget */
+        AiBudget: {
+            /**
+             * Budget Pln
+             * @default 50.00
+             * @constant
+             */
+            budget_pln: "50.00";
+            /** Reserved Pln */
+            reserved_pln: string;
+            /** Remaining Pln */
+            remaining_pln: string;
+            /**
+             * Reservation Per Attempt Pln
+             * @default 1.00
+             * @constant
+             */
+            reservation_per_attempt_pln: "1.00";
+            /** Enabled */
+            enabled: boolean;
+            /** Reason */
+            reason: string | null;
+        };
+        /** AiClaim */
+        AiClaim: {
+            /** Text */
+            text: string;
+            /** Observation Indexes */
+            observation_indexes: number[];
+        };
+        /** AiHistoryClaim */
+        AiHistoryClaim: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "state" | "trend" | "question";
+            /** Text */
+            text: string;
+            /** Evidence Indexes */
+            evidence_indexes: number[];
+            /** Direction */
+            direction: ("increase" | "decrease" | "unchanged") | null;
+        };
+        /** AiHistoryComparison */
+        AiHistoryComparison: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "comparison";
+            /** Index */
+            index: number;
+            /** Metric */
+            metric: string;
+            /** Previous Index */
+            previous_index: number;
+            /** Current Index */
+            current_index: number;
+            /** Delta Value */
+            delta_value: string | null;
+            /** Delta Percent */
+            delta_percent: string | null;
+            /** Comparison Reason */
+            comparison_reason: ("NON_POSITIVE_BASE" | "PERIODS_NOT_COMPARABLE") | null;
+        };
+        /** AiHistoryContext */
+        AiHistoryContext: {
+            /**
+             * Context Version
+             * @default report-history-context-v1
+             * @constant
+             */
+            context_version: "report-history-context-v1";
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /** Revision */
+            revision: number;
+            /** Report Checksum */
+            report_checksum: string;
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Methodology Version
+             * @default sec-comparatives-v1
+             * @constant
+             */
+            methodology_version: "sec-comparatives-v1";
+            /** Evidence */
+            evidence: (components["schemas"]["AiHistoryFact"] | components["schemas"]["AiHistoryComparison"])[];
+            /** Limitations */
+            limitations: string[];
+            /** Context Sha256 */
+            context_sha256: string;
+        };
+        /** AiHistoryFact */
+        AiHistoryFact: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "fact";
+            /** Index */
+            index: number;
+            /** Metric */
+            metric: string;
+            /** Unit */
+            unit: string;
+            /** Currency */
+            currency: string | null;
+            /** Value */
+            value: string;
+            /**
+             * Period Start
+             * Format: date-time
+             */
+            period_start: string;
+            /**
+             * Period End
+             * Format: date-time
+             */
+            period_end: string;
+            /**
+             * Available At
+             * Format: date-time
+             */
+            available_at: string;
+            source: components["schemas"]["SourceProvenance"];
+            /** Report Observation Index */
+            report_observation_index: number | null;
+            /** Filing Accession */
+            filing_accession: string | null;
+        };
+        /** AiHistoryNarrative */
+        AiHistoryNarrative: {
+            /** Summary */
+            summary: components["schemas"]["AiHistoryClaim"][];
+            /** Strengths */
+            strengths: components["schemas"]["AiHistoryClaim"][];
+            /** Risks */
+            risks: components["schemas"]["AiHistoryClaim"][];
+            /** Questions */
+            questions: components["schemas"]["AiHistoryClaim"][];
+            /** Limitations */
+            limitations: string[];
+        };
+        /** AiNarrative */
+        AiNarrative: {
+            /** Summary */
+            summary: components["schemas"]["AiClaim"][];
+            /** Strengths */
+            strengths: components["schemas"]["AiClaim"][];
+            /** Risks */
+            risks: components["schemas"]["AiClaim"][];
+            /** Questions */
+            questions: components["schemas"]["AiClaim"][];
+            /** Limitations */
+            limitations: string[];
+        };
         /** AvailableObservation */
         AvailableObservation: {
             /** Metric */
@@ -847,7 +1212,11 @@ export interface components {
              * Format
              * @enum {string}
              */
-            format: "text" | "html" | "xlsx";
+            format: "text" | "html" | "xlsx" | "pdf";
+            /** Reader Version */
+            reader_version?: "table-text-v2" | null;
+            /** Number Locale */
+            number_locale?: "en-US" | null;
             /**
              * Classification
              * @default private
@@ -900,7 +1269,11 @@ export interface components {
              * Format
              * @enum {string}
              */
-            format: "text" | "html" | "xlsx";
+            format: "text" | "html" | "xlsx" | "pdf";
+            /** Reader Version */
+            reader_version?: "table-text-v2" | null;
+            /** Number Locale */
+            number_locale?: "en-US" | null;
             /**
              * Classification
              * @enum {string}
@@ -968,7 +1341,11 @@ export interface components {
              * Format
              * @enum {string}
              */
-            format: "text" | "html" | "xlsx";
+            format: "text" | "html" | "xlsx" | "pdf";
+            /** Reader Version */
+            reader_version?: "table-text-v2" | null;
+            /** Number Locale */
+            number_locale?: "en-US" | null;
             /**
              * Classification
              * @enum {string}
@@ -1051,6 +1428,53 @@ export interface components {
             classification: "public" | "private" | "secret";
             /** Blocks */
             blocks: components["schemas"]["DocumentBlock"][];
+            /** Reader Version */
+            reader_version?: "table-text-v2" | null;
+            /** Number Locale */
+            number_locale?: "en-US" | null;
+        };
+        /** DocumentPreviewCreate */
+        DocumentPreviewCreate: {
+            /**
+             * Document Id
+             * Format: uuid
+             */
+            document_id: string;
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "text" | "html" | "xlsx" | "pdf";
+            /**
+             * Classification
+             * @default private
+             * @enum {string}
+             */
+            classification: "public" | "private" | "secret";
+            /** Reader Version */
+            reader_version?: "table-text-v2" | null;
+            /** Number Locale */
+            number_locale?: "en-US" | null;
+            /** Content Base64 */
+            content_base64: string;
+        };
+        /** DocumentPreviewResult */
+        DocumentPreviewResult: {
+            packet: components["schemas"]["DocumentPacket"];
+            /** Byte Length */
+            byte_length: number;
+            /**
+             * Model Called
+             * @default false
+             * @constant
+             */
+            model_called: false;
+            /**
+             * Persisted
+             * @default false
+             * @constant
+             */
+            persisted: false;
         };
         /** DocumentReviewCommand */
         DocumentReviewCommand: {
@@ -1274,6 +1698,163 @@ export interface components {
             /** Reason Code */
             reason_code: string;
         };
+        /** FinancialHistory */
+        FinancialHistory: {
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /** Revision */
+            revision: number;
+            /** Report Checksum */
+            report_checksum: string;
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Methodology Version
+             * @default sec-comparatives-v1
+             * @constant
+             */
+            methodology_version: "sec-comparatives-v1";
+            /**
+             * Basis
+             * @default latest_filing_comparatives
+             * @constant
+             */
+            basis: "latest_filing_comparatives";
+            /** Series */
+            series: components["schemas"]["FinancialHistorySeries"][];
+            /** Limitations */
+            limitations: string[];
+        };
+        /** FinancialHistoryPoint */
+        FinancialHistoryPoint: {
+            /**
+             * Period Start
+             * Format: date
+             */
+            period_start: string;
+            /**
+             * Period End
+             * Format: date
+             */
+            period_end: string;
+            /** Value */
+            value: string;
+            /**
+             * Filing Date
+             * Format: date
+             */
+            filing_date: string;
+            /** Delta Value */
+            delta_value: string | null;
+            /** Delta Percent */
+            delta_percent: string | null;
+            /** Comparison Reason */
+            comparison_reason: ("NO_PRIOR_PERIOD" | "PERIODS_NOT_COMPARABLE" | "NON_POSITIVE_BASE") | null;
+        };
+        /** FinancialHistorySeries */
+        FinancialHistorySeries: {
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "revenue" | "net_income" | "operating_cash_flow" | "capital_expenditures";
+            /**
+             * Currency
+             * @default USD
+             * @constant
+             */
+            currency: "USD";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "partial" | "unavailable";
+            /** Reason */
+            reason: string | null;
+            /**
+             * Source Snapshot Id
+             * Format: uuid
+             */
+            source_snapshot_id: string;
+            /** Source Sha256 */
+            source_sha256: string;
+            /** Source Url */
+            source_url: string;
+            /**
+             * Available At
+             * Format: date-time
+             */
+            available_at: string;
+            /** Filing Accession */
+            filing_accession: string | null;
+            /** Points */
+            points: components["schemas"]["FinancialHistoryPoint"][];
+        };
+        /** FinancialRatioPoint */
+        FinancialRatioPoint: {
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "net_margin" | "operating_cash_flow_margin" | "capex_to_revenue" | "free_cash_flow_margin";
+            /**
+             * Period Start
+             * Format: date
+             */
+            period_start: string;
+            /**
+             * Period End
+             * Format: date
+             */
+            period_end: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "available" | "unavailable";
+            /** Value Percent */
+            value_percent: string | null;
+            /** Reason */
+            reason: ("MISSING_INPUT" | "PERIOD_MISMATCH" | "FILING_MISMATCH" | "NON_POSITIVE_REVENUE" | "NEGATIVE_CAPEX") | null;
+            /** Available At */
+            available_at: string | null;
+            /** Operands */
+            operands: components["schemas"]["RatioOperand"][];
+        };
+        /** FinancialRatios */
+        FinancialRatios: {
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /** Revision */
+            revision: number;
+            /** Report Checksum */
+            report_checksum: string;
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /**
+             * Methodology Version
+             * @default sec-ratios-v1
+             * @constant
+             */
+            methodology_version: "sec-ratios-v1";
+            history: components["schemas"]["FinancialHistory"];
+            /** Ratios */
+            ratios: components["schemas"]["FinancialRatioPoint"][];
+            /** Limitations */
+            limitations: string[];
+        };
         /** Finding */
         Finding: {
             /**
@@ -1316,9 +1897,8 @@ export interface components {
             /**
              * External Providers Enabled
              * @default false
-             * @constant
              */
-            external_providers_enabled: false;
+            external_providers_enabled: boolean;
         };
         /** ImportTaskEvent */
         ImportTaskEvent: {
@@ -1619,6 +2199,23 @@ export interface components {
             /** Next After Id */
             next_after_id: string | null;
         };
+        /** RatioOperand */
+        RatioOperand: {
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "revenue" | "net_income" | "operating_cash_flow" | "capital_expenditures";
+            /** Value */
+            value: string;
+            /**
+             * Source Snapshot Id
+             * Format: uuid
+             */
+            source_snapshot_id: string;
+            /** Source Sha256 */
+            source_sha256: string;
+        };
         /** ReportRevision */
         ReportRevision: {
             /**
@@ -1692,6 +2289,22 @@ export interface components {
             findings: components["schemas"]["Finding"][];
             /** Reason */
             reason: string | null;
+        };
+        /** ResearchExport */
+        ResearchExport: {
+            /**
+             * Export Version
+             * @default research-export-v1
+             * @constant
+             */
+            export_version: "research-export-v1";
+            report: components["schemas"]["ReportRevision"];
+            ai_analysis: components["schemas"]["AiAnalysisRecord"] | null;
+            financial_ratios: components["schemas"]["FinancialRatios"];
+            /** Limitations */
+            limitations: string[];
+            /** Checksum */
+            checksum: string;
         };
         /** ResearchInput */
         ResearchInput: {
@@ -3789,6 +4402,287 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_v1_panel_document_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DocumentPreviewCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DocumentPreviewResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    budget_v1_panel_ai_budget_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiBudget"];
+                };
+            };
+        };
+    };
+    analyses_v1_panel_ai_analyses_get: {
+        parameters: {
+            query: {
+                report_id: string;
+                revision: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiAnalysisRecord"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_analysis_v1_panel_ai_analyses_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AiAnalysisCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiAnalysisRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    analysis_v1_panel_ai_analyses__request_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiAnalysisRecord"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    financial_history_v1_panel_reports__report_id___revision__financial_history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+                revision: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinancialHistory"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    financial_ratios_v1_panel_reports__report_id___revision__financial_ratios_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                report_id: string;
+                revision: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinancialRatios"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    research_export_json_v1_panel_reports__report_id___revision__research_export_get: {
+        parameters: {
+            query?: {
+                ai_request_id?: string | null;
+            };
+            header?: never;
+            path: {
+                report_id: string;
+                revision: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResearchExport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    research_export_html_v1_panel_reports__report_id___revision__research_export_html_get: {
+        parameters: {
+            query?: {
+                ai_request_id?: string | null;
+            };
+            header?: never;
+            path: {
+                report_id: string;
+                revision: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
                 };
             };
             /** @description Validation Error */

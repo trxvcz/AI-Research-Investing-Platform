@@ -23,7 +23,6 @@
       "type": "boolean"
     },
     "external_providers_enabled": {
-      "const": false,
       "default": false,
       "title": "External Providers Enabled",
       "type": "boolean"

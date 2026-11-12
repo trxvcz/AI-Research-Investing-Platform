@@ -1,0 +1,117 @@
+{
+  "$defs": {
+    "AiHistoryClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "state",
+            "trend",
+            "question"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 1200,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_indexes": {
+          "items": {
+            "maximum": 63,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "title": "Evidence Indexes",
+          "type": "array"
+        },
+        "direction": {
+          "anyOf": [
+            {
+              "enum": [
+                "increase",
+                "decrease",
+                "unchanged"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Direction"
+        }
+      },
+      "required": [
+        "kind",
+        "text",
+        "evidence_indexes",
+        "direction"
+      ],
+      "title": "AiHistoryClaim",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "summary": {
+      "items": {
+        "$ref": "#/$defs/AiHistoryClaim"
+      },
+      "maxItems": 6,
+      "minItems": 1,
+      "title": "Summary",
+      "type": "array"
+    },
+    "strengths": {
+      "items": {
+        "$ref": "#/$defs/AiHistoryClaim"
+      },
+      "maxItems": 6,
+      "title": "Strengths",
+      "type": "array"
+    },
+    "risks": {
+      "items": {
+        "$ref": "#/$defs/AiHistoryClaim"
+      },
+      "maxItems": 6,
+      "title": "Risks",
+      "type": "array"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/AiHistoryClaim"
+      },
+      "maxItems": 6,
+      "title": "Questions",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "maxLength": 1200,
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Limitations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "summary",
+    "strengths",
+    "risks",
+    "questions",
+    "limitations"
+  ],
+  "title": "AiHistoryNarrative",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:alphasense:ai-history-narrative:1.0"
+}

@@ -1,6 +1,8 @@
 """Company-neutral model adapters are tested with synthetic HTTPS, never API keys."""
 
 import json
+import socket
+from dataclasses import FrozenInstanceError
 
 import pytest
 from test_sec_transport import FakeResponse, mocked_connection
@@ -15,6 +17,49 @@ PAYLOAD = {
     ]
 }
 KEY = "synthetic-key-not-a-real-credential"
+
+
+def test_gemini_receipt_retains_exact_bounded_envelope_without_logging(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", KEY)
+    data = json.loads(envelope("gemini"))
+    data["usageMetadata"] = {"promptTokenCount": 123, "candidatesTokenCount": 7}
+    data["modelVersion"] = "synthetic-version"
+    raw = json.dumps(data).encode()
+    connection, created = mocked_connection(monkeypatch, FakeResponse(raw))
+    receipt = GeminiTransport("synthetic-model").generate_with_receipt(PAYLOAD)
+    assert receipt.draft == '{"facts":[]}'
+    assert receipt.raw_response == raw
+    assert repr(receipt) == "GeminiReceipt()"
+    assert len(created) == len(connection.requests) == 1 and connection.closed
+    with pytest.raises(FrozenInstanceError):
+        receipt.draft = "changed"
+
+
+@pytest.mark.parametrize("status", [403, 429, 500])
+def test_gemini_receipt_errors_do_not_read_or_retry(monkeypatch, status):
+    monkeypatch.setenv("GEMINI_API_KEY", KEY)
+    response = FakeResponse(b"private-error", status)
+    connection, created = mocked_connection(monkeypatch, response)
+    with pytest.raises(GeminiTransportError, match=f"^GEMINI_HTTP_{status}$"):
+        GeminiTransport("synthetic-model").generate_with_receipt(PAYLOAD)
+    assert len(created) == len(connection.requests) == 1 and connection.closed
+    assert response.reads == []
+
+
+def test_gemini_receipt_uses_real_https_constructor_without_network(monkeypatch):
+    monkeypatch.setenv("GEMINI_API_KEY", KEY)
+    attempts = []
+
+    def offline_connection(address, *args, **kwargs):
+        attempts.append(address)
+        raise OSError("synthetic socket failure")
+
+    # Keep the real HTTPSConnection, including its constructor and super().
+    # Block before DNS/socket creation instead of replacing the entire class.
+    monkeypatch.setattr(socket, "create_connection", offline_connection)
+    with pytest.raises(GeminiTransportError, match="^GEMINI_NETWORK_UNAVAILABLE$"):
+        GeminiTransport("synthetic-model").generate_with_receipt(PAYLOAD)
+    assert attempts == [("generativelanguage.googleapis.com", 443)]
 
 
 def envelope(provider: str) -> bytes:
